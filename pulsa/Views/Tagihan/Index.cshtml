@@ -1,0 +1,76 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="~/css/pages/datatables.css">
+
+
+<header class="mb-3">
+    <a href="#" class="burger-btn d-block d-xl-none">
+        <i class="bi bi-justify fs-3"></i>
+    </a>
+</header>
+
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>Tagihan Listrik</h3>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">DataTable jQuery</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <div class="form-group row">
+                    <label for="" class="col-sm-2 col-form-label">Group Tagihan</label>
+                    <div class="col-sm-2">
+                        <select class="form-control getTagihan" id="groupTagihan">
+                            <option value="">Semua</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="tagihan">
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Id Pelanggan</th>
+                                <th>Nama</th>
+                                <th>Admin</th>
+                                <th>Admin Notta</th>
+                                <th>Is Active</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+<script src="~/extensions/jquery/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
+<script src="~/js/pages/datatables.js"></script>
+<script src="~/js/tagihan/master.js"></script>

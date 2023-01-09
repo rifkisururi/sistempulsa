@@ -1,0 +1,19 @@
+#error {
+  background-color: #ebf3ff;
+  padding: 2rem 0;
+  min-height: 100vh;
+}
+#error .img-error {
+  height: 435px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  padding: 3rem 0 3rem 0;
+}
+#error .error-title {
+  font-size: 3rem;
+  margin-top: 1rem;
+}
+
+body.theme-dark #error {
+  background-color: #151521;
+}
