@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using pulsa.ViewModel;
 using Pulsa.Data;
 
 namespace pulsa.Controllers.tagihan
 {
+    [Authorize]
     public class TagihanController : Controller
     {
-
         private readonly PulsaDataContext context;
         public TagihanController(PulsaDataContext context)
         {
@@ -15,6 +16,11 @@ namespace pulsa.Controllers.tagihan
         }
         public IActionResult Index()
         {
+            //var gr = (from tm in context.tagihan_masters
+            //          select new {
+            //              groupTagihan = tm.group_tagihan
+            //          }).GroupBy(a => a.groupTagihan);
+            //ViewBag.Group = gr.ToList();
             return View();
         }
 

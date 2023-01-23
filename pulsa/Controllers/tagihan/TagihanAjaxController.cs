@@ -1,17 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using pulsa.ViewModel;
 using Pulsa.Data;
+using Pulsa.Service.Interface;
+using Pulsa.ViewModel;
 
 namespace pulsa.Controllers.tagihan
 {
+    [Authorize]
     public class TagihanAjaxController : Controller
     {
         private readonly PulsaDataContext context;
-        public TagihanAjaxController(PulsaDataContext context)
+        private ITagihanService _tagihanMaster;
+        public TagihanAjaxController(PulsaDataContext context, ITagihanService tagihanMaster)
         {
             this.context = context;
+            _tagihanMaster = tagihanMaster;
         }
         public IActionResult index()
         {
@@ -71,5 +78,28 @@ namespace pulsa.Controllers.tagihan
                 data = dt
             }); 
         }
+
+        [HttpPost]
+        public IActionResult action([FromBody] InputTagihan inputTagihan)
+        {
+            var result = _tagihanMaster.actionTagihanMaster(inputTagihan);
+            
+
+            return new JsonResult(new
+            {
+                status = true,
+                data = inputTagihan
+            });
+        }
+
+        //public IActionResult bayarSemuaTagihan()
+        //{
+        //    var result = _tagihanMaster.getAllTagihanActive();
+        //    return new JsonResult(new
+        //    {
+        //        status = true,
+        //        data = result
+        //    });
+        //}
     }
 }

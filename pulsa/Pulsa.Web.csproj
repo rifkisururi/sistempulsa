@@ -9,14 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove=".gitignore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include=".gitignore" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.12" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
@@ -24,8 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pulsa.Data\Pulsa.Domain.csproj" />
-    <ProjectReference Include="..\pulsa.ViewModel\Pulsa.ViewModel.csproj" />
+    <ProjectReference Include="..\Pulsa.Core\Pulsa.Core.csproj" />
+    <ProjectReference Include="..\Pulsa.helper\Pulsa.Helper.csproj" />
+    <ProjectReference Include="..\Pulsa.Service\Pulsa.Service.csproj" />
   </ItemGroup>
 
 </Project>

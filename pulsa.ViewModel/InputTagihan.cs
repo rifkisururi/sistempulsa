@@ -1,17 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pulsa.Domain.Entities
+namespace Pulsa.ViewModel
 {
-    public class Tagihan_master
+    public class InputTagihan
     {
-        [Key]
-        public Guid id { get; set; }
+        public Guid? id { get; set; }
         public string? type_tagihan { get; set; }
         public string? id_tagihan { get; set; }
         public string? nama_pelanggan { get; set; }
@@ -19,7 +16,6 @@ namespace Pulsa.Domain.Entities
         public int? admin_notta { get; set; }
         public int? admin { get; set; }
         public bool? is_active { get; set; }
-        //public DateTime? createdAt { get; set; } = DateTime.Now;
-        //public DateTime? updatedAt { get; set; } = DateTime.Now;
+        public string? action { get; set; }
     }
 }

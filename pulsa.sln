@@ -3,11 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pulsa", "pulsa\pulsa.csproj", "{FCA614B4-7E59-4FBF-9B8F-C9A1F84F2080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.Web", "pulsa\Pulsa.Web.csproj", "{FCA614B4-7E59-4FBF-9B8F-C9A1F84F2080}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulsa.Domain", "Pulsa.Data\Pulsa.Domain.csproj", "{F6538C82-29C7-47F0-AD28-30A58830C5F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.Domain", "Pulsa.Data\Pulsa.Domain.csproj", "{F6538C82-29C7-47F0-AD28-30A58830C5F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulsa.ViewModel", "pulsa.ViewModel\Pulsa.ViewModel.csproj", "{0408E4F4-B768-4912-AF84-7FFB6EEA26EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.ViewModel", "pulsa.ViewModel\Pulsa.ViewModel.csproj", "{0408E4F4-B768-4912-AF84-7FFB6EEA26EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.Service", "Pulsa.Service\Pulsa.Service.csproj", "{A908EC78-A880-4C3E-A488-77139FCCC77E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.DataAccess", "Pulsa.DataAccess\Pulsa.DataAccess.csproj", "{758FAF85-3B73-4AD4-A53D-3D33CCFF4A18}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.Core", "Pulsa.Core\Pulsa.Core.csproj", "{43BF1F81-22AF-44E4-9C80-519D61BFC1B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulsa.Helper", "Pulsa.helper\Pulsa.Helper.csproj", "{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +35,22 @@ Global
 		{0408E4F4-B768-4912-AF84-7FFB6EEA26EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0408E4F4-B768-4912-AF84-7FFB6EEA26EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0408E4F4-B768-4912-AF84-7FFB6EEA26EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A908EC78-A880-4C3E-A488-77139FCCC77E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A908EC78-A880-4C3E-A488-77139FCCC77E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A908EC78-A880-4C3E-A488-77139FCCC77E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A908EC78-A880-4C3E-A488-77139FCCC77E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{758FAF85-3B73-4AD4-A53D-3D33CCFF4A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{758FAF85-3B73-4AD4-A53D-3D33CCFF4A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{758FAF85-3B73-4AD4-A53D-3D33CCFF4A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{758FAF85-3B73-4AD4-A53D-3D33CCFF4A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43BF1F81-22AF-44E4-9C80-519D61BFC1B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43BF1F81-22AF-44E4-9C80-519D61BFC1B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43BF1F81-22AF-44E4-9C80-519D61BFC1B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43BF1F81-22AF-44E4-9C80-519D61BFC1B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

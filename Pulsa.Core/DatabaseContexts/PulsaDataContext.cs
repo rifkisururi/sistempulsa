@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿ using Microsoft.EntityFrameworkCore;
 using Pulsa.Domain.Entities;
 using System;
 using System.Collections.Generic;
