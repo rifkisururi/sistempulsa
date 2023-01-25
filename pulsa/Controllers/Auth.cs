@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication.Google;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using pulsa.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 using pulsa.Models;
+using System.Net;
 using System.Security.Claims;
 
 namespace pulsa.Controllers
@@ -43,6 +42,7 @@ namespace pulsa.Controllers
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity), properties);
 
+                Response.StatusCode = (int)HttpStatusCode.Redirect;
                 return RedirectToAction("Index", "Home");
             }
             else

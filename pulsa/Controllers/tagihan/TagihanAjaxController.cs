@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using pulsa.ViewModel;
 using Pulsa.Data;
 using Pulsa.Service.Interface;
@@ -24,7 +21,7 @@ namespace pulsa.Controllers.tagihan
         {
             var _group = Request.Query["group"].ToString();
             var dt = context.tagihan_masters
-                .Where( a => a.group_tagihan == _group.ToLower() || _group == "" );
+                .Where(a => a.group_tagihan == _group.ToLower() || _group == "");
 
             return new JsonResult(new
             {
@@ -36,7 +33,7 @@ namespace pulsa.Controllers.tagihan
         }
         public IActionResult listrik()
         {
-            var _periode = Request.Query["periode"].ToString(); 
+            var _periode = Request.Query["periode"].ToString();
             var _typeTagihan = Request.Query["type"].ToString();
             var _group = Request.Query["group"].ToString();
             var status = Request.Query["status"].ToString();
@@ -46,19 +43,21 @@ namespace pulsa.Controllers.tagihan
                 _status = true;
             }
 
-            if (_periode == "") {
-                _periode = Convert.ToString(DateTime.Now.Year)+Convert.ToString(DateTime.Now.Month);
+            if (_periode == "")
+            {
+                _periode = Convert.ToString(DateTime.Now.Year) + Convert.ToString(DateTime.Now.Month);
             }
 
             var dt = (from tm in context.tagihan_masters
                       join td in context.tagihan_details on tm.id equals td.id_tagihan_master
                       where
-                        ( _periode == "" || _periode.ToLower() == td.periode_tagihan )
-                        && ( _typeTagihan == "" || _typeTagihan.ToLower() == tm.type_tagihan )
-                        && ( _group == "" || _group.ToLower() == tm.group_tagihan )
+                        (_periode == "" || _periode.ToLower() == td.periode_tagihan)
+                        && (_typeTagihan == "" || _typeTagihan.ToLower() == tm.type_tagihan)
+                        && (_group == "" || _group.ToLower() == tm.group_tagihan)
                         && (status == "" || _status == td.status_bayar)
 
-                      select new VMTagihanListrik {
+                      select new VMTagihanListrik
+                      {
                           id = tm.id,
                           type_tagihan = tm.type_tagihan,
                           group_tagihan = tm.group_tagihan,
@@ -76,14 +75,14 @@ namespace pulsa.Controllers.tagihan
                 recordsTotal = dt.Count(),
                 recordsFiltered = dt.Count(),
                 data = dt
-            }); 
+            });
         }
 
         [HttpPost]
         public IActionResult action([FromBody] InputTagihan inputTagihan)
         {
             var result = _tagihanMaster.actionTagihanMaster(inputTagihan);
-            
+
 
             return new JsonResult(new
             {

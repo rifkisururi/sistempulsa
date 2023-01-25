@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Pulsa.Domain.Entities;
 using Pulsa.ViewModel;
-using System.Net;
-using System.Security.AccessControl;
 
 namespace Pulsa.helper
 {

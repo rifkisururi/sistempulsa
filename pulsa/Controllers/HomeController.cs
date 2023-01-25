@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using pulsa.Models;
-using pulsa.ViewModel;
 using Pulsa.Data;
 using System.Diagnostics;
 
@@ -10,7 +9,7 @@ namespace pulsa.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        
+
         private readonly PulsaDataContext context;
 
         public HomeController(PulsaDataContext context)

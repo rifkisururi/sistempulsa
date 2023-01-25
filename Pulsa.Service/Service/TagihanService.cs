@@ -1,14 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using Pulsa.Service.Interface;
-using Pulsa.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Pulsa.DataAccess.Interface;
 using Pulsa.Domain.Entities;
-using AutoMapper;
+using Pulsa.Service.Interface;
+using Pulsa.ViewModel;
 
 namespace Pulsa.Service.Service
 {
@@ -21,17 +15,18 @@ namespace Pulsa.Service.Service
         private IMapper _mapper;
 
         public TagihanService(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             ITagihanMasterRepository tagihanMasterRepository,
             IMapper mapper
             //ITagihanDetailRepository tagihanDetailRepository
-            ) { 
+            )
+        {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _tagihanMaster = tagihanMasterRepository;
             //_tagihanDetail= tagihanDetailRepository;
         }
-        public bool actionTagihanMaster(InputTagihan data) 
+        public bool actionTagihanMaster(InputTagihan data)
         {
             Tagihan_master tm = _mapper.Map<Tagihan_master>(data);
 
@@ -42,9 +37,10 @@ namespace Pulsa.Service.Service
                 var result = _unitOfWork.Complete();
                 return result;
             }
-            else {
+            else
+            {
                 return false;
-                   
+
             }
         }
         //public List<Tagihan_detail> getAllTagihanActive() {

@@ -1,13 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pulsa.Core.Interface;
 using Pulsa.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pulsa.Core.Repositories
 {

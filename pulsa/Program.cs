@@ -1,12 +1,6 @@
-using Pulsa.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
-using AutoMapper;
-using Pulsa.Service.Interface;
-using Pulsa.Service.Service;
+using Microsoft.EntityFrameworkCore;
+using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
 using Pulsa.DataAccess.Repository;
 using Pulsa.helper;
@@ -21,11 +15,13 @@ services.AddAutoMapper(typeof(MappingProfiles));
 // Add services to the container.
 services.AddControllersWithViews();
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(option => {
+    .AddCookie(option =>
+    {
         option.LoginPath = "/auth/index";
         option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    })  
-    .AddGoogle(googleOptions => {
+    })
+    .AddGoogle(googleOptions =>
+    {
         googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
         googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
     });

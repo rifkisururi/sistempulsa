@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using pulsa.ViewModel;
 using Pulsa.Data;
 
 namespace pulsa.Controllers.tagihan
