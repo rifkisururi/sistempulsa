@@ -12,5 +12,7 @@ namespace Pulsa.Data
         public DbSet<Pengguna> penggunas { get; set; }
         public DbSet<Tagihan_master> tagihan_masters { get; set; }
         public DbSet<Tagihan_detail> tagihan_details { get; set; }
+        public DbSet<TopUp> topups { get; set; }
+        public DbSet<TopUp_metode> topup_Metodes { get; set; }
     }
 }

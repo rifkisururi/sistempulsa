@@ -33,9 +33,11 @@ services.AddDbContext<PulsaDataContext>(
 
 // add data access
 services.AddTransient<Pulsa.DataAccess.Interface.ITagihanMasterRepository, Pulsa.DataAccess.Repository.TagihanMasterRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.ITagihanDetailRepository, Pulsa.DataAccess.Repository.TagihanDetailRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.ITopupRepository, Pulsa.DataAccess.Repository.TopupRepository>();
+services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // add service
-services.AddTransient<IUnitOfWork, UnitOfWork>();
 services.AddTransient<Pulsa.Service.Interface.ITagihanService, Pulsa.Service.Service.TagihanService>();
 
 var app = builder.Build();

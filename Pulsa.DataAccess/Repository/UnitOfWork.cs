@@ -1,4 +1,4 @@
-﻿using Pulsa.Data;
+﻿ using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
 using Serilog;
 
@@ -12,11 +12,14 @@ namespace Pulsa.DataAccess.Repository
         {
             _context = context;
             TagihanMasterRepository = new TagihanMasterRepository(_context);
-            //TagihanDetailRepository = new TagihanDetailRepository(_context);
-
+            TagihanDetailRepository = new TagihanDetailRepository(_context);
+            TopupRepository = new TopupRepository(_context);
+            TopupMetodeRepository = new TopupMetodeRepository(_context);
         }
         public ITagihanMasterRepository TagihanMasterRepository { get; private set; }
-        //public ITagihanDetailRepository TagihanDetailRepository { get; private set; }
+        public ITagihanDetailRepository TagihanDetailRepository { get; private set; }
+        public ITopupRepository TopupRepository { get; private set; }
+        public ITopupMetodeRepository TopupMetodeRepository { get; private set; }
 
         public bool Complete()
         {

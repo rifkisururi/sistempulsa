@@ -2,7 +2,7 @@
 
 namespace Pulsa.DataAccess.Interface
 {
-    public interface ITopupMetodeRepository : IGenericRepository<Domain.Entities.TopUp_metode>
+    public interface ITopupRepository : IGenericRepository<Domain.Entities.TopUp>
     {
         // dibuat kosong jika tidak menambahkan spesial query yang digunakan terus menerus
     }
