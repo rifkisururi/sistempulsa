@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.DataAccess", "Pulsa.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.Core", "Pulsa.Core\Pulsa.Core.csproj", "{43BF1F81-22AF-44E4-9C80-519D61BFC1B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulsa.Helper", "Pulsa.helper\Pulsa.Helper.csproj", "{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulsa.Helper", "Pulsa.helper\Pulsa.Helper.csproj", "{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulsa.Test", "Pulsa.Test\Pulsa.Test.csproj", "{12D2FEB1-6333-4D94-848F-65D308EF4673}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F97B021-04F5-4EC2-8589-0F6DFCE1FE1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12D2FEB1-6333-4D94-848F-65D308EF4673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D2FEB1-6333-4D94-848F-65D308EF4673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D2FEB1-6333-4D94-848F-65D308EF4673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D2FEB1-6333-4D94-848F-65D308EF4673}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
