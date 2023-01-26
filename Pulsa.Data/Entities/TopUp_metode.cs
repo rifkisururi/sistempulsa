@@ -8,8 +8,9 @@ namespace Pulsa.Domain.Entities
         [Key]
         public Guid id { get; set; }
         public string name { get; set; }
-        public string unik_key { get; set; }
-        public bool isActive { get; set; }
+        public string? unik_key { get; set; }
+        public string? no_rek { get; set; }
+        public bool isActive { get; set; } = true;
 
     }
 }
