@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<link rel="stylesheet" href="~/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="~/css/pages/datatables.css">
+
+<header class="mb-3">
+    <a href="#" class="burger-btn d-block d-xl-none">
+        <i class="bi bi-justify fs-3"></i>
+    </a>
+</header>
+
+<div class="page-heading">
+    <h3>Top UP</h3>
+</div>
+<div class="page-content">
+    <section class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Topup</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-lg" id="topupList">
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Nama</th>
+                                            <th>Bank Tujuan</th>
+                                            <th>Jumlah</th>
+                                            <th>Pengirim</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>29 Januari 2023 13:52</td>
+                                            <td>Rifki</td>
+                                            <td>Bank Jago</td>
+                                            <td>Jumlah</td>
+                                            <td>Muamanah</td>
+                                            <th>
+                                                <button class="btn btn-primary">Terima</button>
+                                                <button class="btn btn-danger">Tolak</button>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="~/extensions/jquery/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
+<script src="~/js/pages/datatables.js"></script>
+<script src="~/js/topup/index.js?@DateTime.Now.ToString("dd-MM-yyyyhh:mm")"></script>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
@@ -9,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-services.AddAutoMapper(typeof(MappingProfiles));
+services.AddAutoMapper(typeof(MappingProfiles)); 
 
-
+services.AddSession();
 // Add services to the container.
 services.AddControllersWithViews();
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -36,11 +37,14 @@ services.AddTransient<Pulsa.DataAccess.Interface.ITagihanMasterRepository, Pulsa
 services.AddTransient<Pulsa.DataAccess.Interface.ITagihanDetailRepository, Pulsa.DataAccess.Repository.TagihanDetailRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.ITopupRepository, Pulsa.DataAccess.Repository.TopupRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.ITopupMetodeRepository, Pulsa.DataAccess.Repository.TopupMetodeRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.IIUserSaldoHistoryRepository, Pulsa.DataAccess.Repository.UserSaldoHistoryRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.IPenggunaRepository, Pulsa.DataAccess.Repository.PenggunaRepository>();
 services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // add service
 services.AddTransient<Pulsa.Service.Interface.ITagihanService, Pulsa.Service.Service.TagihanService>();
-services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
+services.AddTransient<Pulsa.Service.Interface.ITopUpService, Pulsa.Service.Service.TopUpService>();
+//services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
 
 var app = builder.Build();
 
@@ -58,7 +62,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=index}");

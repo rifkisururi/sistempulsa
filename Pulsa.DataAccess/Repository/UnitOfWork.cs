@@ -15,12 +15,15 @@ namespace Pulsa.DataAccess.Repository
             TagihanDetailRepository = new TagihanDetailRepository(_context);
             TopupRepository = new TopupRepository(_context);
             TopupMetodeRepository = new TopupMetodeRepository(_context);
+            PenggunaRepository = new PenggunaRepository(_context);
+            UserSaldoHistoryRepository = new UserSaldoHistoryRepository(_context);
         }
         public ITagihanMasterRepository TagihanMasterRepository { get; private set; }
         public ITagihanDetailRepository TagihanDetailRepository { get; private set; }
         public ITopupRepository TopupRepository { get; private set; }
         public ITopupMetodeRepository TopupMetodeRepository { get; private set; }
-
+        public IPenggunaRepository PenggunaRepository { get; private set; }
+        public UserSaldoHistoryRepository UserSaldoHistoryRepository { get; private set; }
         public bool Complete()
         {
             bool isSuccess = true;

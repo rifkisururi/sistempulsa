@@ -14,5 +14,7 @@ namespace Pulsa.Data
         public DbSet<Tagihan_detail> tagihan_details { get; set; }
         public DbSet<TopUp> topups { get; set; }
         public DbSet<TopUp_metode> topup_Metodes { get; set; }
+        public DbSet<user_saldo_history_detail> user_saldo_history_detail { get; set; }
+        
     }
 }

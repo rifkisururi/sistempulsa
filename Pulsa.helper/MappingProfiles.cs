@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using pulsa.ViewModel;
 using Pulsa.Domain.Entities;
 using Pulsa.ViewModel;
 
@@ -10,6 +11,9 @@ namespace Pulsa.helper
         {
             CreateMap<Tagihan_master, InputTagihan>();
             CreateMap<InputTagihan, Tagihan_master>();
+            CreateMap<InputTopUpDTO, TopUp>();
+            CreateMap<TopUp, InputTopUpDTO>();
+            CreateMap<TopUp, VmRequestTopup>();
         }
     }
 }
