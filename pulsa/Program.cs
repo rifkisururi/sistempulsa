@@ -5,6 +5,7 @@ using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
 using Pulsa.DataAccess.Repository;
 using Pulsa.helper;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -31,6 +32,8 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 services.AddDbContext<PulsaDataContext>(
     o => o.UseNpgsql(configuration.GetConnectionString("puldaDB"))
 );
+services.AddTransient<PulsaDataContext>();
+services.AddHttpClient();
 
 // add data access
 services.AddTransient<Pulsa.DataAccess.Interface.ITagihanMasterRepository, Pulsa.DataAccess.Repository.TagihanMasterRepository>();
@@ -44,9 +47,9 @@ services.AddTransient<IUnitOfWork, UnitOfWork>();
 // add service
 services.AddTransient<Pulsa.Service.Interface.ITagihanService, Pulsa.Service.Service.TagihanService>();
 services.AddTransient<Pulsa.Service.Interface.ITopUpService, Pulsa.Service.Service.TopUpService>();
-//services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
+services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
 
-var app = builder.Build();
+ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -19,4 +19,6 @@ RUN dotnet publish "pulsa.csproj" -c Release -o /app/publish /p:UseAppHost=false
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "pulsa.dll"]
+ENTRYPOINT ["dotnet", "pulsa.web.dll"]
+
+#docker build . -t belikouta.com:0.0.1

@@ -7,16 +7,18 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["pulsa/pulsa.csproj", "pulsa/"]
-RUN dotnet restore "pulsa/pulsa.csproj"
+COPY ["pulsa/Pulsa.Web.csproj", "pulsa/"]doc
+RUN dotnet restore "pulsa/Pulsa.Web.csproj"
 COPY . .
 WORKDIR "/src/pulsa"
-RUN dotnet build "pulsa.csproj" -c Release -o /app/build
+RUN dotnet build "Pulsa.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "pulsa.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Pulsa.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "pulsa.dll"]
+ENTRYPOINT ["dotnet", "Pulsa.Web.dll"]
+
+# docker build . -t belikouta.com:0.0.2

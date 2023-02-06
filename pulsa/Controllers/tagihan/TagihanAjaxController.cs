@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using pulsa.ViewModel;
 using Pulsa.Data;
+using Pulsa.Domain.Entities;
+using Pulsa.Helper;
 using Pulsa.Service.Interface;
 using Pulsa.ViewModel;
+using Pulsa.ViewModel.tagihan;
 
 namespace pulsa.Controllers.tagihan
 {
@@ -11,11 +14,13 @@ namespace pulsa.Controllers.tagihan
     public class TagihanAjaxController : Controller
     {
         private readonly PulsaDataContext context;
-        private ITagihanService _tagihanMaster;
-        public TagihanAjaxController(PulsaDataContext context, ITagihanService tagihanMaster)
+        private ITagihanService _tagihan;
+        private ISerpulService _serpul;
+        public TagihanAjaxController(PulsaDataContext context, ITagihanService tagihan, ISerpulService serpul)
         {
             this.context = context;
-            _tagihanMaster = tagihanMaster;
+            _tagihan = tagihan;
+            _serpul = serpul;
         }
         public IActionResult index()
         {
@@ -43,15 +48,17 @@ namespace pulsa.Controllers.tagihan
                 _status = true;
             }
 
-            if (_periode == "")
-            {
-                _periode = Convert.ToString(DateTime.Now.Year) + Convert.ToString(DateTime.Now.Month);
-            }
+            //if (_periode == "")
+            //{
+            //    DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
+            //}
+            DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
 
             var dt = (from tm in context.tagihan_masters
                       join td in context.tagihan_details on tm.id equals td.id_tagihan_master
                       where
-                        (_periode == "" || _periode.ToLower() == td.periode_tagihan)
+                        td.tanggal_cek >= awalBulan
+                        //(_periode == "" || _periode.ToLower() == td.periode_tagihan)
                         && (_typeTagihan == "" || _typeTagihan.ToLower() == tm.type_tagihan)
                         && (_group == "" || _group.ToLower() == tm.group_tagihan)
                         && (status == "" || _status == td.status_bayar)
@@ -81,7 +88,7 @@ namespace pulsa.Controllers.tagihan
         [HttpPost]
         public IActionResult action([FromBody] InputTagihan inputTagihan)
         {
-            var result = _tagihanMaster.actionTagihanMaster(inputTagihan);
+            var result = _tagihan.actionTagihanMaster(inputTagihan);
 
 
             return new JsonResult(new
@@ -91,14 +98,16 @@ namespace pulsa.Controllers.tagihan
             });
         }
 
-        //public IActionResult bayarSemuaTagihan()
-        //{
-        //    var result = _tagihanMaster.getAllTagihanActive();
-        //    return new JsonResult(new
-        //    {
-        //        status = true,
-        //        data = result
-        //    });
-        //}
+        public async Task<IActionResult> getTagihan()
+        {
+            var tagihanMaster = _tagihan.getListAll();
+            
+            foreach (var td in tagihanMaster) {
+                await _serpul.getTagihan(td);
+            }
+            //int saldo = _serpul.getSaldo();
+            //var tagihan = await _serpul.getTagihan("PLN", "521510718785");
+            return null;
+        }
     }
 }

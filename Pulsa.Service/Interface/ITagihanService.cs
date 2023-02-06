@@ -1,10 +1,12 @@
-﻿using Pulsa.ViewModel;
+﻿using Pulsa.Domain.Entities;
+using Pulsa.ViewModel;
+using Pulsa.ViewModel.tagihan;
 
 namespace Pulsa.Service.Interface
 {
     public interface ITagihanService
     {
         public bool actionTagihanMaster(InputTagihan tm);
-        //public List<Tagihan_detail> getAllTagihanActive();
+        public List<TagihanMasterDTO> getListAll();
     }
 }

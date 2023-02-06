@@ -5,7 +5,10 @@ namespace Pulsa.Data
 {
     public class PulsaDataContext : DbContext
     {
-        public PulsaDataContext(DbContextOptions<PulsaDataContext> options) : base(options) { }
+        public PulsaDataContext(DbContextOptions<PulsaDataContext> options) : base(options) {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+        }
         //protected override void OnModelCreating(ModelBuilder modelBuilder) {
         //    modelBuilder.UseSerialColums();
         //}

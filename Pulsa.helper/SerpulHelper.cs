@@ -3,6 +3,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,20 @@ namespace Pulsa.Helper
         public SerpulHelper()
         {
             _httpClient = new HttpClient();
+        }
+
+        public static string GetClientInfo(string clientIP)
+        {
+            try
+            {
+                var hostEntry = Dns.GetHostEntry(clientIP);
+                return $"{hostEntry.HostName}::{clientIP}";
+            }
+            catch (Exception ex)
+            {
+                return clientIP;
+            }
+
         }
         public async Task<int> getSaldo()
         {

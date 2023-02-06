@@ -9,5 +9,9 @@ namespace Pulsa.DataAccess.Repository
         public TagihanMasterRepository(PulsaDataContext context) : base(context)
         {
         }
+        //public IQueryable<Domain.Entities.Tagihan_master> getHeader()
+        //{
+        //    return this.Find(p => p.FinancialReportId == Id);
+        //}
     }
 }
