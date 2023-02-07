@@ -79,7 +79,7 @@ namespace Pulsa.Service.Service
                 var response = await client.PostAsync("https://api.serpul.co.id/pascabayar/check", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 var tagihan = JsonConvert.DeserializeObject<RespondSerpul>(responseString);
-                if (tm.type_tagihan.ToLower() == "pln" && tagihan.responseCode == 200)
+                if (tagihan.responseCode == 200)
                 {
                     var tagihanListrik = JsonConvert.DeserializeObject<RespondStatusSerpulTagihanListrik>(responseString);
 
