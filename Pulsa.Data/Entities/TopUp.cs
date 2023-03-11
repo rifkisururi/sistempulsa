@@ -16,8 +16,8 @@ namespace Pulsa.Domain.Entities
         public string? idmetode { get; set; }
         public Int32? saldo_awal { get; set; }
         public Int32? saldo_akhir { get; set; }
-        public Int32 status { get; set; }
-        // 0 -> reques || 1 -> approve || 2 -> reject
+        public Int32 status { get; set; } = 1;
+        // 1 -> reques || 2 -> approve || 3 -> reject
         public Guid? action_by { get; set; }
         [ForeignKey("action_by")]
         public Pengguna action { get; set; }

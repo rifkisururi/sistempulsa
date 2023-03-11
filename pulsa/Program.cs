@@ -33,10 +33,6 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 
 services.AddDbContextPool<PulsaDataContext>(
     o => o.UseNpgsql(configuration.GetConnectionString("puldaDB"))
-    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-    .EnableSensitiveDataLogging()
-    .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.LazyLoadOnDisposedContextWarning))
-    .EnableDetailedErrors()
 );
 
 
@@ -57,6 +53,8 @@ services.AddTransient<IUnitOfWork, UnitOfWork>();
 services.AddTransient<Pulsa.Service.Interface.ITagihanService, Pulsa.Service.Service.TagihanService>();
 services.AddTransient<Pulsa.Service.Interface.ITopUpService, Pulsa.Service.Service.TopUpService>();
 services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
+services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
 
  var app = builder.Build();
 

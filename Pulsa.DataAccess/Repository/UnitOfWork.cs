@@ -1,13 +1,13 @@
-﻿ using Pulsa.Data;
+﻿using Microsoft.VisualBasic;
+using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
+using Pulsa.DataAccess.Repository;
 using Pulsa.Domain.Entities;
 using Serilog;
-
 namespace Pulsa.DataAccess.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-
         private readonly PulsaDataContext _context;
         public UnitOfWork(PulsaDataContext context)
         {
@@ -36,6 +36,7 @@ namespace Pulsa.DataAccess.Repository
                 {
                     _context.SaveChanges();
                     dbContextTransaction.Commit();
+
                 }
                 catch (Exception ex)
                 {

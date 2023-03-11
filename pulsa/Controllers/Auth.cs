@@ -88,6 +88,7 @@ namespace pulsa.Controllers
 
                     List<Claim> claims = new List<Claim>() {
                             new Claim(ClaimTypes.NameIdentifier, _modelLogin.username),
+                            new Claim(ClaimTypes.NameIdentifier, _modelLogin.username),
                             new Claim("Nama", "Rifki"),
                             new Claim("Role", "Admin"),
                             new Claim("Id", Convert.ToString(id)),

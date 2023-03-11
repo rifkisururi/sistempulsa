@@ -1,10 +1,10 @@
 ﻿$(document).ready(function () {
-    getTagihan();
+    getTopupPending();
 });
 
-function getTagihan() {
-    $('#tagihanListrik').dataTable().fnClearTable();
-    $('#tagihanListrik').dataTable().fnDestroy();
+function getTopupPending() {
+    $('#topupList').dataTable().fnClearTable();
+    $('#topupList').dataTable().fnDestroy();
     $('#topupList').DataTable({
         ajax: `../../Topup/getRequestTopup`,
         "columns": [
@@ -34,8 +34,8 @@ function getTagihan() {
                 "bSortable": false,
                 "mRender": function (o) {
                     var btnChange = ""
-                    btnChange += "<button class='btn btn-primary btnApprove' id='id_" + o.id +"'>Terima</button> "
-                    btnChange += "<button class='btn btn-danger btnReject' id='id_" + o.id + "'>Tolak</button>"
+                    btnChange += "<button class='btn btn-primary btnApprove' id='id_" + o.id +"'> <span class='spinner-border spinner-border-sm' role='status' aria-hidden='true' style='display:none;'></span> Terima</button> "
+                    btnChange += "<button class='btn btn-danger btnReject' id='id_" + o.id + "'><span class='spinner-border spinner-border-sm' role='status' aria-hidden='true' style='display:none;'></span> Tolak</button>"
                     return `${btnChange}`;
                 }
             }
@@ -46,6 +46,10 @@ function getTagihan() {
 
 
 $(document).on("click", ".btnApprove", function () {
+    var $btn = $(this);
+    $btn.prop('disabled', true);
+    $btn.find('span.spinner-border').show();
+
     id = $(this).attr("id")
     id = id.replace("id_", "")
     console.log(id);
@@ -53,6 +57,23 @@ $(document).on("click", ".btnApprove", function () {
     var dataPost = new Object();
     dataPost.id = id;
     dataPost.action = "approve";
+
+    action(dataPost);
+});
+
+
+$(document).on("click", ".btnReject", function () {
+    var $btn = $(this);
+    $btn.prop('disabled', true);
+    $btn.find('span.spinner-border').show();
+
+    id = $(this).attr("id")
+    id = id.replace("id_", "")
+    console.log(id);
+
+    var dataPost = new Object();
+    dataPost.id = id;
+    dataPost.action = "reject";
 
     action(dataPost);
 });
@@ -72,7 +93,7 @@ function action(dataPost) {
             } else {
                 alert(dataPost.action + 'request saldo gagal');
             }
-            //getTagihan()
+            getTopupPending();
         },
         failure: function (response) {
             console.log(response);

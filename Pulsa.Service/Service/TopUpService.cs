@@ -43,10 +43,11 @@ namespace Pulsa.Service.Service
             TopUp tm = _mapper.Map<TopUp>(dt);
             tm.idpengguna = idPengguna; 
             tm.id = Guid.NewGuid();
-
+            // todo:rubah ke _unitOfWork
             _topupRepository.Add(tm);
-            //_topupRepository.Save();
+            _topupRepository.Save();
             return _unitOfWork.Complete();
+            
         }
 
         public List<VmRequestTopup> listRequestTopup() { 
@@ -80,28 +81,34 @@ namespace Pulsa.Service.Service
             dataTopUp.waktu_action = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
             if (action.ToLower() == "approve") {
                 dataTopUp.status = 2;
-            }else if (action.ToLower() == "reject")
+                _topupRepository.Update(dataTopUp);
+
+                // update saldo di tbl pengguna
+                pengguna.saldo = saldoAhir;
+                _penggunaRepository.Update(pengguna);
+
+                // insert ke table history saldo
+                user_saldo_history_detail his = new user_saldo_history_detail();
+                his.id_transaksi = idRequest;
+                his.idpengguna = dataTopUp.idpengguna;
+                _userSaldoRepository.Add(his);
+
+                _topupRepository.Save();
+                _penggunaRepository.Save();
+                _userSaldoRepository.Save();
+            }
+            else if (action.ToLower() == "reject")
             {
                 dataTopUp.status = 3;
+                _topupRepository.Save();
             }
+            // todo:rubah ke _unitOfWork
 
-            _topupRepository.Update(dataTopUp);
-            //_topupRepository.Save();
-
-            // update saldo di tbl pengguna
-            pengguna.saldo = saldoAhir;
-            _penggunaRepository.Update(pengguna);
-            //_penggunaRepository.Save();
-
-            // insert ke table history saldo
-            user_saldo_history_detail his = new user_saldo_history_detail();
-            his.id_transaksi = idRequest;
-            his.idpengguna = dataTopUp.idpengguna;
-            _userSaldoRepository.Add(his);
-            //_userSaldoRepository.Save();
-            
             var resutl = _unitOfWork.Complete();
             return resutl;
+        }
+        public int saldo(Guid idPengguna) {
+            return _penggunaRepository.GetById(idPengguna).saldo;
         }
 
     }
