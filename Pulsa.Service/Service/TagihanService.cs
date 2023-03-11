@@ -37,19 +37,20 @@ namespace Pulsa.Service.Service
         public bool actionTagihanMaster(InputTagihan data)
         {
             Tagihan_master tm = _mapper.Map<Tagihan_master>(data);
-
+            var result = false;
             if (data.id == Guid.Empty)
             {
                 _tagihanMaster.Add(tm);
-                _tagihanMaster.Save();
-                var result = _unitOfWork.Complete();
-                return result;
             }
             else
             {
-                return false;
-
+                _tagihanMaster.Update(tm);
+                _tagihanMaster.Save();
             }
+
+            result = _unitOfWork.Complete();
+            return result;
+
         }
 
         public List<TagihanMasterDTO> getListAll() {
@@ -73,10 +74,34 @@ namespace Pulsa.Service.Service
                       }).ToList();
             return gr;
         }
-        //public List<Tagihan_detail> getAllTagihanActive() {
-        //    var data = _tagihanDetail.Find( a => a.harus_dibayar == true && a.status_bayar == false).ToList();
-        //    return data;
-        //}
+
+        public List<TagihanMasterDTO> GetListBayarAll()
+        {
+
+            DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
+            var gr = (from tm in _context.tagihan_masters
+                      join detail in _context.tagihan_details on tm.id equals detail.id_tagihan_master 
+                      where
+                        tm.is_active == true
+                        && detail.harus_dibayar != false
+                        && detail.tanggal_cek >= awalBulan
+                      //&& tm.id_tagihan == "521511308486" || 
+                      //&& tm.id_tagihan == "521510460244"
+                      //  m.jumlah_tagihan == null && detail.tanggal_cek >= awalBulan
+                      select new TagihanMasterDTO
+                      {
+                          id = tm.id,
+                          type_tagihan = tm.type_tagihan,
+                          id_tagihan = tm.id_tagihan,
+                          nama_pelanggan = tm.nama_pelanggan,
+                          jumlah_tagihan = detail.jumlah_tagihan
+                      }).OrderBy( a => a.jumlah_tagihan).ToList();
+            return gr;
+        }
+
+        public Domain.Entities.Tagihan_master detailMaster(Guid id) { 
+            return _tagihanMaster.GetById(id);
+        } 
 
     }
 }

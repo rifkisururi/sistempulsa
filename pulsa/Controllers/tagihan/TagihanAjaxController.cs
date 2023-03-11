@@ -65,7 +65,7 @@ namespace pulsa.Controllers.tagihan
 
                       select new VMTagihanListrik
                       {
-                          id = tm.id,
+                          id = td.id,
                           type_tagihan = tm.type_tagihan,
                           group_tagihan = tm.group_tagihan,
                           nama_pelanggan = tm.nama_pelanggan,
@@ -73,7 +73,8 @@ namespace pulsa.Controllers.tagihan
                           jumlah_tagihan = td.jumlah_tagihan,
                           admin_tagihan = td.admin_tagihan,
                           admin_notta = td.admin_notta,
-                          status_bayar = td.status_bayar
+                          status_bayar = td.status_bayar,
+                          harus_dibayar = td.harus_dibayar
                       });
 
             return new JsonResult(new
@@ -103,11 +104,33 @@ namespace pulsa.Controllers.tagihan
             var tagihanMaster = _tagihan.getListAll();
             
             foreach (var td in tagihanMaster) {
-                await _serpul.getTagihan(td);
+                 await _serpul.getTagihan(td);
+            }
+            return null;
+        }
+
+        public async Task<IActionResult> bayarTagihan()
+        {
+            var tagihanMaster = _tagihan.GetListBayarAll();
+
+            foreach (var td in tagihanMaster)
+            {
+                 _serpul.PayTagihan(td);
             }
             //int saldo = _serpul.getSaldo();
             //var tagihan = await _serpul.getTagihan("PLN", "521510718785");
             return null;
+        }
+
+        public IActionResult getDetailMaster(Guid idMaster)
+        {
+            var tagihanMaster = _tagihan.detailMaster(idMaster);
+            
+            return new JsonResult(new
+            {
+                status = true,
+                data = tagihanMaster
+            });
         }
     }
 }

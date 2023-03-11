@@ -6,5 +6,6 @@
         public string? type_tagihan { get; set; }
         public string? id_tagihan { get; set; }
         public string? nama_pelanggan { get; set; }
+        public int? jumlah_tagihan { get; set; }
     }
 }

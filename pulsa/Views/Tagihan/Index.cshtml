@@ -49,8 +49,7 @@
                 <div class="table-responsive">
                     <div class="form-group">
                         <!-- Button trigger for login form modal -->
-                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                data-bs-target="#inlineForm">
+                        <button type="button" id="tambahTagihan" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#inlineForm">
                             Tambah
                         </button>
                     </div>
@@ -91,6 +90,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
+                        <input type="hidden" class="form-control" id="idTagihan">
                         <label for="" class="col-sm-4 col-form-label">Group Tagihan</label>
                         <div class="col-sm-8">
                             <select class="form-control" id="inputGroupTagihan">
@@ -113,15 +113,20 @@
                         <div class="col-sm-8">
                             <select class="form-control" id="typeTagihan">
                                 <option value="pln">PLN</option>
-                                <option value="indihome">Indihome</option>
+                                <option value="telkom">Telkom / Indihome</option>
                             </select>
                         </div>
                     </div>
-
+                    <div class="form-group row">
+                        <label for="" class="col-sm-4 col-form-label">Nama Pelanggan</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="nama_pelanggan" readonly disabled>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label for="" class="col-sm-4 col-form-label">Admin</label>
                         <div class="col-sm-8">
-                            <input type="text" placeholder="Admin"
+                            <input type="number" placeholder="Admin"
                                    class="form-control" id="admin">
                         </div>
                     </div>
@@ -129,7 +134,7 @@
                     <div class="form-group row">
                         <label for="" class="col-sm-4 col-form-label">Admin notta</label>
                         <div class="col-sm-8">
-                            <input type="text" placeholder="Admin notta"
+                            <input type="number" placeholder="Admin notta"
                                    class="form-control" id="adminNotta">
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 ﻿ using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
+using Pulsa.Domain.Entities;
 using Serilog;
 
 namespace Pulsa.DataAccess.Repository
@@ -17,13 +18,15 @@ namespace Pulsa.DataAccess.Repository
             TopupMetodeRepository = new TopupMetodeRepository(_context);
             PenggunaRepository = new PenggunaRepository(_context);
             UserSaldoHistoryRepository = new UserSaldoHistoryRepository(_context);
+            Provider_H2HRepository = new Provider_h2hRepository(_context);
         }
         public ITagihanMasterRepository TagihanMasterRepository { get; private set; }
         public ITagihanDetailRepository TagihanDetailRepository { get; private set; }
         public ITopupRepository TopupRepository { get; private set; }
         public ITopupMetodeRepository TopupMetodeRepository { get; private set; }
         public IPenggunaRepository PenggunaRepository { get; private set; }
-        public UserSaldoHistoryRepository UserSaldoHistoryRepository { get; private set; }
+        public IProvider_h2hRepository Provider_H2HRepository { get; private set; }
+        public IUserSaldoHistoryRepository UserSaldoHistoryRepository { get; private set; }
         public bool Complete()
         {
             bool isSuccess = true;

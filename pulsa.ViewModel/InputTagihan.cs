@@ -2,7 +2,7 @@
 {
     public class InputTagihan
     {
-        public Guid? id { get; set; }
+        public Guid? id { get; set; } = Guid.Empty;
         public string? type_tagihan { get; set; }
         public string? id_tagihan { get; set; }
         public string? nama_pelanggan { get; set; }

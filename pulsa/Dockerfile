@@ -14,11 +14,11 @@ WORKDIR "/src/pulsa"
 RUN dotnet build "pulsa.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "pulsa.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "pulsa.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:ASPNETCORE_ENVIRONMENT=Development
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "pulsa.web.dll"]
 
-#docker build . -t belikouta.com:0.0.1
+#docker build . -t rifkisururi/belikouta.com.com:0.0.4

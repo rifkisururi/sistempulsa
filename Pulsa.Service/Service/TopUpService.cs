@@ -16,7 +16,7 @@ namespace Pulsa.Service.Service
         Pulsa.DataAccess.Interface.ITagihanMasterRepository _tagihanMaster;
         Pulsa.DataAccess.Interface.ITopupRepository _topupRepository;
         Pulsa.DataAccess.Interface.IPenggunaRepository _penggunaRepository;
-        IIUserSaldoHistoryRepository _userSaldoRepository;
+        IUserSaldoHistoryRepository _userSaldoRepository;
         //Pulsa.DataAccess.Interface.ITagihanDetailRepository _tagihanDetail;
         private IMapper _mapper;
 
@@ -26,7 +26,7 @@ namespace Pulsa.Service.Service
             ITopupRepository topupRepository,
             IMapper mapper,
             IPenggunaRepository penggunaRepository,
-            IIUserSaldoHistoryRepository userSaldoHistoryRepository
+            IUserSaldoHistoryRepository userSaldoHistoryRepository
             //ITagihanDetailRepository tagihanDetailRepository
             )
         {

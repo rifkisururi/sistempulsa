@@ -42,41 +42,38 @@ function getTagihan(group) {
                     return `${btnChange}`;
                 }
             }
-
         ]
     });
 }
 
 $(document).on("click", ".saveData", function () {
     var group = $("#groupTagihan").val();
-
     var type_tagihan = $("#typeTagihan").val();
     var id_tagihan = $("#idPelanggan").val();
     var group_tagihan = $("#inputGroupTagihan").val();
     var admin = $("#admin").val();
     var admin_notta = $("#adminNotta").val();
+    var id = $("#idTagihan").val();
+    var nama_pelanggan = $("#nama_pelanggan").val();;
     var is_active = true;
 
     var dataPost = new Object();
     dataPost.type_tagihan = type_tagihan;
     dataPost.id_tagihan = id_tagihan;
     dataPost.group_tagihan = group_tagihan;
-    dataPost.admin = admin;
-    dataPost.admin_notta = admin_notta;
+    dataPost.admin = parseInt(admin);
+    dataPost.admin_notta = parseInt(admin_notta);
+    dataPost.nama_pelanggan = nama_pelanggan;
     dataPost.is_active = is_active;
-    dataPost.id = '00000000-0000-0000-0000-000000000000';
-    dataPost.action = "add";
+    if (id == "") {
+        dataPost.id = '00000000-0000-0000-0000-000000000000';
+        dataPost.action = "add";
+    } else {
+        dataPost.id = id;
+        dataPost.action = "update";
+    }
     console.log('dataPost', dataPost);
-  
 
-    //var oForm = $('form')[0];
-    //var oData = new FormData(oForm);
-    //oData.append("submissionData", JSON.stringify(dataPost));
-
-    //var data2 = {
-    //    "type_tagihan": id_tagihan,
-    //    "group_tagihan": group_tagihan
-    //};
     debugger
 
     $.ajax({
@@ -92,25 +89,38 @@ $(document).on("click", ".saveData", function () {
             console.log(response);
         }
     });
-
 });
-
 
 $(document).on("click", ".btnEdit", function () {
     id = $(this).attr("id")
     id = id.replace("id_","")
-
-    axios.get('/user', {
-        params: {
-            ID: 12345
+    $("#tambahTagihan").click()
+    $.ajax({
+        type: "GET",
+        url: "../../TagihanAjax/getDetailMaster?idMaster="+id,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            if (response.status == true) {
+                //alert('get berhasil');
+                $("#idTagihan").val(response.data.id);
+                $("#inputGroupTagihan").val(response.data.group_tagihan);
+                $("#typeTagihan").val(response.data.type_tagihan);
+                $("#idPelanggan").val(response.data.id_tagihan);
+                $("#admin").val(response.data.admin);
+                $("#adminNotta").val(response.data.admin_notta);
+                $("#nama_pelanggan").val(response.data.nama_pelanggan);
+                
+                var is_active = true;
+            } else {
+                alert('get gagal');
+            }
+            console.log(response);
+        },
+        failure: function (response) {
+            console.log(response);
         }
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error) {
-        console.log(error);
-    }).then(function () {
-        // always executed
-        console.log('always executed');
     });
         
 });

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using pulsa.Models;
 using Pulsa.Data;
 using System.Diagnostics;
+using Pulsa.Service.Interface;
 
 namespace pulsa.Controllers
 {
@@ -12,20 +13,26 @@ namespace pulsa.Controllers
     {
 
         private readonly PulsaDataContext context;
+        private readonly IWebHostEnvironment _env;
 
-        public HomeController(PulsaDataContext context)
+        private ISerpulService _serpul;
+        public HomeController(PulsaDataContext context, IWebHostEnvironment env, ISerpulService serpul)
         {
             this.context = context;
+            _env = env;
+            _serpul = serpul;
         }
 
         public IActionResult Index()
         {
-            //var data = this.context.penggunas
-            //    .Select( m => new penggunaModel { 
-            //        nama = m.nama,
-            //        email= m.email,
-            //    });
+            var saldo = _serpul.getSaldo();
+            ViewBag.saldo = saldo;
             return View();
+        }
+        public IActionResult env()
+        {
+            var environment = _env.EnvironmentName;
+            return Content("environment " + environment);
         }
 
         public IActionResult Privacy()

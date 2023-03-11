@@ -4,7 +4,7 @@ using Pulsa.DataAccess.Interface;
 
 namespace Pulsa.DataAccess.Repository
 {
-    public class UserSaldoHistoryRepository : GenericRepository<Domain.Entities.user_saldo_history_detail>, IIUserSaldoHistoryRepository
+    public class UserSaldoHistoryRepository : GenericRepository<Domain.Entities.user_saldo_history_detail>, IUserSaldoHistoryRepository
     {
         public UserSaldoHistoryRepository(PulsaDataContext context) : base(context)
         {

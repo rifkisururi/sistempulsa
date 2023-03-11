@@ -18,6 +18,7 @@ namespace Pulsa.Data
         public DbSet<TopUp> topups { get; set; }
         public DbSet<TopUp_metode> topup_Metodes { get; set; }
         public DbSet<user_saldo_history_detail> user_saldo_history_detail { get; set; }
-        
+        public DbSet<Provider_h2h> Provider_h2h { get; set; }
+
     }
 }
