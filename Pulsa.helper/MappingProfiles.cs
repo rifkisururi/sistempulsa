@@ -15,6 +15,9 @@ namespace Pulsa.helper
             CreateMap<InputTopUpDTO, TopUp>();
             CreateMap<TopUp, InputTopUpDTO>();
             CreateMap<TopUp, VmRequestTopup>();
+
+            // sumber, tujuan
+            CreateMap<prabayarProduk, Supplier_produk>();
         }
     }
 }

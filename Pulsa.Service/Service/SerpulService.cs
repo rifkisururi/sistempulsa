@@ -1,10 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Azure.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
 using Newtonsoft.Json;
+using pulsa.ViewModel;
 using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
 using Pulsa.Domain.Entities;
 using Pulsa.Helper;
 using Pulsa.Service.Interface;
+using Pulsa.ViewModel;
 using Pulsa.ViewModel.tagihan;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -20,18 +26,25 @@ namespace Pulsa.Service.Service
         IConfiguration _configuration;
         ITagihanDetailRepository _tagihanDetailRepository;
         ITagihanMasterRepository _tagihanMasterRepository;
+        ISupplier_produkRepository _supplier_produkRepository;
+        private IMapper _mapper;
+        private readonly PulsaDataContext _context;
 
         public string apiKey;
         public string _baseUrl = "https://api.serpul.co.id/";
         public string _apiKey = "57a20250296598dd9f079e2b05f09f24";
         private readonly HttpClient _client;
+        
 
         public SerpulService(
                 IUnitOfWork unitOfWork,
                 IConfiguration configuration,
                 HttpClient client,
                 ITagihanDetailRepository tagihanDetailRepository,
-                ITagihanMasterRepository tagihanMasterRepository
+                ITagihanMasterRepository tagihanMasterRepository,
+                ISupplier_produkRepository Supplier_produkRepository,
+                IMapper mapper,
+                PulsaDataContext context
         ) {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -39,6 +52,9 @@ namespace Pulsa.Service.Service
             _client = client;
             _tagihanDetailRepository = tagihanDetailRepository;
             _tagihanMasterRepository = tagihanMasterRepository;
+            _supplier_produkRepository = Supplier_produkRepository;
+            _mapper = mapper;
+            _context = context;
         }
         public int getSaldo()
         {
@@ -50,7 +66,7 @@ namespace Pulsa.Service.Service
             var response = _httpClient.Send(request);
             var responseCode = response.EnsureSuccessStatusCode();
 
-            var todo = response.Content.ReadFromJsonAsync<RespondStatus>().Result;
+            var todo = response.Content.ReadFromJsonAsync<SerpulRespondAccount>().Result;
             return todo.responseData.balance;
         }
 
@@ -75,10 +91,10 @@ namespace Pulsa.Service.Service
                 client.DefaultRequestHeaders.Add("Authorization", _apiKey);
                 var response = await client.PostAsync("https://api.serpul.co.id/pascabayar/check", content);
                 var responseString = await response.Content.ReadAsStringAsync();
-                var tagihan = JsonConvert.DeserializeObject<RespondSerpul>(responseString);
+                var tagihan = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseString);
                 if (tagihan.responseCode == 200)
                 {
-                    var tagihanListrik = JsonConvert.DeserializeObject<RespondStatusSerpulTagihanListrik>(responseString);
+                    var tagihanListrik = JsonConvert.DeserializeObject<SerpulRespondTagihanListrik>(responseString);
 
                     // save nama pelanggan
                     if (tm.nama_pelanggan == null || tm.nama_pelanggan == "")
@@ -129,15 +145,15 @@ namespace Pulsa.Service.Service
             client.DefaultRequestHeaders.Add("Authorization", _apiKey);
             var responseCheck = await client.PostAsync("https://api.serpul.co.id/pascabayar/check", content);
             var responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
-            var tagihanCheck = JsonConvert.DeserializeObject<RespondSerpul>(responseStringCheck);
+            var tagihanCheck = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringCheck);
             if (tagihanCheck.responseCode == 200)
             {
                 var response = await client.PostAsync("https://api.serpul.co.id/pascabayar/pay", content);
                 var responseString = await response.Content.ReadAsStringAsync();
-                var tagihan = JsonConvert.DeserializeObject<RespondSerpul>(responseString);
+                var tagihan = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseString);
                 if (tagihan.responseCode == 200)
                 {
-                    var tagihanListrik = JsonConvert.DeserializeObject<RespondStatusSerpulTagihanListrik>(responseString);
+                    var tagihanListrik = JsonConvert.DeserializeObject<SerpulRespondTagihanListrik>(responseString);
 
                     // save nama pelanggan
                     if (tm.nama_pelanggan == null || tm.nama_pelanggan == "")
@@ -171,58 +187,43 @@ namespace Pulsa.Service.Service
             }
         }
 
+        public async void refressProduk() {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("Authorization", _apiKey);
+            var responseCheckCategory = await client.GetAsync(_baseUrl+ "prabayar/category");
+            var responseCategoryCheck = await responseCheckCategory.Content.ReadAsStringAsync();
+            var category = JsonConvert.DeserializeObject<responseDataCategory>(responseCategoryCheck);
+            foreach(var c in category.responseData) {
+                if (c.status.ToLower() == "active") {
+                    var responseCategoryProduk = await client.GetAsync(_baseUrl + "prabayar/operator?product_id=" + c.product_id);
+                    var responseCategoryProdukCheck = await responseCategoryProduk.Content.ReadAsStringAsync();
+                    var categoryProduk = JsonConvert.DeserializeObject<responseDataProdukOperator>(responseCategoryProdukCheck);
+
+                    foreach (var p in categoryProduk.responseData)
+                    {
+                        if (p.status.ToLower() == "active")
+                        {
+                            var responsePrabayarProduk = await client.GetAsync(_baseUrl + "prabayar/product?product_id=" + p.product_id);
+                            var responsePrabayarProdukCheck = await responsePrabayarProduk.Content.ReadAsStringAsync();
+                            var prabayarProduk = JsonConvert.DeserializeObject<responsePrabayarProduk>(responsePrabayarProdukCheck);
+                            foreach (var pp in prabayarProduk.responseData) {
+                                //int? dp = null;
+                                var dataInsert = _mapper.Map<Supplier_produk>(pp);
+                                await saveProduk(dataInsert);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private async Task<bool> saveProduk(Supplier_produk data) {
+            _supplier_produkRepository.Add(data);
+            _supplier_produkRepository.Save();
+            return true;
+        }
+
     }
 }
 
-public class SerpulAccount
-{
-    public string? id { get; set; }
-    public string? name { get; set; }
-    public string? company_name { get; set; }
-    public string? phone { get; set; }
-    public int balance { get; set; }
-}
-
-public class RespondStatus
-{
-    public string? responseStatus { get; set; }
-    public string? responseMessage { get; set; }
-    public int? responseCode { get; set; }
-    public SerpulAccount? responseData { get; set; }
-}
-
-public class RespondSerpul
-{
-    public string? responseStatus { get; set; }
-    public string? responseMessage { get; set; }
-    public int? responseCode { get; set; }
-}
-
-public class RespondStatusSerpulTagihanListrik
-{
-    public string? responseStatus { get; set; }
-    public string? responseMessage { get; set; }
-    public Int32 responseCode { get; set; }
-    public SerpulTagihanListrik responseData { get; set; }
-}
-
-public class SerpulTagihanListrik {
-    public string? ref_id { get; set; }
-    public string? no_pelanggan { get; set; }
-    public string? nama_pelanggan { get; set; }
-    public string? periode { get; set; }
-    public string? multiplier { get; set; }
-    public string? jumlah_tagihan { get; set; }
-    public string? biaya_admin { get; set; }
-    public string? total_tagihan { get; set; }
-    public string? fee { get; set; }
-    public string? total_bayar { get; set; }
-    public List<DetailTagihan>? detail { get; set; }
-    public string? description { get; set; }
-
-}
-
-public class DetailTagihan {
-    public string? key { get; set; }
-    public string? value { get; set; }
-}

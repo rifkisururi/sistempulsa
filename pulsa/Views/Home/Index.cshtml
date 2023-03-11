@@ -62,7 +62,9 @@
                                     <h6 class="text-muted font-semibold">
                                         Saldo
                                     </h6>
-                                    <h6 class="font-extrabold mb-0">112.000 
+                                    <h6 class="font-extrabold mb-0">
+
+                                        @string.Format("{0:#,##0}", (decimal)ViewBag.saldoPengguna)
                                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" style="float:right;"
                                                 data-bs-target="#inlineForm">
                                             Deposit ->

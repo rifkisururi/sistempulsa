@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -7,6 +8,7 @@ using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
 using Pulsa.DataAccess.Repository;
 using Pulsa.helper;
+using System.Globalization;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +34,7 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 
 
 services.AddDbContextPool<PulsaDataContext>(
-    o => o.UseNpgsql(configuration.GetConnectionString("puldaDB"))
+    o => o.UseNpgsql(configuration.GetConnectionString("puldaDB")), 1024
 );
 
 
@@ -47,6 +49,7 @@ services.AddTransient<Pulsa.DataAccess.Interface.ITopupMetodeRepository, Pulsa.D
 services.AddTransient<Pulsa.DataAccess.Interface.IUserSaldoHistoryRepository, Pulsa.DataAccess.Repository.UserSaldoHistoryRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IPenggunaRepository, Pulsa.DataAccess.Repository.PenggunaRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IProvider_h2hRepository, Pulsa.DataAccess.Repository.Provider_h2hRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.ISupplier_produkRepository, Pulsa.DataAccess.Repository.Supplier_produkRepository>();
 services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // add service
@@ -55,8 +58,19 @@ services.AddTransient<Pulsa.Service.Interface.ITopUpService, Pulsa.Service.Servi
 services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
 services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
+services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(culture: "id-ID", uiCulture: "id-ID");
+    options.SupportedCultures = new List<CultureInfo> { new CultureInfo("id-ID") };
+    options.SupportedUICultures = new List<CultureInfo> { new CultureInfo("id-ID") };
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+        {
+            new QueryStringRequestCultureProvider(),
+            new CookieRequestCultureProvider()
+        };
+});
 
- var app = builder.Build();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

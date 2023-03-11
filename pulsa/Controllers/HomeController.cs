@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Pulsa.Service.Interface;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace pulsa.Controllers
 {
@@ -18,7 +19,7 @@ namespace pulsa.Controllers
         private readonly IWebHostEnvironment _env;
         private  ITopUpService _topUpService;
         private ISerpulService _serpul;
-        public Guid IdLogin { get; private set; }
+        private Guid IdLogin { get; set; }
         public HomeController(
             PulsaDataContext context, 
             IWebHostEnvironment env, 
@@ -68,6 +69,11 @@ namespace pulsa.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult refressProduk() { 
+            _serpul.refressProduk();
+            return Content("refreess produk");
         }
     }
 }
