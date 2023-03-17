@@ -187,13 +187,14 @@ namespace Pulsa.Service.Service
             }
         }
 
-        public async void refressProduk() {
+        public async Task<List<Supplier_produk>> refressProduk() {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("Authorization", _apiKey);
             var responseCheckCategory = await client.GetAsync(_baseUrl+ "prabayar/category");
             var responseCategoryCheck = await responseCheckCategory.Content.ReadAsStringAsync();
             var category = JsonConvert.DeserializeObject<responseDataCategory>(responseCategoryCheck);
+            List<Supplier_produk> sp = new List<Supplier_produk>();
             foreach(var c in category.responseData) {
                 if (c.status.ToLower() == "active") {
                     var responseCategoryProduk = await client.GetAsync(_baseUrl + "prabayar/operator?product_id=" + c.product_id);
@@ -210,20 +211,26 @@ namespace Pulsa.Service.Service
                             foreach (var pp in prabayarProduk.responseData) {
                                 //int? dp = null;
                                 var dataInsert = _mapper.Map<Supplier_produk>(pp);
-                                await saveProduk(dataInsert);
+                                dataInsert.supplier = "serpul";
+                                sp.Add(dataInsert);
+                                break;
+                                
                             }
+                            break;
                         }
                     }
+                    break;
                 }
             }
+
+            return sp;
         }
 
-        private async Task<bool> saveProduk(Supplier_produk data) {
-            _supplier_produkRepository.Add(data);
+        public bool saveProduk(List<Supplier_produk> dt){
+            _supplier_produkRepository.AddRange(dt);
             _supplier_produkRepository.Save();
             return true;
         }
-
     }
 }
 

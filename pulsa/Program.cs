@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph.ExternalConnectors;
 using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
@@ -32,9 +33,8 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
     });
 
-
-services.AddDbContextPool<PulsaDataContext>(
-    o => o.UseNpgsql(configuration.GetConnectionString("puldaDB")), 1024
+services.AddDbContext<PulsaDataContext>(
+    o => o.UseNpgsql(configuration.GetConnectionString("puldaDB"))
 );
 
 

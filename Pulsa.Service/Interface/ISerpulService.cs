@@ -1,4 +1,6 @@
-﻿using Pulsa.ViewModel.tagihan;
+﻿using Pulsa.Domain.Entities;
+using Pulsa.ViewModel;
+using Pulsa.ViewModel.tagihan;
 
 namespace Pulsa.Service.Interface
 {
@@ -6,8 +8,8 @@ namespace Pulsa.Service.Interface
     {
         //Task<int> getSaldo();
         public int getSaldo();
-        public void refressProduk();
-        //Task<Dictionary<string, object>> GetK2User();
+        Task<List<Supplier_produk>> refressProduk();
+        public bool saveProduk(List<Supplier_produk> tm);
         Task<string> getTagihan(TagihanMasterDTO tm);
         Task<string> PayTagihan(TagihanMasterDTO tm);
     }

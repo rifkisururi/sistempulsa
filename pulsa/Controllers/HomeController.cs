@@ -72,7 +72,8 @@ namespace pulsa.Controllers
         }
 
         public IActionResult refressProduk() { 
-            _serpul.refressProduk();
+            var dtProduk = _serpul.refressProduk().Result;
+            _serpul.saveProduk(dtProduk);
             return Content("refreess produk");
         }
     }

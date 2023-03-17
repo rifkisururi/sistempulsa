@@ -17,21 +17,21 @@ namespace Pulsa.Domain.Entities
         public string product_zona { get; set; }
         public int product_price { get; set; } = 0;
         public string product_multi { get; set; }
-        public string? status { get; set; }
-        public virtual bool status_bool
-        {
-            get
-            {
-                if (status == "INACTIVE")
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                };
-            }
-        }
+        public string status { get; set; } = string.Empty;
+        //public virtual bool status_bool
+        //{
+        //    get
+        //    {
+        //        if (status == "INACTIVE")
+        //        {
+        //            return false;
+        //        }
+        //        else
+        //        {
+        //            return true;
+        //        };
+        //    }
+        //}
         public string updated_at { get; set; } = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
     }
 }
