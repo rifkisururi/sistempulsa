@@ -194,6 +194,7 @@ namespace Pulsa.Service.Service
             var responseCheckCategory = await client.GetAsync(_baseUrl+ "prabayar/category");
             var responseCategoryCheck = await responseCheckCategory.Content.ReadAsStringAsync();
             var category = JsonConvert.DeserializeObject<responseDataCategory>(responseCategoryCheck);
+            string updated_at  = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
             List<Supplier_produk> sp = new List<Supplier_produk>();
             foreach(var c in category.responseData) {
                 if (c.status.ToLower() == "active") {
@@ -212,14 +213,11 @@ namespace Pulsa.Service.Service
                                 //int? dp = null;
                                 var dataInsert = _mapper.Map<Supplier_produk>(pp);
                                 dataInsert.supplier = "serpul";
+                                dataInsert.updated_at = updated_at;
                                 sp.Add(dataInsert);
-                                break;
-                                
                             }
-                            break;
                         }
                     }
-                    break;
                 }
             }
 
