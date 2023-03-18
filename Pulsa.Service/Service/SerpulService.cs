@@ -128,10 +128,6 @@ namespace Pulsa.Service.Service
 
         public async Task<string> PayTagihan(TagihanMasterDTO tm)
         {
-            DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
-            var cekData = _tagihanDetailRepository
-                .Find(a => a.id_tagihan_master == tm.id && a.tanggal_cek >= awalBulan).FirstOrDefault();
-
             var client = new HttpClient();
             String ref_id = "serpul_" + tm.id_tagihan;
             var data = new
@@ -153,28 +149,15 @@ namespace Pulsa.Service.Service
                 var tagihan = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseString);
                 if (tagihan.responseCode == 200)
                 {
-                    var tagihanListrik = JsonConvert.DeserializeObject<SerpulRespondTagihanListrik>(responseString);
+                    var tagihanListrik = JsonConvert.DeserializeObject<SerpulRespondPaymentBill>(responseString);
 
-                    // save nama pelanggan
-                    if (tm.nama_pelanggan == null || tm.nama_pelanggan == "")
-                    {
-                        var tagihanMaster = _tagihanMasterRepository.Find(a => a.id == tm.id).FirstOrDefault();
-                        tagihanMaster.nama_pelanggan = tagihanListrik.responseData.nama_pelanggan;
-                        //_tagihanMasterRepository.Update(tagihanMaster);
-                        //_tagihanMasterRepository.Save();
-                    }
-
+                    DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
+                    var dtTagihan = _tagihanDetailRepository
+                        .Find(a => a.id_tagihan_master == tm.id && a.tanggal_cek >= awalBulan).FirstOrDefault();
                     // todo save to tagihanDetail
-                    Domain.Entities.Tagihan_detail td = new Tagihan_detail();
-                    td.id_tagihan_master = tm.id;
-                    td.ref_id = tagihanListrik.responseData.ref_id;
-                    td.periode_tagihan = tagihanListrik.responseData.periode;
-                    td.jumlah_tagihan = Convert.ToInt32(tagihanListrik.responseData.jumlah_tagihan);
-                    td.admin_tagihan = Convert.ToInt32(tagihanListrik.responseData.biaya_admin);
-
-                    //_tagihanDetailRepository.Add(td);
-                    //_tagihanDetailRepository.Save();
-                    //var saveData = _unitOfWork.Complete();
+                    dtTagihan.request_bayar = true;
+                    _tagihanDetailRepository.Update(dtTagihan);
+                    _tagihanDetailRepository.Save();
                     return responseString;
                 }
                 else

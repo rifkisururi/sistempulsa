@@ -31,6 +31,10 @@
     {
         public SerpulTagihanListrik responseData { get; set; }
     }
+    public class SerpulRespondPaymentBill: SerpulRespondStatus
+    {
+        public SerpulPaymentBill responseData { get; set; }
+    }
     public class SerpulAccount
     {
         public string? id { get; set; }
@@ -100,6 +104,13 @@
         public string? total_bayar { get; set; }
         public List<DetailTagihan>? detail { get; set; }
         public string? description { get; set; }
+    }
+
+    public class SerpulPaymentBill
+    {
+        public string? status { get; set; }
+        public string? ref_id { get; set; }
+        public string? message { get; set; }
     }
 
     public class DetailTagihan

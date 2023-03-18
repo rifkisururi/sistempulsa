@@ -530,3 +530,5 @@ FodyWeavers.xsd
 
 *appsettings.json
 *.appsettings.json
+*.sql
+sql

@@ -21,4 +21,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "pulsa.web.dll"]
 
-#docker build . -t rifkisururi/belikouta.com.com:0.0.4
+#docker build . -t rifkisururi/belikouta.com:0.0.4
