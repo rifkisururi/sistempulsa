@@ -142,6 +142,10 @@ namespace Pulsa.Service.Service
             var responseCheck = await client.PostAsync("https://api.serpul.co.id/pascabayar/check", content);
             var responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
             var tagihanCheck = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringCheck);
+               
+            
+            
+            
             if (tagihanCheck.responseCode == 200)
             {
                 var response = await client.PostAsync("https://api.serpul.co.id/pascabayar/pay", content);
@@ -156,8 +160,8 @@ namespace Pulsa.Service.Service
                         .Find(a => a.id_tagihan_master == tm.id && a.tanggal_cek >= awalBulan).FirstOrDefault();
                     // todo save to tagihanDetail
                     dtTagihan.request_bayar = true;
-                    _tagihanDetailRepository.Update(dtTagihan);
-                    _tagihanDetailRepository.Save();
+                    //_tagihanDetailRepository.Update(dtTagihan);
+                    //_tagihanDetailRepository.Save();
                     return responseString;
                 }
                 else

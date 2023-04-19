@@ -61,10 +61,7 @@ namespace Pulsa.Service.Service
                       from detail in td.DefaultIfEmpty()
                       where 
                         tm.is_active == true
-                        //&& tm.id_tagihan == "521511308486" || 
-                        //&& tm.id_tagihan == "521510460244"
-                      // detail.tanggal_cek >= awalBulan
-                      //  m.jumlah_tagihan == null && detail.tanggal_cek >= awalBulan
+                        && detail.tanggal_cek >= awalBulan
                       select new TagihanMasterDTO
                       {
                           id = tm.id,
@@ -85,9 +82,7 @@ namespace Pulsa.Service.Service
                         tm.is_active == true
                         && detail.harus_dibayar != false
                         && detail.tanggal_cek >= awalBulan
-                      //&& tm.id_tagihan == "521511308486" || 
-                      //&& tm.id_tagihan == "521510460244"
-                      //  m.jumlah_tagihan == null && detail.tanggal_cek >= awalBulan
+                        && detail.request_bayar != true
                       select new TagihanMasterDTO
                       {
                           id = tm.id,

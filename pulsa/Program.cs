@@ -50,12 +50,14 @@ services.AddTransient<Pulsa.DataAccess.Interface.IUserSaldoHistoryRepository, Pu
 services.AddTransient<Pulsa.DataAccess.Interface.IPenggunaRepository, Pulsa.DataAccess.Repository.PenggunaRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IProvider_h2hRepository, Pulsa.DataAccess.Repository.Provider_h2hRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.ISupplier_produkRepository, Pulsa.DataAccess.Repository.Supplier_produkRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.IProdukRepository, Pulsa.DataAccess.Repository.ProdukRepository>();
 services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // add service
 services.AddTransient<Pulsa.Service.Interface.ITagihanService, Pulsa.Service.Service.TagihanService>();
 services.AddTransient<Pulsa.Service.Interface.ITopUpService, Pulsa.Service.Service.TopUpService>();
 services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
+services.AddTransient<Pulsa.Service.Interface.IProdukService, Pulsa.Service.Service.ProdukService>();
 services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 services.Configure<RequestLocalizationOptions>(options =>

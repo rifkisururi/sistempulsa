@@ -115,7 +115,7 @@ namespace pulsa.Controllers.tagihan
 
             foreach (var td in tagihanMaster)
             {
-                 _serpul.PayTagihan(td);
+                 await _serpul.PayTagihan(td);
             }
             //int saldo = _serpul.getSaldo();
             //var tagihan = await _serpul.getTagihan("PLN", "521510718785");

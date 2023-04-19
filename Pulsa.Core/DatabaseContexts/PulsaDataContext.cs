@@ -20,6 +20,7 @@ namespace Pulsa.Data
         public DbSet<user_saldo_history_detail> user_saldo_history_detail { get; set; }
         public DbSet<Provider_h2h> Provider_h2h { get; set; }
         public DbSet<Supplier_produk> supplier_produks { get; set; }
+        public DbSet<Produk> produks { get; set; }
 
     }
 }
