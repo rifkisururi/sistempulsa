@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
-using pulsa.ViewModel;
 using Pulsa.DataAccess.Interface;
 using Pulsa.Domain.Entities;
 using Pulsa.Service.Interface;

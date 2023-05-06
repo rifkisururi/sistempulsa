@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using pulsa.ViewModel;
 using Pulsa.Data;
 using Pulsa.Domain.Entities;
 using Pulsa.Helper;
@@ -48,10 +47,6 @@ namespace pulsa.Controllers.tagihan
                 _status = true;
             }
 
-            //if (_periode == "")
-            //{
-            //    DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
-            //}
             DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
 
             var dt = (from tm in context.tagihan_masters
@@ -106,7 +101,7 @@ namespace pulsa.Controllers.tagihan
             foreach (var td in tagihanMaster) {
                  await _serpul.getTagihan(td);
             }
-            return null;
+            return Ok("cek data sukses"); ;
         }
 
         public async Task<IActionResult> bayarTagihan()

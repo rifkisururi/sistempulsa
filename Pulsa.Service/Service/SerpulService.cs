@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using Newtonsoft.Json;
-using pulsa.ViewModel;
 using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
 using Pulsa.Domain.Entities;

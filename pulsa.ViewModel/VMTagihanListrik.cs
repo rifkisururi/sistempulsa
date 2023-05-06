@@ -1,4 +1,4 @@
-﻿namespace pulsa.ViewModel
+﻿namespace Pulsa.ViewModel
 {
     public class VMTagihanListrik
     {
@@ -14,6 +14,8 @@
         public int? jumlah_tagihan { get; set; }
         public int? admin_tagihan { get; set; }
         public int? admin_notta { get; set; }
+        public int? admin { get; set; }
+        public int? total { get; set; }
         public bool? status_bayar { get; set; }
         public bool? harus_dibayar { get; set; }
     }

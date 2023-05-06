@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Pulsa.Data;
@@ -57,11 +58,13 @@ namespace Pulsa.Service.Service
 
             DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
             var gr = (from tm in _context.tagihan_masters
-                      join detail in _context.tagihan_details on tm.id equals detail.id_tagihan_master into td
+                      join detail in _context.tagihan_details.Where(a => a.tanggal_cek >= awalBulan) 
+                        on tm.id equals detail.id_tagihan_master 
+                        into td
                       from detail in td.DefaultIfEmpty()
                       where 
                         tm.is_active == true
-                        && detail.tanggal_cek >= awalBulan
+                        && detail.tanggal_cek == null 
                       select new TagihanMasterDTO
                       {
                           id = tm.id,
@@ -96,7 +99,34 @@ namespace Pulsa.Service.Service
 
         public Domain.Entities.Tagihan_master detailMaster(Guid id) { 
             return _tagihanMaster.GetById(id);
-        } 
+        }
+
+        public List<VMTagihanListrik> getTagihanBulanIni(String _group) {
+            DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
+
+            var dt = (from tm in _context.tagihan_masters
+                      join td in _context.tagihan_details on tm.id equals td.id_tagihan_master
+                      where
+                        td.tanggal_cek >= awalBulan
+                        //(_periode == "" || _periode.ToLower() == td.periode_tagihan)
+                        && (_group == "" || _group.ToLower() == tm.group_tagihan)
+
+                      select new VMTagihanListrik
+                      {
+                          id = td.id,
+                          type_tagihan = tm.type_tagihan,
+                          group_tagihan = tm.group_tagihan,
+                          nama_pelanggan = tm.nama_pelanggan,
+                          id_tagihan = tm.id_tagihan,
+                          jumlah_tagihan = td.jumlah_tagihan,
+                          admin_tagihan = tm.admin_notta,
+                          admin_notta = tm.admin,
+                          total = td.jumlah_tagihan+ tm.admin,
+                          status_bayar = td.status_bayar,
+                          harus_dibayar = td.harus_dibayar
+                      });
+            return dt.ToList();
+        }
 
     }
 }

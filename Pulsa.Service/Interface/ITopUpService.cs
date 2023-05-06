@@ -1,5 +1,4 @@
-﻿using pulsa.ViewModel;
-using Pulsa.Domain.Entities;
+﻿using Pulsa.Domain.Entities;
 using Pulsa.ViewModel;
 
 namespace Pulsa.Service.Interface
