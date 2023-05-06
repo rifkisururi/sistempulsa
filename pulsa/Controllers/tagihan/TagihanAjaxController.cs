@@ -9,7 +9,6 @@ using Pulsa.ViewModel.tagihan;
 
 namespace pulsa.Controllers.tagihan
 {
-    [Authorize]
     public class TagihanAjaxController : Controller
     {
         private readonly PulsaDataContext context;
@@ -21,6 +20,8 @@ namespace pulsa.Controllers.tagihan
             _tagihan = tagihan;
             _serpul = serpul;
         }
+
+        [Authorize]
         public IActionResult index()
         {
             var _group = Request.Query["group"].ToString();
@@ -35,6 +36,8 @@ namespace pulsa.Controllers.tagihan
                 data = dt
             });
         }
+
+        [Authorize]
         public IActionResult listrik()
         {
             var _periode = Request.Query["periode"].ToString();
@@ -81,6 +84,7 @@ namespace pulsa.Controllers.tagihan
             });
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult action([FromBody] InputTagihan inputTagihan)
         {
@@ -104,6 +108,7 @@ namespace pulsa.Controllers.tagihan
             return Ok("cek data sukses"); ;
         }
 
+        [Authorize]
         public async Task<IActionResult> bayarTagihan()
         {
             var tagihanMaster = _tagihan.GetListBayarAll();
@@ -117,6 +122,7 @@ namespace pulsa.Controllers.tagihan
             return null;
         }
 
+        [Authorize]
         public IActionResult getDetailMaster(Guid idMaster)
         {
             var tagihanMaster = _tagihan.detailMaster(idMaster);
