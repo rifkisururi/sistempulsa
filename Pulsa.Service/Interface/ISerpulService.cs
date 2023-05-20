@@ -12,5 +12,7 @@ namespace Pulsa.Service.Interface
         public bool saveProduk(List<Supplier_produk> tm);
         Task<string> getTagihan(TagihanMasterDTO tm);
         Task<string> PayTagihan(TagihanMasterDTO tm);
+        public List<Tagihan_detail> cekTransaksiPascaPending();
+        Task<string> cekTransaksiPending(string refId);
     }
 }

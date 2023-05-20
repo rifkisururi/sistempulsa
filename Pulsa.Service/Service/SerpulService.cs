@@ -128,7 +128,9 @@ namespace Pulsa.Service.Service
         public async Task<string> PayTagihan(TagihanMasterDTO tm)
         {
             var client = new HttpClient();
-            String ref_id = "serpul_" + tm.id_tagihan;
+            String yearMonth = Convert.ToString(DateTime.Now.Year) + Convert.ToString(DateTime.Now.Month);
+
+            String ref_id = "serpul_"+ yearMonth+ "_" + tm.id_tagihan ;
             var data = new
             {
                 no_pelanggan = tm.id_tagihan,
@@ -141,10 +143,6 @@ namespace Pulsa.Service.Service
             var responseCheck = await client.PostAsync("https://api.serpul.co.id/pascabayar/check", content);
             var responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
             var tagihanCheck = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringCheck);
-               
-            
-            
-            
             if (tagihanCheck.responseCode == 200)
             {
                 var response = await client.PostAsync("https://api.serpul.co.id/pascabayar/pay", content);
@@ -159,8 +157,10 @@ namespace Pulsa.Service.Service
                         .Find(a => a.id_tagihan_master == tm.id && a.tanggal_cek >= awalBulan).FirstOrDefault();
                     // todo save to tagihanDetail
                     dtTagihan.request_bayar = true;
-                    //_tagihanDetailRepository.Update(dtTagihan);
-                    //_tagihanDetailRepository.Save();
+                    dtTagihan.ref_id = ref_id;
+                    dtTagihan.tanggal_bayar = DateTime.Now;
+                    _tagihanDetailRepository.Update(dtTagihan);
+                    _tagihanDetailRepository.Save();
                     return responseString;
                 }
                 else
@@ -169,7 +169,7 @@ namespace Pulsa.Service.Service
                 }
             }
             else {
-                return "Belum tersedia";
+                return responseStringCheck;
             }
         }
 
@@ -214,6 +214,40 @@ namespace Pulsa.Service.Service
             _supplier_produkRepository.AddRange(dt);
             _supplier_produkRepository.Save();
             return true;
+        }
+
+
+        public List<Tagihan_detail> cekTransaksiPascaPending() {
+            var dtTagihan = _tagihanDetailRepository.Find(a => a.request_bayar == true && a.status_bayar == false).AsNoTracking().ToList();
+            return dtTagihan;
+        }
+
+        public async Task<string> cekTransaksiPending(string refId)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("Authorization", _apiKey);
+            var cekPendingPasca = await client.GetAsync(_baseUrl + "pascabayar/history/"+ refId);
+            var responseStringPendingPasca = await cekPendingPasca.Content.ReadAsStringAsync();
+            var respond = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringPendingPasca);
+            if (respond.responseCode == 200)
+            {
+                var respondCekBill = JsonConvert.DeserializeObject<SerpulRespondCekBill>(responseStringPendingPasca);
+
+                var dtTagihan = _tagihanDetailRepository.Find(a => a.ref_id == refId ).FirstOrDefault();
+                dtTagihan.jumlah_tagihan = respondCekBill.responseData.bill_tagihan;
+                dtTagihan.tanggal_bayar = DateTime.Now;
+                dtTagihan.admin_transaksi = respondCekBill.responseData.bill_admin - respondCekBill.responseData.bill_fee;
+                dtTagihan.status_bayar = true;
+                dtTagihan.sn = respondCekBill.responseData.serial_number;
+
+                _tagihanDetailRepository.Update(dtTagihan);
+                _tagihanDetailRepository.Save();
+            }
+            else {
+                return respond.responseMessage;
+            }
+            return "";
         }
     }
 }

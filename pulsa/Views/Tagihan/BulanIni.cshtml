@@ -48,9 +48,6 @@
                     <div class="col-sm-2">
                         <select class="form-control getTagihan" id="groupTagihan">
                             <option value="">Semua</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
                         </select>
                     </div>
                 </div>
@@ -92,3 +89,17 @@
 <script src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
 <script src="~/js/pages/datatables.js"></script>
 <script src="~/js/tagihan/tagihan.js"></script>
+<script>
+    @{
+        var groupTagihanInput = (List<Pulsa.ViewModel.tagihan.GroupTagihanDTO>)ViewBag.groupTagihan;
+    }
+    let groupTagihanInput = @Html.Raw(Json.Serialize(@groupTagihanInput));
+    var htmlOptioninputGroupTagihan = "";
+    for (var i = 0; i < groupTagihanInput.length; i++) {
+        htmlOptioninputGroupTagihan += `<option value="${groupTagihanInput[i].group_tagihan}">${groupTagihanInput[i].group_tagihan}</option>`;
+        console.log(htmlOptioninputGroupTagihan);
+    }
+
+    $(htmlOptioninputGroupTagihan).appendTo("#groupTagihan");
+    
+</script>

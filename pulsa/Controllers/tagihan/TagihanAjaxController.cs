@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Graph;
 using Pulsa.Data;
 using Pulsa.Domain.Entities;
 using Pulsa.Helper;
@@ -13,12 +15,18 @@ namespace pulsa.Controllers.tagihan
     {
         private readonly PulsaDataContext context;
         private ITagihanService _tagihan;
-        private ISerpulService _serpul;
-        public TagihanAjaxController(PulsaDataContext context, ITagihanService tagihan, ISerpulService serpul)
+        private ISerpulService _serpul; 
+        private IMapper _mapper;
+        public TagihanAjaxController(
+            PulsaDataContext context, 
+            ITagihanService tagihan, 
+            ISerpulService serpul,
+            IMapper mapper)
         {
             this.context = context;
             _tagihan = tagihan;
             _serpul = serpul;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -38,7 +46,7 @@ namespace pulsa.Controllers.tagihan
         }
 
         [Authorize]
-        public IActionResult listrik()
+        public async Task<IActionResult> listrik()
         {
             var _periode = Request.Query["periode"].ToString();
             var _typeTagihan = Request.Query["type"].ToString();
@@ -64,6 +72,7 @@ namespace pulsa.Controllers.tagihan
                       select new VMTagihanListrik
                       {
                           id = td.id,
+                          idMaster = td.id_tagihan_master,
                           type_tagihan = tm.type_tagihan,
                           group_tagihan = tm.group_tagihan,
                           nama_pelanggan = tm.nama_pelanggan,
@@ -72,7 +81,8 @@ namespace pulsa.Controllers.tagihan
                           admin_tagihan = td.admin_tagihan,
                           admin_notta = td.admin_notta,
                           status_bayar = td.status_bayar,
-                          harus_dibayar = td.harus_dibayar
+                          harus_dibayar = td.harus_dibayar,
+                          request_bayar = td.request_bayar
                       });
 
             return new JsonResult(new
@@ -81,7 +91,7 @@ namespace pulsa.Controllers.tagihan
                 recordsTotal = dt.Count(),
                 recordsFiltered = dt.Count(),
                 data = dt
-            });
+            }); 
         }
 
         [Authorize]
@@ -89,8 +99,6 @@ namespace pulsa.Controllers.tagihan
         public IActionResult action([FromBody] InputTagihan inputTagihan)
         {
             var result = _tagihan.actionTagihanMaster(inputTagihan);
-
-
             return new JsonResult(new
             {
                 status = true,
@@ -111,7 +119,7 @@ namespace pulsa.Controllers.tagihan
         [Authorize]
         public async Task<IActionResult> bayarTagihan()
         {
-            var tagihanMaster = _tagihan.GetListBayarAll();
+            var tagihanMaster = _tagihan.GetListBayarAll(Guid.Empty);
 
             foreach (var td in tagihanMaster)
             {
@@ -127,11 +135,30 @@ namespace pulsa.Controllers.tagihan
         {
             var tagihanMaster = _tagihan.detailMaster(idMaster);
             
-            return new JsonResult(new
+            return new JsonResult(new 
             {
                 status = true,
                 data = tagihanMaster
             });
         }
+        [Authorize]
+        public async Task<IActionResult> bayarTagihanIni(Guid idMaster) {
+            var tagihan = _tagihan.GetListBayarAll(idMaster);
+            var returnBayar = await _serpul.PayTagihan(tagihan[0]);
+            return Ok(returnBayar);
+        }
+
+        public async Task<IActionResult> cekTransaksiPascaPending(Guid idMaster)
+        {
+            var tagihan = _serpul.cekTransaksiPascaPending();
+            foreach (var td in tagihan)
+            {
+                await _serpul.cekTransaksiPending(td.ref_id);
+            }
+            return Ok("tidak ada pending transaksi"); ;
+        }
+        
+
+
     }
 }

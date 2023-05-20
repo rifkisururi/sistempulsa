@@ -3,6 +3,7 @@
     public class VMTagihanListrik
     {
         public Guid id { get; set; } // id tagihan detail
+        public Guid idMaster { get; set; } // id tagihan detail
         public string type_tagihan { get; set; }
         public string id_tagihan { get; set; }
         public string nama_pelanggan { get; set; }
@@ -18,5 +19,6 @@
         public int? total { get; set; }
         public bool? status_bayar { get; set; }
         public bool? harus_dibayar { get; set; }
+        public bool? request_bayar { get; set; }
     }
 }

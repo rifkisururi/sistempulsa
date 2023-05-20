@@ -19,25 +19,20 @@ namespace pulsa.Controllers.tagihan
         [Authorize]
         public IActionResult Index()
         {
-            //var gr = (from tm in context.tagihan_masters
-            //          select new {
-            //              groupTagihan = tm.group_tagihan
-            //          }).GroupBy(a => a.groupTagihan);
-            //ViewBag.Group = gr.ToList();
+            ViewBag.groupTagihan = _tagihan.getGroupTagihan().ToList();
             return View();
         }
 
         [Authorize]
         public IActionResult BulanIni()
         {
-            //getTagihanBulanIni
+            ViewBag.groupTagihan = _tagihan.getGroupTagihan().ToList();
             return View();
         }
 
         public IActionResult Print(String Group)
         {
             var data = _tagihan.getTagihanBulanIni(Group);
-
 
             int? jumlahPembayaran = 0;
             int? biayaJasa = 0;

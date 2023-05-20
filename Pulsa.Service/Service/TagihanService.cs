@@ -35,6 +35,16 @@ namespace Pulsa.Service.Service
             _context = context;
             //_tagihanDetail= tagihanDetailRepository;
         }
+
+        
+        public List<GroupTagihanDTO> getGroupTagihan()
+        {
+            var results = (from tm in _context.tagihan_masters.GroupBy(n => new { n.group_tagihan})
+                          select new GroupTagihanDTO {
+                              group_tagihan = tm.Key.group_tagihan
+                          }).ToList();
+            return results;
+        }
         public bool actionTagihanMaster(InputTagihan data)
         {
             Tagihan_master tm = _mapper.Map<Tagihan_master>(data);
@@ -75,7 +85,7 @@ namespace Pulsa.Service.Service
             return gr;
         }
 
-        public List<TagihanMasterDTO> GetListBayarAll()
+        public List<TagihanMasterDTO> GetListBayarAll(Guid id)
         {
 
             DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
@@ -83,9 +93,11 @@ namespace Pulsa.Service.Service
                       join detail in _context.tagihan_details on tm.id equals detail.id_tagihan_master 
                       where
                         tm.is_active == true
+                        && (tm.id == id || id == Guid.Empty) 
                         && detail.harus_dibayar != false
                         && detail.tanggal_cek >= awalBulan
                         && detail.request_bayar != true
+                        
                       select new TagihanMasterDTO
                       {
                           id = tm.id,

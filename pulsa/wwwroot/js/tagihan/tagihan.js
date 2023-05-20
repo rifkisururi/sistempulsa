@@ -27,19 +27,25 @@ function getTagihan(group, status, type) {
                     var btnBayar = "";
                     var btnNonactive = "";
                     if (o.harus_dibayar != false) {
-                        if (o.status_bayar == false) {
-                            btnBayar = "<button class='btn btn-primary btn-sm btn-bayar' id='" + o.id + "'> Bayar </button>";
+                        
+                        if (o.request_bayar == true && o.status_bayar == false) {
+                            console.log('log record', o);
+                            btnBayar = "<button class='btn btn-info btn-sm'> In Proses </button>";
+                        } else if (o.request_bayar == true && o.status_bayar == true) {
+                            btnBayar = "<button class='btn btn-success btn-sm'> Sukses </button>";
+                        } else if (o.request_bayar == false && o.status_bayar == false) {
+                            btnBayar = "<button class='btn btn-primary btn-sm btn-bayar' id='" + o.idMaster + "'> Bayar </button>";
+                        }
+                    }
+
+                    if (o.request_bayar != true) {
+                        if (o.harus_dibayar == false) {
+                            btnNonactive = "<button class='btn btn-sm btn-warning tambahkan' id='" + o.id + "'>Tambahkan</button>";
                         } else {
-                            btnBayar = "<button class='btn btn-sucess btn-sm'> Lunas </button>";
+                            btnNonactive = "<button class='btn btn-sm btn-warning tinggalkan' id='" + o.id + "'>Tinggalkan</button>";
                         }
                     }
                     
-
-                    if (o.harus_dibayar == false) {
-                        btnNonactive = "<button class='btn btn-sm btn-warning tambahkan' id='" + o.id + "'>Tambahkan</button>";
-                    } else {
-                        btnNonactive = "<button class='btn btn-sm btn-warning tinggalkan' id='" + o.id + "'>Tinggalkan</button>";
-                    }
 
                     return `${btnBayar}  ${btnNonactive}`;
                 }
@@ -58,26 +64,17 @@ $(document).on("click", ".btn-bayar", function () {
 
     $.ajax({
         type: "GET",
-        url: "../../TagihanAjax/getDetailMaster?idMaster=" + id,
+        url: "../../TagihanAjax/bayarTagihanIni?idMaster=" + id,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
             console.log(response);
-            if (response.status == true) {
-                //alert('get berhasil');
-                $("#idTagihan").val(response.data.id);
-                $("#inputGroupTagihan").val(response.data.group_tagihan);
-                $("#typeTagihan").val(response.data.type_tagihan);
-                $("#idPelanggan").val(response.data.id_tagihan);
-                $("#admin").val(response.data.admin);
-                $("#adminNotta").val(response.data.admin_notta);
-                $("#nama_pelanggan").val(response.data.nama_pelanggan);
-
-                var is_active = true;
+            if (response.responseCode == 400) {
+                alert(response.responseMessage);
             } else {
-                alert('get gagal');
+                alert(response.responseData.message);
             }
-            console.log(response);
+            $(".getTagihan").change();
         },
         failure: function (response) {
             console.log(response);

@@ -35,6 +35,12 @@
     {
         public SerpulPaymentBill responseData { get; set; }
     }
+
+    public class SerpulRespondCekBill : SerpulRespondStatus
+    {
+        public DetailPaymentPasca responseData { get; set; }
+    }
+    
     public class SerpulAccount
     {
         public string? id { get; set; }
@@ -117,5 +123,30 @@
     {
         public string? key { get; set; }
         public string? value { get; set; }
+    }
+
+    public class DetailPaymentPasca
+    {
+        public int? id { get; set; }
+        public string? ref_id { get; set; }
+        public string? product_id { get; set; }
+        public string? product_name { get; set; }
+        public string? no_pelanggan { get; set; }
+        public string? nama_pelanggan { get; set; }
+        public string? bill_periode { get; set; }
+        public int bill_tagihan { get; set; }
+        public int bill_admin { get; set; }
+        public int bill_total_tagihan { get; set; }
+        public int bill_fee { get; set; }
+        public int bill_total_bayar { get; set; }
+        public string? bill_detail { get; set; }
+        public string? message { get; set; }
+        public string? serial_number { get; set; }
+        public string? status { get; set; }
+        public string? via { get; set; }
+        public string? sender { get; set; }
+        public string? created_at { get; set; }
+        public string? updated_at { get; set; }
+        public int? bill_multiplier { get; set; }
     }
 }

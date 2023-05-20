@@ -17,11 +17,14 @@ namespace Pulsa.Domain.Entities
         public int jumlah_tagihan { get; set; }
         public int? admin_tagihan { get; set; }
         public int? admin_notta { get; set; }
+        public int? admin_transaksi { get; set; }
         public bool? status_bayar { get; set; } = false;
         public bool? request_bayar { get; set; } = false;
         public bool harus_dibayar { get; set; } = true;
         public DateTime createdAt { get; set; } = DateTime.Now;
         public DateTime updatedAt { get; set; } = DateTime.Now;
+        public string? sn { get; set; }
+
 
     }
 }
