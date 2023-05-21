@@ -22,16 +22,17 @@ namespace Pulsa.Service.Service
     public class SerpulService : ISerpulService
     {
         IUnitOfWork _unitOfWork;
-        IConfiguration _configuration;
         ITagihanDetailRepository _tagihanDetailRepository;
         ITagihanMasterRepository _tagihanMasterRepository;
         ISupplier_produkRepository _supplier_produkRepository;
         private IMapper _mapper;
         private readonly PulsaDataContext _context;
+        private readonly IConfiguration _configuration;
 
         public string apiKey;
         public string _baseUrl = "https://api.serpul.co.id/";
-        public string _apiKey = "57a20250296598dd9f079e2b05f09f24";
+        //public string _apiKey = "57a20250296598dd9f079e2b05f09f24";
+        public string _apiKey { get; }
         private readonly HttpClient _client;
         
 
@@ -47,14 +48,15 @@ namespace Pulsa.Service.Service
         ) {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
-            apiKey = _configuration["email_template_path"];
             _client = client;
             _tagihanDetailRepository = tagihanDetailRepository;
             _tagihanMasterRepository = tagihanMasterRepository;
             _supplier_produkRepository = Supplier_produkRepository;
             _mapper = mapper;
             _context = context;
+            _apiKey = configuration.GetSection("apikey_serpul").Value;
         }
+
         public int getSaldo()
         {
             HttpClient _httpClient = new HttpClient();
