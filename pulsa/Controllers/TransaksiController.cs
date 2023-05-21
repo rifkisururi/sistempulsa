@@ -25,12 +25,39 @@ namespace Pulsa.Web.Controllers
                 }
             }
         }
-        public IActionResult Index()
+        public IActionResult Index(String produk)
         {
+            var title = "";
+            if (produk == "pulsa")
+            {
+                title = "pulsa";
+            }
+            else if(produk == "data")
+            {
+                title = "data";
+            }
+            else if(produk == "tokenlistrik")
+            {
+                title = "token listrik";
+
+            }
+            else if(produk == "emonay")
+            {
+                title = "emonay";
+                // redirect new page
+            }
+            else if(produk == "game")
+            {
+                title = "game";
+                // redirect new page
+            }
+            ViewBag.title = title;
+            ViewBag.produk = produk;
             return View();
         }
-        public IActionResult Pulsa()
+        public IActionResult choseproduk(string produk, string dest)
         {
+
             return View();
         }
     }

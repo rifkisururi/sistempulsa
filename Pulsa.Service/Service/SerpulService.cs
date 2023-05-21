@@ -28,10 +28,7 @@ namespace Pulsa.Service.Service
         private IMapper _mapper;
         private readonly PulsaDataContext _context;
         private readonly IConfiguration _configuration;
-
-        public string apiKey;
-        public string _baseUrl = "https://api.serpul.co.id/";
-        //public string _apiKey = "57a20250296598dd9f079e2b05f09f24";
+        public string _baseUrl { get; }
         public string _apiKey { get; }
         private readonly HttpClient _client;
         
@@ -54,9 +51,9 @@ namespace Pulsa.Service.Service
             _supplier_produkRepository = Supplier_produkRepository;
             _mapper = mapper;
             _context = context;
-            _apiKey = configuration.GetSection("apikey_serpul").Value;
+            _apiKey = configuration.GetSection("serpul_apikey").Value;
+            _baseUrl = configuration.GetSection("serpul_url").Value;
         }
-
         public int getSaldo()
         {
             HttpClient _httpClient = new HttpClient();
@@ -90,7 +87,7 @@ namespace Pulsa.Service.Service
                 var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("Authorization", _apiKey);
-                var response = await client.PostAsync("https://api.serpul.co.id/pascabayar/check", content);
+                var response = await client.PostAsync(_baseUrl+"pascabayar/check", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 var tagihan = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseString);
                 if (tagihan.responseCode == 200)
@@ -142,12 +139,12 @@ namespace Pulsa.Service.Service
             var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("Authorization", _apiKey);
-            var responseCheck = await client.PostAsync("https://api.serpul.co.id/pascabayar/check", content);
+            var responseCheck = await client.PostAsync(_baseUrl+"pascabayar/check", content);
             var responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
             var tagihanCheck = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringCheck);
             if (tagihanCheck.responseCode == 200)
             {
-                var response = await client.PostAsync("https://api.serpul.co.id/pascabayar/pay", content);
+                var response = await client.PostAsync(_baseUrl + "pascabayar/pay", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 var tagihan = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseString);
                 if (tagihan.responseCode == 200)
