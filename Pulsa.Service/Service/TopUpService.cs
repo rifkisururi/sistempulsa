@@ -5,6 +5,7 @@ using Pulsa.DataAccess.Interface;
 using Pulsa.Domain.Entities;
 using Pulsa.Service.Interface;
 using Pulsa.ViewModel;
+using System.Diagnostics.Metrics;
 
 namespace Pulsa.Service.Service
 {
@@ -70,32 +71,42 @@ namespace Pulsa.Service.Service
             // referss saldo dari table history
             
             // get saldo awal sebelum request
-            var pengguna = _penggunaRepository.Find(a => a.id == dataTopUp.idpengguna).SingleOrDefault();
-            int saldoAwal = pengguna.saldo;
-            int saldoAhir = saldoAwal + dataTopUp.jumlah;
+            
 
             // update data tbl topup
             // set saldo sebelum dan sesudah
-            dataTopUp.action_by = idPengguna;
-            dataTopUp.saldo_awal = saldoAwal;
-            dataTopUp.saldo_akhir = saldoAhir;
             dataTopUp.waktu_action = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
             if (action.ToLower() == "approve") {
-                dataTopUp.status = 2;
-                _topupRepository.Update(dataTopUp);
-
                 // update saldo di tbl pengguna
+                // cek ulang saldo before update
+                var pengguna = _penggunaRepository.Find(a => a.id == dataTopUp.idpengguna).SingleOrDefault();
+                int saldoAwal = pengguna.saldo;
+                int saldoAhir = saldoAwal + dataTopUp.jumlah;
+                while (pengguna.saldo != _penggunaRepository.getSaldo(dataTopUp.idpengguna))
+                {
+                    pengguna = _penggunaRepository.Find(a => a.id == dataTopUp.idpengguna).SingleOrDefault();
+                    saldoAwal = pengguna.saldo;
+                    saldoAhir = saldoAwal + dataTopUp.jumlah;
+                    
+                    
+                }
+
+                dataTopUp.status = 2;
+                dataTopUp.action_by = idPengguna;
+                dataTopUp.saldo_awal = saldoAwal;
+                dataTopUp.saldo_akhir = saldoAhir;
+                _topupRepository.Update(dataTopUp);
+                _topupRepository.Save();
+
                 pengguna.saldo = saldoAhir;
                 _penggunaRepository.Update(pengguna);
+                _penggunaRepository.Save();
 
                 // insert ke table history saldo
                 user_saldo_history_detail his = new user_saldo_history_detail();
                 his.id_transaksi = idRequest;
                 his.idpengguna = dataTopUp.idpengguna;
                 _userSaldoRepository.Add(his);
-
-                _topupRepository.Save();
-                _penggunaRepository.Save();
                 _userSaldoRepository.Save();
             }
             else if (action.ToLower() == "reject")
@@ -111,6 +122,5 @@ namespace Pulsa.Service.Service
         public int saldo(Guid idPengguna) {
             return _penggunaRepository.GetById(idPengguna).saldo;
         }
-
     }
 }

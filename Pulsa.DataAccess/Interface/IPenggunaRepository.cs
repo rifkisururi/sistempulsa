@@ -2,8 +2,10 @@
 
 namespace Pulsa.DataAccess.Interface
 {
-    public interface IProvider_h2hRepository : IGenericRepository<Domain.Entities.Provider_h2h>
+    public interface IPenggunaRepository : IGenericRepository<Domain.Entities.Pengguna>
     {
         // dibuat kosong jika tidak menambahkan spesial query yang digunakan terus menerus
+        public Int32 getSaldo(Guid Id);
     }
+    
 }

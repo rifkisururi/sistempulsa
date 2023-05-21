@@ -7,7 +7,7 @@ namespace Pulsa.Domain.Entities
     {
         [Key]
         public Guid id { get; set; } = Guid.NewGuid();
-        public Guid? idpengguna { get; set; }
+        public Guid idpengguna { get; set; }
         [ForeignKey("idpengguna")]
         public Pengguna? pengguna { get; set; }
         public string waktu { get; set; } = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
