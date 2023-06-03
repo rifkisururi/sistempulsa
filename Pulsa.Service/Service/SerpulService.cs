@@ -111,9 +111,12 @@ namespace Pulsa.Service.Service
                     td.jumlah_tagihan = Convert.ToInt32(tagihanListrik.responseData.jumlah_tagihan);
                     td.admin_tagihan = Convert.ToInt32(tagihanListrik.responseData.biaya_admin);
 
-                    _tagihanDetailRepository.Add(td);
-                    _tagihanDetailRepository.Save();
-                    //var saveData = _unitOfWork.Complete();
+                    var dataTagihan = _tagihanDetailRepository.Find(a => a.id_tagihan_master == td.id_tagihan_master && td.tanggal_cek >= awalBulan).FirstOrDefault();
+                    if (dataTagihan == null) {
+                        _tagihanDetailRepository.Add(td);
+                        _tagihanDetailRepository.Save();
+                        //var saveData = _unitOfWork.Complete();
+                    }
                     return responseString;
                 }
                 else { 
