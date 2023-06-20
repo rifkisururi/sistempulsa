@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Pulsa.Data;
 using Pulsa.Domain.Entities;
@@ -34,7 +35,7 @@ namespace pulsa.Controllers.tagihan
         {
             var _group = Request.Query["group"].ToString();
             var dt = context.tagihan_masters
-                .Where(a => a.group_tagihan == _group.ToLower() || _group == "");
+                .Where(a => a.group_tagihan == _group.ToLower() || _group == "").AsNoTracking();
 
             return new JsonResult(new
             {

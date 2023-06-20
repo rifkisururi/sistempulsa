@@ -10,8 +10,11 @@ namespace Pulsa.Web.Controllers
     public class TransaksiController : Controller
     {
         private Guid IdLogin { get; set; }
+        private IProdukService _produk;
         public TransaksiController(
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IProdukService produk
+        )
         {
             var claimsIdentity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
 
@@ -24,6 +27,7 @@ namespace Pulsa.Web.Controllers
                     IdLogin = Guid.Parse(idClaim.Value);
                 }
             }
+            _produk = produk;
         }
         public IActionResult Index(String produk)
         {
@@ -55,10 +59,25 @@ namespace Pulsa.Web.Controllers
             ViewBag.produk = produk;
             return View();
         }
-        public IActionResult choseproduk(string produk, string dest)
+        public IActionResult cariproduk(string produk, string dest)
         {
-
+            var brand = _produk.cekOperator(dest);
+            var dtProduk = _produk.getProdukByType(produk, brand);
+            ViewBag.produk = produk;
+            ViewBag.dest = dest;
+            ViewBag.listProduk = dtProduk;
             return View();
         }
+        public IActionResult order(string produkId, string suppliyer, string dest)
+        {
+            // insert data transaksi
+
+
+            var brand = _produk.cekOperator(dest);
+            ViewBag.dest = dest;
+     
+            return View();
+        }
+        
     }
 }

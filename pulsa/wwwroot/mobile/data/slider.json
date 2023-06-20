@@ -1,0 +1,19 @@
+{
+    "banner" : [
+        {
+            "gambar": "../mobile/img/banner/img_1.png",
+            "teks"  : "wifi murah",
+            "url"   : "google.com"
+        },
+        {
+            "gambar": "../mobile/img/banner/img_2.png",
+            "teks"  : "wifi rumahan",
+            "url"   : "google.com"
+        },
+        {
+            "gambar": "../mobile/img/banner/img_3.png",
+            "teks"  : "wifi rumahan",
+            "url"   : "google.com"
+        }
+    ]
+}

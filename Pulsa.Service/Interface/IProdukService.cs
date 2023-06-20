@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pulsa.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,7 @@ namespace Pulsa.Service.Interface
     public interface IProdukService
     {
         public List<Domain.Entities.Produk> getAllProduk();
+        public List<CariProdukDTO> getProdukByType(string type, string brand);
+        public string cekOperator(string dest);
     }
 }

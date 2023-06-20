@@ -9,8 +9,10 @@ using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
 using Pulsa.DataAccess.Repository;
 using Pulsa.helper;
+using Supabase;
 using System.Globalization;
 using System.Net;
+using Supabase;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -33,6 +35,16 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
     });
 
+builder.Services.AddScoped<Supabase.Client>( option =>
+   new Supabase.Client(
+        builder.Configuration["Supabase:Url"],
+        builder.Configuration["Supabase:Key"],
+        new SupabaseOptions
+        {
+            AutoRefreshToken = true,
+            AutoConnectRealtime = true
+        }));
+
 services.AddDbContext<PulsaDataContext>(
     o => o.UseNpgsql(configuration.GetConnectionString("puldaDB"))
 );
@@ -51,6 +63,7 @@ services.AddTransient<Pulsa.DataAccess.Interface.IPenggunaRepository, Pulsa.Data
 services.AddTransient<Pulsa.DataAccess.Interface.IProvider_h2hRepository, Pulsa.DataAccess.Repository.Provider_h2hRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.ISupplier_produkRepository, Pulsa.DataAccess.Repository.Supplier_produkRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IProdukRepository, Pulsa.DataAccess.Repository.ProdukRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.IProdukDetailRepository, Pulsa.DataAccess.Repository.ProdukDetailRepository>();
 services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // add service

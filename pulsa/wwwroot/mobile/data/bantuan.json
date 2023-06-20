@@ -1,0 +1,10 @@
+[
+    {
+        "judul" : "Kenapa saat login user selalu penuh?",
+        "content" : "Biasanya hal ini terjadi karena Penggunaan MAC Acak, Solusinya sebelum anda login tahan pada nama wifi dan cari menu privasi lalu ganti menjadi Gunakan MAC Perangkat "
+    },
+    {
+        "judul" : "Kenapa saya tidak bisa login?",
+        "content" : "Saat anda memasukan Kode voucher atau username dan password harap perhatikan penulisan huruf besar, kecil ataupun angka. ini sangat berpengaruh saat anda login."
+    }
+]

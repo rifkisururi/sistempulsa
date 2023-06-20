@@ -1,0 +1,44 @@
+[
+    {
+        "id"    : "produk_1",
+        "harga" : "5.000",
+        "img"   : "../mobile/img/produk/2-min.png",
+        "font_color" : "#fff",
+        "bg_color" : "#dc2626",
+        "nama_produk"  : "Paket V1",
+        "masa_aktif"    : "6 Jam",
+        "speed"         : "3 Mbps",
+        "device_login"  : "1",
+        "voucher_fisik" : 1,
+        "via_bot"       : 0,
+        "link_order"    : "https://wa.me/6289662402018"
+    },
+    {
+        "id"    : "produk_2",
+        "harga" : "5.000",
+        "img"   : "../mobile/img/produk/2-min.png",
+        "font_color" : "#fff",
+        "bg_color" : "#dc2626",
+        "nama_produk"  : "Paket V2",
+        "masa_aktif"    : "12 Jam",
+        "speed"         : "3 Mbps",
+        "device_login"  : "1",
+        "voucher_fisik" : 1,
+        "via_bot"       : 1,
+        "link_order"    : "https://wa.me/6289662402018"
+    },
+    {
+        "id"    : "produk_3",
+        "harga" : "5.000",
+        "img"   : "../mobile/img/produk/2-min.png",
+        "font_color" : "#fff",
+        "bg_color" : "#dc2626",
+        "nama_produk"  : "Paket V3",
+        "masa_aktif"    : "1 Hari",
+        "speed"         : "3 Mbps",
+        "device_login"  : "1",
+        "voucher_fisik" : 1,
+        "via_bot"       : 1,
+        "link_order"    : "https://wa.me/6289662402018"
+    }    
+]
