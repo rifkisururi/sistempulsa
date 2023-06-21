@@ -43,10 +43,10 @@ namespace Pulsa.Service.Service
         public List<Domain.Entities.Produk> getAllProduk() { 
             return _produk.GetAll().ToList();
         }
-        public List<CariProdukDTO> saveDraft(string dest, string idProduk, string suppliyer)
-        {
+        //public List<CariProdukDTO> saveDraft(string dest, string idProduk, string suppliyer)
+        //{
             
-        }
+        //}
 
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Pulsa.Domain.Entities
 {
-    public class Produk
+    public class ProdukTest
     {
         [Key]
         public string product_id { get; set; }
