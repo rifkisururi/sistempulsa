@@ -1,0 +1,26 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_push_image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t rifkisururi/sistempulsa:latest .
+
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Push Docker image to Docker Hub
+        run: docker push rifkisururi/pulsesystem:latest
+
+      - name: Trigger URL after push
+        run: curl -X POST ${{ secrets.AAPANEL }}
