@@ -24,10 +24,30 @@ function getTagihan(group) {
                 "bSortable": true,
                 "mRender": function (o) {
                     var label = ""
+                    if (o.autopay == 1) {
+                        label = "<span class='badge bg-warning'>Yes</span><br>"
+                        if (o.autopay_day == 0) { 
+                            label += "Setiap ada tagihan"
+                        } else {
+                            label += "Setiap tanggal " + o.autopay_day + " jam " + o.autopay_hour
+                        }
+
+                    } else {
+                        label = "<span class='badge bg-success'>NO</span>"
+                    }
+
+                    return `${label}`;
+                }
+            },
+            {
+                "mData": null,
+                "bSortable": true,
+                "mRender": function (o) {
+                    var label = ""
                     if (o.is_active == true) {
                         label = "<span class='badge bg-success'>Active</span>"
                     } else {
-                        label = "<span class='badge bg-success'>Inactive</span>"
+                        label = "<span class='badge bg-warning'>Inactive</span>"
                     }
 
                     return `${label}`;

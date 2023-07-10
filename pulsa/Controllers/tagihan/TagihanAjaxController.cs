@@ -158,7 +158,16 @@ namespace pulsa.Controllers.tagihan
             }
             return Ok("tidak ada pending transaksi"); ;
         }
-        
+        public async Task<IActionResult> autoPayTagihan()
+        {
+            var tagihan = _tagihan.GetListBayarAutoPay();
+            foreach (var td in tagihan)
+            {
+                await _serpul.PayTagihan(td);
+            }
+            return Ok("tidak ada pending autopay"); ;
+        }
+
 
 
     }

@@ -12,6 +12,7 @@ namespace Pulsa.Service.Interface
         public List<TagihanMasterDTO> GetListBayarAll(Guid id);
         public Domain.Entities.Tagihan_master detailMaster(Guid id);
         public List<VMTagihanListrik> getTagihanBulanIni(String _group);
+        public List<TagihanMasterDTO> GetListBayarAutoPay();
 
     }
 }

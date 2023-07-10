@@ -140,5 +140,34 @@ namespace Pulsa.Service.Service
             return dt.ToList();
         }
 
+        public List<TagihanMasterDTO> GetListBayarAutoPay()
+        {
+
+            DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
+
+            int dayToday = DateTime.Now.Day;
+            int hourToday = DateTime.Now.Hour;
+            
+            var gr = (from tm in _context.tagihan_masters
+                      join detail in _context.tagihan_details on tm.id equals detail.id_tagihan_master
+                      where
+                        tm.is_active == true
+                        && detail.harus_dibayar != false
+                        && detail.tanggal_cek >= awalBulan
+                        && detail.request_bayar != true
+                        && tm.autopay == 1
+                        && (tm.autopay_day == 0 || tm.autopay_day == dayToday)
+                        && (tm.autopay_hour == 0 || tm.autopay_hour == hourToday)
+                      select new TagihanMasterDTO
+                      {
+                          id = tm.id,
+                          type_tagihan = tm.type_tagihan,
+                          id_tagihan = tm.id_tagihan,
+                          nama_pelanggan = tm.nama_pelanggan,
+                          jumlah_tagihan = detail.jumlah_tagihan
+                      }).OrderBy(a => a.jumlah_tagihan).ToList();
+            return gr;
+        }
+
     }
 }

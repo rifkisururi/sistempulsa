@@ -13,7 +13,8 @@ namespace Pulsa.Domain.Entities
         public int? admin_notta { get; set; }
         public int? admin { get; set; }
         public bool? is_active { get; set; }
-        //public DateTime? createdAt { get; set; } = DateTime.Now;
-        //public DateTime? updatedAt { get; set; } = DateTime.Now;
+        public int? autopay { get; set; }
+        public int? autopay_day { get; set; }
+        public int? autopay_hour { get; set; }
     }
 }

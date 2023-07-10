@@ -111,7 +111,7 @@ namespace Pulsa.Service.Service
                     td.jumlah_tagihan = Convert.ToInt32(tagihanListrik.responseData.jumlah_tagihan);
                     td.admin_tagihan = Convert.ToInt32(tagihanListrik.responseData.biaya_admin);
 
-                    var dataTagihan = _tagihanDetailRepository.Find(a => a.id_tagihan_master == td.id_tagihan_master && td.tanggal_cek >= awalBulan).FirstOrDefault();
+                    var dataTagihan = _tagihanDetailRepository.Find(a => a.id_tagihan_master == td.id_tagihan_master && a.tanggal_cek >= awalBulan).FirstOrDefault();
                     if (dataTagihan == null) {
                         _tagihanDetailRepository.Add(td);
                         _tagihanDetailRepository.Save();
