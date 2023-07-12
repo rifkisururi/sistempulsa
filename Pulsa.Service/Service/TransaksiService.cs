@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
+using Pulsa.DataAccess.Repository;
 using Pulsa.Domain.Entities;
 using Pulsa.Service.Interface;
 using Pulsa.ViewModel;
@@ -40,13 +41,21 @@ namespace Pulsa.Service.Service
             _context = context;
         }
 
-        public List<Domain.Entities.Produk> getAllProduk() { 
+        public List<Domain.Entities.Produk> getAllProduk()
+        {
             return _produk.GetAll().ToList();
         }
-        //public List<CariProdukDTO> saveDraft(string dest, string idProduk, string suppliyer)
-        //{
-            
-        //}
+        public bool transaksi(string produkId, string suppliyer, string dest)
+        {
+            Pengguna_Traksaksi pt = new Pengguna_Traksaksi();
+            pt.product_id = produkId;
+            pt.suppliyer = suppliyer;
+            pt.tujuan = dest;
+
+            return true;
+            //return _produk.GetAll().ToList();
+        }
+
 
     }
 }

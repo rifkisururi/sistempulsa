@@ -6,25 +6,16 @@
 }
 <br />
 
-<div class="mt-4">
-    <div class="flex flex-col p-4 bg-white rounded-lg shadow-md">
-        <div class="flex flex-between justify-start items-center border-b-2 py-2 font-medium text-slate-800 tracking-wide text-sm">
-            <div class="w-full font-bold">
-                Tujuan
-            </div>
-            <div class="font-bold">
-                <input type="text" class="form" value="@ViewBag.dest" id="dest" readonly />
-                
-            </div>
+<div class="w-full rounded-xl bg-blue-400 p-4 pb-2 shadow-md dark:bg-sky-900 transition duration-500 dark:shadow-gray-400 ">
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">Tujuan</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="dest" placeholder="085" value="@ViewBag.dest" readonly>
+            <input type="text" value="@ViewBag.produk" id="produk" hidden>
         </div>
-        <div class="flex flex-between justify-start items-center border-b-2 py-2 font-medium text-slate-800 tracking-wide text-sm">
-            <div class="w-full font-bold">
-                Produk
-            </div>
-            <div class="font-bold">
-                @ViewBag.produk
-            </div>
-        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-12 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">Rifki Ahmad Sururi</label>
     </div>
 </div>
 

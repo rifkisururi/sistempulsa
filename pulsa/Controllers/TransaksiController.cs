@@ -71,8 +71,6 @@ namespace Pulsa.Web.Controllers
         public IActionResult order(string produkId, string suppliyer, string dest)
         {
             // insert data transaksi
-
-
             var brand = _produk.cekOperator(dest);
             ViewBag.dest = dest;
      

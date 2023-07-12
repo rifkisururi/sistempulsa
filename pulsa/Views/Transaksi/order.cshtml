@@ -1,0 +1,51 @@
+﻿@using Pulsa.ViewModel;
+@{
+    Layout = "_UserLayout";
+    var listProduk = (List<CariProdukDTO>)ViewBag.listProduk;
+    var rekomendasi = "Rekomendasi harga";
+}
+<br />
+
+
+<div class="mt-4">
+    <div class="flex flex-col p-4 bg-white rounded-lg shadow-md">
+        <table class="table">
+            <tr>
+                <td>Tujuan</td>
+                <td>085647451640</td>
+            </tr>
+            <tr>
+                <td>Produk</td>
+                <td>Pulsa 5.000</td>
+            </tr>
+            <tr>
+                <td>Harga</td>
+                <td>6500</td>
+            </tr>
+            <tr>
+                <td>Harga Juan</td>
+                <td><input type="number" value="7000" id="hargajual" /></td>
+            </tr>
+            <tr>
+                <td>Lunas</td>
+                <td>
+                    <input type="radio" name="lunas" value="1">
+                    <label>HTML</label><br>
+                    <input type="radio" name="lunas" value="0">
+                    <label>Hutang</label><br>
+
+                </td>
+            </tr>
+            <tr>
+                <td>PIN</td>
+                <td><input type="text" id="pin" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button class="btn btn-primary">Beli</button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="~/mobile/js/pilihProduk.js"></script>
