@@ -15,6 +15,7 @@ using Supabase;
 using Supabase.Interfaces;
 using static Supabase.Gotrue.Constants;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace pulsa.Controllers
 {
@@ -23,10 +24,12 @@ namespace pulsa.Controllers
         FirebaseAuthProvider auth;
 
         private readonly Client _supabaseClient;
-        public Auth(Supabase.Client supabaseClient)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public Auth(Supabase.Client supabaseClient, IHttpContextAccessor httpContextAccessor)
         {
             auth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyCd9Qw1xwXaxB1LIIByISX_c--aclzhaF0"));
             _supabaseClient = supabaseClient;
+            _httpContextAccessor = httpContextAccessor; 
         }
 
 
@@ -46,11 +49,54 @@ namespace pulsa.Controllers
             return View();
         }
 
-        public async Task<IActionResult> callBack()
+        public async Task<IActionResult> callBackSupabase(string access_token, string expires_in, string provider_token, string refresh_token, string token_type)
         {
-            string accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjg1OTY1MTE3LCJzdWIiOiI2N2Y4N2VjNC05NGJiLTRmYzAtOTU0Ni1hN2UyNWQ2NTViNWEiLCJlbWFpbCI6InJpZmtpc3VydXJpMjdAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJnb29nbGUiLCJwcm92aWRlcnMiOlsiZ29vZ2xlIl19LCJ1c2VyX21ldGFkYXRhIjp7ImF2YXRhcl91cmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRjbkhxMlJQTFFMUThyZTJyYUg2VTZuZ3I5b2NfWk5PVzZDVUdrPXM5Ni1jIiwiZW1haWwiOiJyaWZraXN1cnVyaTI3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJyaWZraSBhaG1hZCBzdXJ1cmkiLCJpc3MiOiJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS91c2VyaW5mby92Mi9tZSIsIm5hbWUiOiJyaWZraSBhaG1hZCBzdXJ1cmkiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFjSFR0Y25IcTJSUExRTFE4cmUycmFINlU2bmdyOW9jX1pOT1c2Q1VHaz1zOTYtYyIsInByb3ZpZGVyX2lkIjoiMTExNTI3MzkyOTY4MTE4OTE5NzkzIiwic3ViIjoiMTExNTI3MzkyOTY4MTE4OTE5NzkzIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib2F1dGgiLCJ0aW1lc3RhbXAiOjE2ODU5NjE1MTd9XSwic2Vzc2lvbl9pZCI6IjE4MzU2NWQ2LWM0OWUtNDhlYS04OTk5LTVmOTEzOGM1YTBhNiJ9.5O3YLRN6Q7xVgpTtVJf76rKzSmop4qpbDmdm9qCXmsc&expires_in=3600&provider_token=ya29.a0AWY7Ckni9oFIO6VtqoIzRCCfJz_gWdCqhcLdAu8vyyZcHN0pCOgkgMFO8Vyv2nEIAFEIonkCnTpqH9DSM4MNv9NHpWL-sGKXcIRQpFfu2uZSXagaRgRKf4NJHaNngBU3YyT7X1MM71UXAGxjnQl5ycHCSa2ZVQaCgYKAcYSARMSFQG1tDrp71NAs7_B5oIz3iiCvsHvcA0165";
-            var userSupabase = await _supabaseClient.Auth.SignInWithIdToken(Provider.Google, accessToken);
-            return View();
+            var fullUrl = GetFullUrl(_httpContextAccessor.HttpContext);
+            Uri siteUri = new Uri(fullUrl+"#"+ "access_token=" + access_token + "&expires_in="+ expires_in + "" + "&provider_token=" + provider_token + "&refresh_token="+ refresh_token + "&token_type=" + token_type);
+
+            var name = HttpContext.Session.GetString("_supabaseId");
+
+            var session = await _supabaseClient.Auth.GetSessionFromUrl(siteUri);
+            HttpContext.Session.SetString("_supabaseTokenType", session.TokenType);
+            HttpContext.Session.SetString("_supabaseAccessToken", session.CreatedAt.ToShortTimeString());
+            HttpContext.Session.SetInt32("_supabaseExpiresIn", session.ExpiresIn);
+            HttpContext.Session.SetString("_supabaseRefreshToken", session.RefreshToken);
+            HttpContext.Session.SetString("_supabaseEmail", session.User.Email);
+            HttpContext.Session.SetString("_supabaseId", session.User.Id);
+            foreach (var mt in session.User.UserMetadata) {
+
+                HttpContext.Session.SetString("_supabaseUserMetadata"+mt.Key, mt.Value.ToString());
+            }
+            var userMetaData = session.User.UserMetadata;
+            string fullname = userMetaData.Where(a => a.Key == "full_name").SingleOrDefault().Value.ToString();
+            var picture = userMetaData.Where(a => a.Key == "picture").SingleOrDefault().Value.ToString();
+            
+
+
+            List<Claim> claims = new List<Claim>() {
+                            new Claim(ClaimTypes.Email, session.User.Email),
+                            new Claim(ClaimTypes.Uri, siteUri.ToString()),
+                            new Claim("Nama", fullname),
+                            new Claim("picture", picture),
+                            new Claim("Role", "Admin"),
+                            new Claim("Id", session.User.Id),
+                            new Claim("_supabaseTokenType", session.TokenType),
+                            new Claim("_supabaseAccessToken", session.CreatedAt.ToShortTimeString()),
+                            new Claim("_supabaseExpiresIn", session.ExpiresIn.ToString()),
+                            new Claim("_supabaseRefreshToken", session.RefreshToken),
+                        };
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            AuthenticationProperties properties = new AuthenticationProperties()
+            {
+                AllowRefresh = true,
+                IsPersistent = true
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity), properties);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -156,6 +202,23 @@ namespace pulsa.Controllers
                 return accessToken;
             }
 
+            return null;
+        }
+        public string GetFullUrl(HttpContext context)
+        {
+            var session = _supabaseClient.Auth.CurrentSession;
+            var request = context.Request;
+            var host = request.Scheme + "://" + request.Host;
+            var fullUrl = host;
+            return fullUrl;
+        }
+
+    
+        [HttpPost]
+        public async Task<IActionResult> loginSupabase(string fullUri)
+        {
+            Uri siteUri = new Uri(fullUri);
+            var session = await _supabaseClient.Auth.GetSessionFromUrl(siteUri);
             return null;
         }
 

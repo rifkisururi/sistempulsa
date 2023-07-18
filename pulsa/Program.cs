@@ -52,6 +52,7 @@ services.AddDbContext<PulsaDataContext>(
 
 services.AddTransient<PulsaDataContext>();
 services.AddHttpClient();
+services.AddHttpContextAccessor();
 
 // add data access
 services.AddTransient<Pulsa.DataAccess.Interface.ITagihanMasterRepository, Pulsa.DataAccess.Repository.TagihanMasterRepository>();
