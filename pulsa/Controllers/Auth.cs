@@ -53,25 +53,10 @@ namespace pulsa.Controllers
         {
             var fullUrl = GetFullUrl(_httpContextAccessor.HttpContext);
             Uri siteUri = new Uri(fullUrl+"#"+ "access_token=" + access_token + "&expires_in="+ expires_in + "" + "&provider_token=" + provider_token + "&refresh_token="+ refresh_token + "&token_type=" + token_type);
-
-            var name = HttpContext.Session.GetString("_supabaseId");
-
             var session = await _supabaseClient.Auth.GetSessionFromUrl(siteUri);
-            HttpContext.Session.SetString("_supabaseTokenType", session.TokenType);
-            HttpContext.Session.SetString("_supabaseAccessToken", session.CreatedAt.ToShortTimeString());
-            HttpContext.Session.SetInt32("_supabaseExpiresIn", session.ExpiresIn);
-            HttpContext.Session.SetString("_supabaseRefreshToken", session.RefreshToken);
-            HttpContext.Session.SetString("_supabaseEmail", session.User.Email);
-            HttpContext.Session.SetString("_supabaseId", session.User.Id);
-            foreach (var mt in session.User.UserMetadata) {
-
-                HttpContext.Session.SetString("_supabaseUserMetadata"+mt.Key, mt.Value.ToString());
-            }
             var userMetaData = session.User.UserMetadata;
             string fullname = userMetaData.Where(a => a.Key == "full_name").SingleOrDefault().Value.ToString();
             var picture = userMetaData.Where(a => a.Key == "picture").SingleOrDefault().Value.ToString();
-            
-
 
             List<Claim> claims = new List<Claim>() {
                             new Claim(ClaimTypes.Email, session.User.Email),

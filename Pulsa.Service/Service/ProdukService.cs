@@ -99,7 +99,7 @@ namespace Pulsa.Service.Service
                 operatorName = "Indosat";
             }
             else if(prefixTelkomsel.Any(prefix => dest.StartsWith(prefix))){
-                if (prefixTelkomsel.Any(prefix => dest.StartsWith(prefix)))
+                if (prefixByu.Any(prefix => dest.StartsWith(prefix)))
                 {
                     operatorName = "By.U";
                 }

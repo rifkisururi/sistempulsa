@@ -20,12 +20,12 @@
 </div>
 
 <div class="mt-4">
-    <div class="flex flex-col p-4 bg-white rounded-lg shadow-md">
+    <div class="flex flex-col p-1 bg-white rounded-lg shadow-md">
         @foreach (var (p, index) in listProduk.OrderBy(a => a.price).Distinct().Select((value, i) => (value, i)))
         {
-            <div class="flex flex-between justify-start items-center border-b-2 py-2 font-medium text-slate-800 tracking-wide text-sm pilihProduk"
+            <div class="flex flex-between justify-start items-center border-b-2 py-2 font-medium text-slate-800 tracking-wide text-sm"
              style="background-color:@(index % 2 == 0 ? "silver" : "white") "
-             suppliyer="@p.suppliyer" produkId="@p.product_id" >
+              >
                 <div class="w-full" style="padding-right:1px">
                     <div class="font-bold">@p.product_name</div>
                     <div class="">
@@ -39,7 +39,8 @@
                     </div>
                 </div>
                 <div class="font-bold">
-                    @p.price.ToString("N0")
+                    @p.price.ToString("N0")<br>
+                    <button class="btn btn-primary pilihProduk" suppliyer="@p.suppliyer" produkId="@p.product_id">Beli</button>
                 </div>
             </div>
         }

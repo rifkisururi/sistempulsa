@@ -20,6 +20,8 @@ namespace pulsa.Controllers
         private  ITopUpService _topUpService;
         private ISerpulService _serpul;
         private Guid IdLogin { get; set; }
+        private string fullname { get; set; }
+        private string picture { get; set; }
         public HomeController(
             PulsaDataContext context, 
             IWebHostEnvironment env, 
@@ -42,6 +44,10 @@ namespace pulsa.Controllers
                 {
                     IdLogin = Guid.Parse(idClaim.Value);
                 }
+                fullname = claimsIdentity.FindFirst("Nama").Value;
+                picture = claimsIdentity.FindFirst("picture").Value;
+
+                
             }
         }
 
@@ -50,8 +56,9 @@ namespace pulsa.Controllers
             
             var saldo = _serpul.getSaldo();
             var saldoPengguna = _topUpService.saldo(IdLogin);
-            ViewBag.saldo = saldo;
             ViewBag.saldoPengguna = saldoPengguna;
+            ViewBag.nama = fullname+"<br>"+"saldo "+ saldo;
+            ViewBag.picture = picture;
             return View();
         }
         public IActionResult env()

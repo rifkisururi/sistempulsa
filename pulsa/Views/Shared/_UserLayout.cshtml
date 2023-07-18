@@ -12,15 +12,15 @@
     
 </head>
 <body class=" dark:bg-gray-300 bg-white transition-all duration-500">
-    <div class="max-w-md mx-auto min-h-screen bg-gray-50 p-6 dark:bg-gray-800 transition-all duration-500 pb-24">
+    <div class="max-w-md mx-auto min-h-screen bg-gray-50 dark:bg-gray-800 transition-all duration-500 pb-24">
         <!-- Header Login -->
         <div class="flex items-center space-x-3">
             <div class="w-16 flex items-center justify-center">
-                <img src="~/mobile/img/man.png" alt="" class="">
+                <img src="@ViewBag.picture" alt="" class="">
             </div>
             <div class="w-full flex flex-col justify-center items-start">
                 <div class="-mb-1">
-                    <span class="text-gray-700  dark:text-gray-400 text-sm font-bold leading-1 tracking-none">@ViewBag.nama</span>
+                    <span class="text-gray-700  dark:text-gray-400 text-sm font-bold leading-1 tracking-none">@Html.Raw(ViewBag.nama)</span>
                 </div>
                 <div class="text-xs text-gray-600 dark:text-gray-400 font-normal mt-1">@ViewBag.UserLogin</div>
             </div>
