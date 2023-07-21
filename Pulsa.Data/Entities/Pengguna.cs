@@ -9,5 +9,7 @@
         public int gagal { get; set; } = 0;
         public int saldo { get; set; } = 0;
         public bool is_active { get; set; } = true;
+        public bool isBlokir { get; set; } = false;
+        
     }
 }

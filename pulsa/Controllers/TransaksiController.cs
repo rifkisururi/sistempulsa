@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pulsa.Data;
+using Pulsa.Domain.Entities;
 using Pulsa.Service.Interface;
 using System.Security.Claims;
 
@@ -11,9 +12,11 @@ namespace Pulsa.Web.Controllers
     {
         private Guid IdLogin { get; set; }
         private IProdukService _produk;
+        private ITransaksiService _transaksi;
         public TransaksiController(
             IHttpContextAccessor httpContextAccessor,
-            IProdukService produk
+            IProdukService produk,
+            ITransaksiService transaksi
         )
         {
             var claimsIdentity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
@@ -28,6 +31,7 @@ namespace Pulsa.Web.Controllers
                 }
             }
             _produk = produk;
+            _transaksi = transaksi;
         }
         public IActionResult Index(String produk)
         {
@@ -68,12 +72,43 @@ namespace Pulsa.Web.Controllers
             ViewBag.listProduk = dtProduk;
             return View();
         }
-        public IActionResult order(string produkId, string suppliyer, string dest)
+        public IActionResult order(Guid idTransaksi)
         {
-            var brand = _produk.cekOperator(dest);
-            ViewBag.dest = dest;
-     
+            var data = _transaksi.getDetailTransaksi(idTransaksi);
+            var dataProduk = _produk.getProdukSuppliyer(data.product_id, data.suppliyer);
+            var rekomendasiHarga = _produk.getAllProduk().Where(a => a.product_id == data.product_id).SingleOrDefault()?.price_suggest;
+           
+            ViewBag.data = data;
+            ViewBag.dataProduk = dataProduk;
+            ViewBag.hargaJual = rekomendasiHarga;
             return View();
+        }
+
+        public IActionResult generate_order(string produkId, string suppliyer, string dest)
+        {
+            Guid idTransaksi = _transaksi.transaksi(produkId, suppliyer, dest, IdLogin);
+            return RedirectToAction("order", new { idTransaksi = idTransaksi });
+        }
+
+        public IActionResult submitorder(Guid idTransaksi, string harga_jual, string pin, string nama_pembeli)
+        {
+            // cek pin
+            bool cekPin = _transaksi.verifikasiPin(IdLogin, pin);
+            if (cekPin == false) {
+                return new JsonResult(new
+                {
+                    status = false,
+                    message = "pin salah !"
+                });
+            }
+            // save nama pembeli
+
+            // action ke serpul
+            _transaksi.fixorder(idTransaksi);
+
+
+
+            return null;
         }
         
     }

@@ -45,20 +45,6 @@ namespace Pulsa.Service.Service
         }
         public List<CariProdukDTO> getProdukByType(string type, string brand)
         {
-            //var data1 = _produk.Find(a => a.category.ToLower() == type.ToLower() && a.brand == brand && a.status == true)
-            //    .SelectMany(p => _produkDetail.Find(pd => pd.product_id == p.product_id && pd.status == true)).AsEnumerable() // Evaluasi klien setelah mendapatkan data dari database
-            //    .SelectMany(b => _produkSuppliyer.Find(ps => ps.product_id == b.suppliyer_product_id && ps.supplier == b.suppliyer && ps.status == "ACTIVE")).AsEnumerable()
-            //    .Select(c => new CariProdukDTO
-            //    {
-            //        product_id = c.product_id,
-            //        product_name = c.product_name,
-            //        product_detail = c.product_detail,
-            //        product_syarat = c.product_syarat,
-            //        product_zona = c.product_zona,
-            //        suppliyer = b.su ppliyer,
-            //        price = (p.margin ?? 0) + c.product_price + (p.bagihasil1 ?? 0) + (p.bagihasil2 ?? 0),
-            //        price_suggest = p.price_suggest ?? 0
-            //    });
 
             var data = (from p in _context.produks.Where(a => a.brand.ToLower() == brand.ToLower() && a.category.ToLower() == type.ToLower())
                         join pd in _context.produk_details on p.product_id.ToLower() equals pd.product_id.ToLower()
@@ -79,10 +65,30 @@ namespace Pulsa.Service.Service
             return data.ToList();
         }
 
-        //public Domain.Entities.Produk getDetailProduk(string produkId, string suppliyer)
-        //{
-        //    return supplier_produks. ;
-        //}
+        
+
+        public CariProdukDTO getProdukSuppliyer(string produkId, string suppliyer)
+        {
+            var data = (from p in _context.produks
+                        join pd in _context.produk_details on p.product_id.ToLower() equals pd.product_id.ToLower()
+                        join ps in _context.supplier_produks on pd.suppliyer_product_id.ToLower() equals ps.product_id.ToLower() 
+                        where
+                            pd.suppliyer.ToLower() == ps.supplier.ToLower()
+                            && pd.suppliyer.ToLower() == suppliyer.ToLower()
+                            && pd.suppliyer_product_id.ToLower() == produkId.ToLower()
+                        select new CariProdukDTO
+                        {
+                            product_id = p.product_id,
+                            product_name = p.product_name,
+                            product_detail = p.product_detail,
+                            product_syarat = p.product_syarat,
+                            product_zona = p.product_zona,
+                            suppliyer = pd.suppliyer,
+                            price = (p.margin ?? 0) + ps.product_price + (p.bagihasil1 ?? 0) + (p.bagihasil2 ?? 0),
+                            price_suggest = p.price_suggest ?? 0
+                        }).FirstOrDefault();
+            return data;
+        }
 
         public string cekOperator(string dest) {
             string operatorName = string.Empty;

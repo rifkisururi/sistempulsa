@@ -12,5 +12,6 @@ namespace Pulsa.Service.Interface
         public List<Domain.Entities.Produk> getAllProduk();
         public List<CariProdukDTO> getProdukByType(string type, string brand);
         public string cekOperator(string dest);
+        public CariProdukDTO getProdukSuppliyer(string produkId, string suppliyer);
     }
 }

@@ -14,5 +14,6 @@ namespace Pulsa.Service.Interface
         Task<string> PayTagihan(TagihanMasterDTO tm);
         public List<Tagihan_detail> cekTransaksiPascaPending();
         Task<string> cekTransaksiPending(string refId);
+        Task<string> orderPrabayar(string produkId, string dest, string refId);
     }
 }

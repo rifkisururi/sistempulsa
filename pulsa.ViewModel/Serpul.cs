@@ -40,6 +40,12 @@
     {
         public DetailPaymentPasca responseData { get; set; }
     }
+
+    public class SerpulRespondPayment : SerpulRespondStatus
+    {
+        public DetailPayment responseData { get; set; }
+    }
+
     
     public class SerpulAccount
     {
@@ -148,5 +154,11 @@
         public string? created_at { get; set; }
         public string? updated_at { get; set; }
         public int? bill_multiplier { get; set; }
+    }
+
+    public class DetailPayment
+    {
+        public string? status { get; set; }
+        public string? message { get; set; }
     }
 }

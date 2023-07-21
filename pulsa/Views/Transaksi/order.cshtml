@@ -1,7 +1,9 @@
-﻿@using Pulsa.ViewModel;
+﻿@using Pulsa.Domain.Entities;
+@using Pulsa.ViewModel;
 @{
     Layout = "_UserLayout";
-    var listProduk = (List<CariProdukDTO>)ViewBag.listProduk;
+    var data = (Pengguna_Traksaksi)ViewBag.data;
+    var dataProduk = (CariProdukDTO)ViewBag.dataProduk;
     var rekomendasi = "Rekomendasi harga";
 }
 <br />
@@ -12,40 +14,46 @@
         <table class="table">
             <tr>
                 <td>Tujuan</td>
-                <td>085647451640</td>
+                <td>@data.tujuan</td>
             </tr>
             <tr>
                 <td>Produk</td>
-                <td>Pulsa 5.000</td>
+                <td>@dataProduk.product_name</td>
+            </tr>
+            <tr>
+                <td colspan="2">@dataProduk.product_detail @dataProduk.product_syarat @dataProduk.product_zona</td>
             </tr>
             <tr>
                 <td>Harga</td>
-                <td>6500</td>
+                <td>@data.harga_jual</td>
             </tr>
             <tr>
                 <td>Harga Juan</td>
-                <td><input type="number" value="7000" id="hargajual" /></td>
+                <td><input type="number" class="form form-control" value="@ViewBag.hargaJual" id="hargajual" /></td>
             </tr>
             <tr>
+                <td>Pembeli</td>
+                <td><input type="text" class="form form-control" value="@ViewBag.pembeli" id="pembeli" /></td>
+            </tr>
+            <tr hidden>
                 <td>Lunas</td>
                 <td>
                     <input type="radio" name="lunas" value="1">
-                    <label>HTML</label><br>
+                    <label>Lunas</label><br>
                     <input type="radio" name="lunas" value="0">
                     <label>Hutang</label><br>
-
                 </td>
             </tr>
             <tr>
                 <td>PIN</td>
-                <td><input type="text" id="pin" /></td>
+                <td><input type="text" class="form form-control" id="pin" /></td>
             </tr>
             <tr>
                 <td></td>
-                <td><button class="btn btn-primary">Beli</button></td>
+                <td><button class="btn btn-primary" id="beli">Beli</button></td>
             </tr>
         </table>
     </div>
 </div>
 
-<script src="~/mobile/js/pilihProduk.js"></script>
+<script src="~/mobile/js/order.js"></script>

@@ -61,3 +61,8 @@ $(document).on("click", ".btnEdit", function () {
 $(document).on("click", "#pulsa", function () {
     window.location.href = "Transaksi/Index?produk=pulsa";
 });
+
+$(document).on("click", "#paketdata", function () {
+    window.location.href = "Transaksi/Index?produk=data";
+});
+

@@ -5,7 +5,7 @@ $(document).on("click", ".pilihProduk", function () {
 
     console.log('suppliyer', suppliyer);
     console.log('produkId', produkId);
-    window.location.href = `order?produkId=${produkId}&suppliyer=${suppliyer}&dest=${dest}`;
+    window.location.href = `generate_order?produkId=${produkId}&suppliyer=${suppliyer}&dest=${dest}`;
 
 });
 

@@ -175,6 +175,23 @@ namespace Pulsa.Service.Service
             }
         }
 
+        public async Task<string> orderPrabayar(string produkId, string dest, string refId) {
+            var client = new HttpClient();
+            var data = new
+            {
+                destination = dest,
+                product_id = produkId,
+                ref_id = refId
+            };
+            var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("Authorization", _apiKey);
+            var responseCheck = await client.PostAsync(_baseUrl + "prabayar/order", content);
+            var responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+            var serpulRespondStatus = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringCheck);
+            return responseStringCheck;
+        }
+
         public async Task<List<Supplier_produk>> refressProduk() {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");

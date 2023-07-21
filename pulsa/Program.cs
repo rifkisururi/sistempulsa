@@ -45,6 +45,7 @@ builder.Services.AddScoped<Supabase.Client>( option =>
             AutoConnectRealtime = true
         }));
 
+// config database 
 services.AddDbContext<PulsaDataContext>(
     o => o.UseNpgsql(configuration.GetConnectionString("puldaDB"))
 );
@@ -65,6 +66,7 @@ services.AddTransient<Pulsa.DataAccess.Interface.IProvider_h2hRepository, Pulsa.
 services.AddTransient<Pulsa.DataAccess.Interface.ISupplier_produkRepository, Pulsa.DataAccess.Repository.Supplier_produkRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IProdukRepository, Pulsa.DataAccess.Repository.ProdukRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IProdukDetailRepository, Pulsa.DataAccess.Repository.ProdukDetailRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.IPenggunaTransaksiRepository, Pulsa.DataAccess.Repository.PenggunaTransaksiRepository>();
 services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // add service
@@ -72,6 +74,7 @@ services.AddTransient<Pulsa.Service.Interface.ITagihanService, Pulsa.Service.Ser
 services.AddTransient<Pulsa.Service.Interface.ITopUpService, Pulsa.Service.Service.TopUpService>();
 services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
 services.AddTransient<Pulsa.Service.Interface.IProdukService, Pulsa.Service.Service.ProdukService>();
+services.AddTransient<Pulsa.Service.Interface.ITransaksiService, Pulsa.Service.Service.TransaksiService>();
 services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 services.Configure<RequestLocalizationOptions>(options =>
