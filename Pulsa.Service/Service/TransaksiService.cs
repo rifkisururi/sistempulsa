@@ -23,6 +23,7 @@ namespace Pulsa.Service.Service
         IProdukDetailRepository _produkDetail;
         ISupplier_produkRepository _produkSuppliyer;
         IPenggunaTransaksiRepository _penggunaTransaksi;
+        IPenggunaMutasiRepository _penggunaMutasi;
         IPenggunaRepository _pengguna;
         ISerpulService _serpul;
         private IMapper _mapper;
@@ -36,6 +37,7 @@ namespace Pulsa.Service.Service
             IMapper mapper,
             IPenggunaTransaksiRepository penggunaTransaksi,
             IPenggunaRepository pengguna,
+            IPenggunaMutasiRepository penggunaMutasi,
             ISerpulService serpul,
             PulsaDataContext context
         ) {
@@ -46,6 +48,7 @@ namespace Pulsa.Service.Service
             _produkSuppliyer = produkSuppliyer;
             _penggunaTransaksi = penggunaTransaksi;
             _pengguna = pengguna;
+            _penggunaMutasi = penggunaMutasi;
             _serpul = serpul;
             _mapper = mapper;
             _context = context;
@@ -103,11 +106,26 @@ namespace Pulsa.Service.Service
             var transaksi = _penggunaTransaksi.GetById(id);
             var pengguna = _pengguna.Find(a => a.id == transaksi.pengguna).SingleOrDefault();
             if (pengguna.saldo > transaksi.harga_jual) {
+
+                // update status transaksi
                 transaksi.status_transaksi = 1;
                 _penggunaTransaksi.Update(transaksi);
                 _penggunaTransaksi.Save();
 
+                // log mutasi saldo
+                var dataMutasi = new Pengguna_mutasi();
+                dataMutasi.saldo_sebelum = pengguna.saldo;
+                dataMutasi.saldo_sesudah = pengguna.saldo - transaksi.harga_jual;
+                dataMutasi.mutasi = -1* transaksi.harga_jual;
+                dataMutasi.type_transaksi = "Pembelian";
+                dataMutasi.id_transaksi = transaksi.id;
+                _penggunaMutasi.Add(dataMutasi);
+                _penggunaMutasi.Save();
+
                 // potong saldo
+                pengguna.saldo = pengguna.saldo - transaksi.harga_jual;
+                _pengguna.Update(pengguna);
+                _pengguna.Save();
 
                 // hit ppob server
                 if (transaksi.suppliyer.ToLower() == "serpul")
@@ -116,14 +134,7 @@ namespace Pulsa.Service.Service
                     String refId = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
                     _serpul.orderPrabayar(transaksi.product_id, transaksi.tujuan, Convert.ToString(transaksi.id));
                 }
-
-                // log mutasi saldo
-                
-
-
             }
-
-
         }
 
     }

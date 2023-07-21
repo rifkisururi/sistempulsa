@@ -23,6 +23,7 @@ namespace Pulsa.Data
         public DbSet<Produk> produks { get; set; }
         public DbSet<Produks_detail> produk_details { get; set; }
         public DbSet<Pengguna_Traksaksi> pengguna_transaksi { get; set; }
+        public DbSet<Pengguna_mutasi> pengguna_mutasi { get; set; }
 
     }
 }

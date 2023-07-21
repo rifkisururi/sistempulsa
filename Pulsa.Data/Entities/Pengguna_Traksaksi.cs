@@ -11,7 +11,7 @@ namespace Pulsa.Domain.Entities
         public string suppliyer { get; set; }
         public string tujuan { get; set; }
         public int harga { get; set; }
-        public int? harga_jual { get; set; }
+        public int harga_jual { get; set; }
         public int? harga_jual_agen { get; set; }
         public int? bagihasil1 { get; set; } = 0;
         public int? bagihasil2 { get; set; } = 0;
