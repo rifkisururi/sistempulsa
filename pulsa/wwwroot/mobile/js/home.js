@@ -66,3 +66,8 @@ $(document).on("click", "#paketdata", function () {
     window.location.href = "Transaksi/Index?produk=data";
 });
 
+
+$(document).on("click", "#tokenlistrik", function () {
+    window.location.href = "Transaksi/Index?produk=token";
+});
+

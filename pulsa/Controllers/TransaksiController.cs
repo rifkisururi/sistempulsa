@@ -13,10 +13,12 @@ namespace Pulsa.Web.Controllers
         private Guid IdLogin { get; set; }
         private IProdukService _produk;
         private ITransaksiService _transaksi;
+        private ISerpulService _serpul;
         public TransaksiController(
             IHttpContextAccessor httpContextAccessor,
             IProdukService produk,
-            ITransaksiService transaksi
+            ITransaksiService transaksi,
+            ISerpulService serpul
         )
         {
             var claimsIdentity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
@@ -32,21 +34,26 @@ namespace Pulsa.Web.Controllers
             }
             _produk = produk;
             _transaksi = transaksi;
+            _serpul = serpul;
         }
         public IActionResult Index(String produk)
         {
             var title = "";
+            var label = "";
             if (produk == "pulsa")
             {
                 title = "pulsa";
+                label = "No HP";
             }
             else if(produk == "data")
             {
                 title = "data";
+                label = "No HP";
             }
-            else if(produk == "tokenlistrik")
+            else if(produk == "token")
             {
                 title = "token listrik";
+                label = "No PLN";
 
             }
             else if(produk == "emonay")
@@ -59,6 +66,7 @@ namespace Pulsa.Web.Controllers
                 title = "game";
                 // redirect new page
             }
+            ViewBag.label = label;
             ViewBag.title = title;
             ViewBag.produk = produk;
             return View();
@@ -67,6 +75,7 @@ namespace Pulsa.Web.Controllers
         {
             var brand = _produk.cekOperator(dest);
             var dtProduk = _produk.getProdukByType(produk, brand);
+
             ViewBag.produk = produk;
             ViewBag.dest = dest;
             ViewBag.listProduk = dtProduk;
@@ -112,6 +121,19 @@ namespace Pulsa.Web.Controllers
                 message = result
             });
         }
-        
+
+        public async Task<IActionResult> cekPln(string no)
+        {
+            var result = await _serpul.cekPln(no);
+
+            return new JsonResult(new
+            {
+                status = true,
+                message = result
+            });
+        }
+
+         
+
     }
 }

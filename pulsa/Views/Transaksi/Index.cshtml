@@ -3,16 +3,23 @@
 }
 <br />
 <div class="w-full rounded-xl bg-blue-400 p-4 pb-2 shadow-md dark:bg-sky-900 transition duration-500 dark:shadow-gray-400 ">
+
+    <label class="col-sm-2 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">@ViewBag.label</label>
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">No Hp</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="dest" placeholder="085">
             <input type="text" value="@ViewBag.produk" id="produk" hidden>
         </div>
+
+        <label class="col-sm-2 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium" id="namaPln"></label>
     </div>
     <br />
     <div class="form-group row">
         <div class="col-sm-10">
+            @if (ViewBag.produk == "token")
+            {
+                <button class="btn btn-success" id="cekPln">Cek No PLN</button>
+            }
             <button class="btn btn-primary" id="cariProduk">Cari produk</button>
         </div>
     </div>

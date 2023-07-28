@@ -268,6 +268,27 @@ namespace Pulsa.Service.Service
             }
             return "";
         }
+
+
+        public async Task<string> cekPln(string noPln)
+        {
+            string namaPln = "Tidak ditemukan";
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("Authorization", _apiKey);
+
+            var cekPLN = await client.GetAsync(_baseUrl + "checkplnprepaid?no_pelanggan=" + noPln);
+            var responseCekPLN = await cekPLN.Content.ReadAsStringAsync();
+            var respond = JsonConvert.DeserializeObject<RespondCekPLN>(responseCekPLN);
+
+            if (respond.status == "success")
+            {
+                namaPln = respond.data.nama_pelanggan+ " " + respond.data.tarif_daya;
+            }
+
+            return namaPln;
+
+        }
     }
 }
 

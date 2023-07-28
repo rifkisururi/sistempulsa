@@ -161,4 +161,16 @@
         public string? status { get; set; }
         public string? message { get; set; }
     }
+
+    public class RespondCekPLN
+    {
+        public string? status { get; set; }
+        public string? message { get; set; }
+        public RespondDataCekPLN? data { get; set; }
+    }
+    public class RespondDataCekPLN
+    {
+        public string? nama_pelanggan { get; set; }
+        public string? tarif_daya { get; set; }
+    }
 }
