@@ -104,11 +104,13 @@ namespace Pulsa.Web.Controllers
             // save nama pembeli
 
             // action ke serpul
-            _transaksi.fixorder(idTransaksi);
+            var result = _transaksi.fixorder(idTransaksi);
 
-
-
-            return null;
+            return new JsonResult(new
+            {
+                status = true,
+                message = result
+            });
         }
         
     }

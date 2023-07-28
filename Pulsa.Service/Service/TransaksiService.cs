@@ -101,7 +101,7 @@ namespace Pulsa.Service.Service
             return true;
         }
 
-        public void fixorder(Guid id)
+        public string fixorder(Guid id)
         {
             var transaksi = _penggunaTransaksi.GetById(id);
             var pengguna = _pengguna.Find(a => a.id == transaksi.pengguna).SingleOrDefault();
@@ -134,7 +134,10 @@ namespace Pulsa.Service.Service
                     String refId = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
                     _serpul.orderPrabayar(transaksi.product_id, transaksi.tujuan, Convert.ToString(transaksi.id));
                 }
+                return "onProses";
+                
             }
+            return "saldo tidak cukup";
         }
 
     }
