@@ -1,19 +1,65 @@
 {
-    "banner" : [
-        {
-            "gambar": "../mobile/img/banner/img_1.png",
-            "teks"  : "wifi murah",
-            "url"   : "google.com"
-        },
-        {
-            "gambar": "../mobile/img/banner/img_2.png",
-            "teks"  : "wifi rumahan",
-            "url"   : "google.com"
-        },
-        {
-            "gambar": "../mobile/img/banner/img_3.png",
-            "teks"  : "wifi rumahan",
-            "url"   : "google.com"
-        }
-    ]
+  "banner": [
+
+    {
+      "gambar": "../mobile/img/banner/1.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/2.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/3.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/4.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/5.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/6.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/7.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/8.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/9.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/10.jpg",
+      "teks": "",
+      "url": ""
+    },
+    {
+      "gambar": "../mobile/img/banner/img_1.png",
+      "teks": "wifi murah",
+      "url": "google.com"
+    },
+    {
+      "gambar": "../mobile/img/banner/img_2.png",
+      "teks": "wifi rumahan",
+      "url": "google.com"
+    }
+  ]
 }
