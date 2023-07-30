@@ -36,7 +36,9 @@ namespace pulsa.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var signInUrlGoogle = _supabaseClient.Auth.SignIn(Provider.Google);
+            var fullUrl = GetFullUrl(_httpContextAccessor.HttpContext);
+            var signInUrlGoogle = _supabaseClient.Auth.SignIn(Provider.Google, new Supabase.Gotrue.SignInOptions { RedirectTo = fullUrl });
+
             var urlGoogle = signInUrlGoogle?.Result?.Uri?.ToString();
 
             ClaimsPrincipal claimsUser = HttpContext.User;
@@ -198,7 +200,6 @@ namespace pulsa.Controllers
             return fullUrl;
         }
 
-    
         [HttpPost]
         public async Task<IActionResult> loginSupabase(string fullUri)
         {

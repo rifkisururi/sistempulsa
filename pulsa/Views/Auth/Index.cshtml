@@ -13,12 +13,8 @@
 
     if (hash) {
         var urlcallback = window.location.origin + "/auth/callBackSupabase?" + hash;
-        console.log('redirect');
-        console.log('urlcallback', urlcallback);
-        alert(hash)
         window.location.replace(urlcallback);
     } else {
         console.log('belum login');
-        // do something else
     }
 </script>
