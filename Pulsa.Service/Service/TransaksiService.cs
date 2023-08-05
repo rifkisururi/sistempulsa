@@ -58,7 +58,7 @@ namespace Pulsa.Service.Service
         {
             return _produk.GetAll().ToList();
         }
-        public Guid transaksi(string product_id, string suppliyer, string dest, Guid penggunan)
+        public Guid transaksi(string product_id, string suppliyer, string dest, Guid pengguna)
         {
 
             var produkDetailSuppiyer = _produkSuppliyer.Find(a => a.product_id == product_id && a.supplier == suppliyer).FirstOrDefault();
@@ -71,8 +71,7 @@ namespace Pulsa.Service.Service
             pt.harga = produkDetailSuppiyer.product_price;
             pt.harga_jual = (produk.margin ?? 0) + produkDetailSuppiyer.product_price + (produk.bagihasil1 ?? 0) + (produk.bagihasil2 ?? 0);
             pt.status_transaksi = 0;
-            pt.pengguna = penggunan;
-            pt.pengguna_id = pengguna;
+            pt.pengguna = pengguna;
 
             _penggunaTransaksi.Add(pt);
             _penggunaTransaksi.Save();
