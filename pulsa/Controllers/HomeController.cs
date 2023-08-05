@@ -8,6 +8,7 @@ using Pulsa.Service.Interface;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Globalization;
 
 namespace pulsa.Controllers
 {
@@ -52,11 +53,10 @@ namespace pulsa.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            
-            var saldo = _serpul.getSaldo();
+            //var saldo = await _serpul.getSaldo();
             var saldoPengguna = _topUpService.saldo(IdLogin);
-            ViewBag.saldo = saldo;
-            ViewBag.nama = fullname+"<br>"+"saldo "+  saldoPengguna.ToString("C");
+            //ViewBag.saldo = saldo;
+            ViewBag.nama = fullname+"<br>"+"saldo "+  saldoPengguna.ToString("N0");
             ViewBag.picture = picture;
             return View();
         }

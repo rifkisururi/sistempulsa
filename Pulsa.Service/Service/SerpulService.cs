@@ -291,12 +291,12 @@ namespace Pulsa.Service.Service
             {
                 var respondCekBill = JsonConvert.DeserializeObject<SerpulRespondCekBillPrabayar>(responseStringPendingPasca);
                 var transaksiPending = _penggunaTransaksi.GetById(Guid.Parse(refId));
-                if (respondCekBill.responseData.status == "SUCCESS" && transaksiPending.status_transaksi != 2) {
+                if (respondCekBill.responseData.status == "SUCCESS" && transaksiPending.status_transaksi != 3) {
                     transaksiPending.sn = respondCekBill.responseData.serial_number;
                     transaksiPending.status_transaksi = 2;
                     transaksiPending.harga = respondCekBill.responseData.price;
                 }
-                else if(respondCekBill.responseData.status == "FAILED" && transaksiPending.status_transaksi != 4)
+                else if(respondCekBill.responseData.status == "FAILED" && transaksiPending.status_transaksi != 2)
                 {
                     transaksiPending.status_transaksi = 3;
                     // todo kembalikan deposit

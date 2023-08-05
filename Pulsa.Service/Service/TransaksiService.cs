@@ -9,6 +9,7 @@ using Pulsa.Service.Interface;
 using Pulsa.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -153,15 +154,15 @@ namespace Pulsa.Service.Service
                 var dtMutasi = new MutasiDTO();
                 dtMutasi.id = item.id_transaksi;
                 dtMutasi.type = item.type_transaksi;
-                dtMutasi.saldo_sebelum = item.saldo_sebelum.ToString("C");
-                dtMutasi.saldo_sesudah= item.saldo_sesudah.ToString("C");
-                dtMutasi.jumlah_mutasi= item.mutasi.ToString("C");
+                dtMutasi.saldo_sebelum = item.saldo_sebelum.ToString("N0");
+                dtMutasi.saldo_sesudah= item.saldo_sesudah.ToString("N0");
+                dtMutasi.jumlah_mutasi= item.mutasi.ToString("N0");
                 dtMutasi.created_at = item.createdAt;
                 if (dtMutasi.type.ToLower() == "pembelian") {
                     var detailMutasi = _penggunaTransaksi.GetById(item.id_transaksi);                    
                     var detailProduk = _produkSuppliyer.Find(a => a.supplier == detailMutasi.suppliyer && a.product_id == detailMutasi.product_id).FirstOrDefault();
-                    dtMutasi.produk = detailProduk.category_name + " " +detailProduk.product_name;
-                    string noteTransaksi = ""; 
+                    dtMutasi.produk = detailProduk.product_name;
+                    string noteTransaksi = detailMutasi.tujuan + " <br>"; 
                     if (detailMutasi.status_transaksi == 1) {
                         noteTransaksi += " sedang di proses";
                     }

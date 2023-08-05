@@ -115,11 +115,12 @@ namespace Pulsa.Web.Controllers
             // action ke serpul
             var result = _transaksi.fixorder(idTransaksi);
 
-            return new JsonResult(new
-            {
-                status = true,
-                message = result
-            });
+            //return new JsonResult(new
+            //{
+            //    status = true,
+            //    message = result
+            //});
+            return Redirect("../../mutasi/detail?id=" + idTransaksi);
         }
 
         public async Task<IActionResult> cekPln(string no)
