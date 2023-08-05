@@ -76,6 +76,7 @@ services.AddTransient<Pulsa.Service.Interface.ITopUpService, Pulsa.Service.Servi
 services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Service.SerpulService>();
 services.AddTransient<Pulsa.Service.Interface.IProdukService, Pulsa.Service.Service.ProdukService>();
 services.AddTransient<Pulsa.Service.Interface.ITransaksiService, Pulsa.Service.Service.TransaksiService>();
+services.AddTransient<Pulsa.Service.Interface.IPenggunaService, Pulsa.Service.Service.PenggunaService> ();
 services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 services.Configure<RequestLocalizationOptions>(options =>

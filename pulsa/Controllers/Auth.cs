@@ -16,6 +16,8 @@ using Supabase.Interfaces;
 using static Supabase.Gotrue.Constants;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http;
+using Pulsa.Service.Interface;
+using Pulsa.Service.Service;
 
 namespace pulsa.Controllers
 {
@@ -25,11 +27,13 @@ namespace pulsa.Controllers
 
         private readonly Client _supabaseClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public Auth(Supabase.Client supabaseClient, IHttpContextAccessor httpContextAccessor)
+        private IPenggunaService _penggunaService;
+        public Auth(Supabase.Client supabaseClient, IHttpContextAccessor httpContextAccessor, IPenggunaService pengguna)
         {
             auth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyCd9Qw1xwXaxB1LIIByISX_c--aclzhaF0"));
             _supabaseClient = supabaseClient;
-            _httpContextAccessor = httpContextAccessor; 
+            _httpContextAccessor = httpContextAccessor;
+            _penggunaService = pengguna;
         }
 
 
@@ -57,9 +61,10 @@ namespace pulsa.Controllers
             Uri siteUri = new Uri(fullUrl+"#"+ "access_token=" + access_token + "&expires_in="+ expires_in + "" + "&provider_token=" + provider_token + "&refresh_token="+ refresh_token + "&token_type=" + token_type);
             var session = await _supabaseClient.Auth.GetSessionFromUrl(siteUri);
             var userMetaData = session.User.UserMetadata;
-            string fullname = userMetaData.Where(a => a.Key == "full_name").SingleOrDefault().Value.ToString();
-            var picture = userMetaData.Where(a => a.Key == "picture").SingleOrDefault().Value.ToString();
+            string fullname = userMetaData.Where(a => a.Key == "full_name").FirstOrDefault().Value.ToString();
+            var picture = userMetaData.Where(a => a.Key == "picture").FirstOrDefault().Value.ToString();
 
+            _penggunaService.cekPengguna(Guid.Parse(session.User.Id), fullname, session.User.Email);
             List<Claim> claims = new List<Claim>() {
                             new Claim(ClaimTypes.Email, session.User.Email),
                             new Claim(ClaimTypes.Uri, siteUri.ToString()),
@@ -83,6 +88,7 @@ namespace pulsa.Controllers
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity), properties);
+            
             return RedirectToAction("Index", "Home");
         }
 
