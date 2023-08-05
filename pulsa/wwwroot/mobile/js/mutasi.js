@@ -1,10 +1,7 @@
 $(document).ready(function () {
-    getMutasi(0, 10);
+    getMutasi(0, 5);
 });
 
-function more() {
-    $('#current_page').append(result);
-};
 
 function getMutasi(from, take) {
     var url = `Mutasi/ajaxIndexMutasi?from=${from}&take=${take}`;
@@ -12,11 +9,12 @@ function getMutasi(from, take) {
         //alert("Data: " + data + "\nStatus: " + status);
         generateHtml(data);
     });
+    $("#form").val(parseInt(from) + parseInt(take));
 
 };
 
 function generateHtml(data) {
-    console.log(data.data);
+    $("#more").remove();
     var dataMutasi = data.data;
     for (var i = 0; i < dataMutasi.length; i++) {
         var color = "green"
@@ -34,8 +32,18 @@ function generateHtml(data) {
         `;
 
         $("#dataMutasi").append(html);
-        console.log(dataMutasi[i].id);
     }
+    var html = `
+        <div id='more'>
+            <button class='btn btn-info btn-sm'>Lebih banyak</button>
+            <br><br>
+            <br><br>
+        <div>
+    `;
+
+
+    $("#dataMutasi").append(html);
+
 }
 
 $(document).on("click", ".card", function () {
@@ -47,4 +55,9 @@ $(document).on("click", ".card", function () {
     } else {
 
     }
+});
+
+
+$(document).on("click", "#more", function () {
+    getMutasi($("#form").val(), 5);
 });

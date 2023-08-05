@@ -146,7 +146,7 @@ namespace Pulsa.Service.Service
         {
             var transaksi = _penggunaMutasi.Find(a => a.pengguna_id == idPengguna)
                 .OrderByDescending(a => Convert.ToInt64(a.createdAt))
-                .Take(jumlah).Skip(start).ToList();
+                .Take(jumlah+start).Skip(start).ToList();
             var listMutasi = new List<MutasiDTO>();
             
             foreach(var item in transaksi)

@@ -27,7 +27,7 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option =>
     {
         option.LoginPath = "/auth/index";
-        option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     })
     .AddGoogle(googleOptions =>
     {
