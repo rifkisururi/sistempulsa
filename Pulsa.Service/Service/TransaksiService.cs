@@ -72,6 +72,7 @@ namespace Pulsa.Service.Service
             pt.harga_jual = (produk.margin ?? 0) + produkDetailSuppiyer.product_price + (produk.bagihasil1 ?? 0) + (produk.bagihasil2 ?? 0);
             pt.status_transaksi = 0;
             pt.pengguna = penggunan;
+            pt.pengguna_id = pengguna;
 
             _penggunaTransaksi.Add(pt);
             _penggunaTransaksi.Save();
