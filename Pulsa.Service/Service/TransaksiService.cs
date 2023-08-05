@@ -120,6 +120,7 @@ namespace Pulsa.Service.Service
                 dataMutasi.mutasi = -1* transaksi.harga_jual;
                 dataMutasi.type_transaksi = "Pembelian";
                 dataMutasi.id_transaksi = transaksi.id;
+                dataMutasi.id_pengguna = transaksi.pengguna;
                 _penggunaMutasi.Add(dataMutasi);
                 _penggunaMutasi.Save();
 
