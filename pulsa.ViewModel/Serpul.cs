@@ -36,9 +36,13 @@
         public SerpulPaymentBill responseData { get; set; }
     }
 
-    public class SerpulRespondCekBill : SerpulRespondStatus
+    public class SerpulRespondCekBillPasca : SerpulRespondStatus
     {
         public DetailPaymentPasca responseData { get; set; }
+    }
+    public class SerpulRespondCekBillPrabayar : SerpulRespondStatus
+    {
+        public DetailPaymentPrabayar responseData { get; set; }
     }
 
     public class SerpulRespondPayment : SerpulRespondStatus
@@ -154,6 +158,23 @@
         public string? created_at { get; set; }
         public string? updated_at { get; set; }
         public int? bill_multiplier { get; set; }
+    }
+
+    public class DetailPaymentPrabayar
+    {
+        public int? id { get; set; }
+        public string? ref_id { get; set; }
+        public string? product_id { get; set; }
+        public string? product_name { get; set; }
+        public int price { get; set; }
+        public string destination { get; set; }
+        public string message { get; set; }
+        public string via { get; set; }
+        public string sender { get; set; }
+        public string serial_number { get; set; }
+        public string status { get; set; }
+        public string created_at { get; set; }
+        public string updated_at { get; set; }
     }
 
     public class DetailPayment

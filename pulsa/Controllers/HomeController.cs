@@ -50,14 +50,13 @@ namespace pulsa.Controllers
                 
             }
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             
             var saldo = _serpul.getSaldo();
             var saldoPengguna = _topUpService.saldo(IdLogin);
-            ViewBag.saldoPengguna = saldoPengguna;
-            ViewBag.nama = fullname+"<br>"+"saldo "+ saldo;
+            ViewBag.saldo = saldo;
+            ViewBag.nama = fullname+"<br>"+"saldo "+  saldoPengguna.ToString("C");
             ViewBag.picture = picture;
             return View();
         }

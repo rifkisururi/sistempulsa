@@ -140,5 +140,73 @@ namespace Pulsa.Service.Service
             return "saldo tidak cukup";
         }
 
+        public List<MutasiDTO> listMutasi(Guid idPengguna, int start, int jumlah)
+        {
+            var transaksi = _penggunaMutasi.Find(a => a.pengguna_id == idPengguna)
+                .OrderByDescending(a => Convert.ToInt64(a.createdAt))
+                .Take(jumlah).Skip(start).ToList();
+            var listMutasi = new List<MutasiDTO>();
+            
+            foreach(var item in transaksi)
+            {
+                var dtMutasi = new MutasiDTO();
+                dtMutasi.id = item.id_transaksi;
+                dtMutasi.type = item.type_transaksi;
+                dtMutasi.saldo_sebelum = item.saldo_sebelum.ToString("C");
+                dtMutasi.saldo_sesudah= item.saldo_sesudah.ToString("C");
+                dtMutasi.jumlah_mutasi= item.mutasi.ToString("C");
+                dtMutasi.created_at = item.createdAt;
+                if (dtMutasi.type.ToLower() == "pembelian") {
+                    var detailMutasi = _penggunaTransaksi.GetById(item.id_transaksi);                    
+                    var detailProduk = _produkSuppliyer.Find(a => a.supplier == detailMutasi.suppliyer && a.product_id == detailMutasi.product_id).FirstOrDefault();
+                    dtMutasi.produk = detailProduk.category_name + " " +detailProduk.product_name;
+                    string noteTransaksi = ""; 
+                    if (detailMutasi.status_transaksi == 1) {
+                        noteTransaksi += " sedang di proses";
+                    }
+                    else if (detailMutasi.status_transaksi == 2)
+                    {
+                        noteTransaksi += " sukses SN " + detailMutasi.sn;
+                    }
+                    else if (detailMutasi.status_transaksi == 3)
+                    {
+                        noteTransaksi += " gagal " + detailMutasi.sn;
+                    }
+
+                    dtMutasi.note = noteTransaksi;
+                    listMutasi.Add(dtMutasi);
+                }
+            }
+
+            return listMutasi;
+        }
+
+
+        public async Task<DetailTransaksiDTO> detailTransaksi(Guid id) {
+            await _serpul.cekTransaksiPendingPrabayar(Convert.ToString(id));
+
+            var dtMutasi = new DetailTransaksiDTO();
+            var detailMutasi = _penggunaMutasi.Find(a => a.id_transaksi == id).FirstOrDefault();
+            var detailTransaksi = _penggunaTransaksi.GetById(id);
+            var detailProduk = _produkSuppliyer.Find(a => a.supplier == detailTransaksi.suppliyer && a.product_id == detailTransaksi.product_id).FirstOrDefault();
+
+            dtMutasi.id = id;
+            dtMutasi.dest = detailTransaksi.tujuan;
+            dtMutasi.product_name = detailProduk.product_name;
+            dtMutasi.product_detail = detailProduk.product_detail;
+            dtMutasi.product_syarat = detailProduk.product_syarat;
+            dtMutasi.product_zona = detailProduk.product_zona;
+            dtMutasi.product_id = detailProduk.product_id;
+            dtMutasi.created_at = detailProduk.updated_at;
+            dtMutasi.price_buyer = detailTransaksi.harga_jual_agen.GetValueOrDefault().ToString("C");
+            dtMutasi.saldo_sebelum = detailMutasi.saldo_sebelum.ToString("C");
+            dtMutasi.saldo_sesudah = detailMutasi.saldo_sesudah.ToString("C");
+            dtMutasi.jumlah_mutasi = detailMutasi.mutasi.ToString("C");
+            dtMutasi.nama_pembeli = "";
+            dtMutasi.sn = detailTransaksi.sn;
+            dtMutasi.status = detailTransaksi.status_transaksi;
+
+            return dtMutasi;
+        }
     }
 }

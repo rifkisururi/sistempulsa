@@ -20,8 +20,8 @@ namespace Pulsa.Domain.Entities
         public string? sn { get; set; }
         public string? hit_start { get; set; }
         public string? hit_result { get; set; }
-        public string createdAt { get; set; } = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
-        public string? updatedAt { get; set; }
+        public string? createdAt { get; set; } 
+        public string? updatedAt { get; set; } = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
         public Guid? pasca_id { get; set; }
 
     }

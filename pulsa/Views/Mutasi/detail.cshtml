@@ -1,0 +1,105 @@
+﻿@using Pulsa.ViewModel;
+@{
+    Layout = "_UserLayout";
+    var data = (DetailTransaksiDTO)ViewBag.data;
+}
+
+<nav class="fixed flex flex-between top-0 left-1/2 -translate-x-1/2 w-full h-10 bg-blue-400 dark:bg-sky-900 max-w-md px-4 space-x-8 z-30">
+    <div class="flex flex-col justify-center w-full items-center cursor-pointer col p-2">
+        <strong>Detail Transaksi</strong>
+    </div>
+</nav>
+<br />
+<br />
+
+<div class="card" id="${dataMutasi[i].id}" type="${dataMutasi[i].type}">
+    <table class="table">
+        <tr>
+            <th>Tujuan</th>
+            <td>@data.dest</td>
+        </tr>
+        <tr>
+            <th>Produk Name</th>
+            <td>@data.product_name</td>
+        </tr>
+        @if (!string.IsNullOrEmpty(data.product_syarat))
+        {
+            <tr>
+                <th></th>
+                <td>@data.product_syarat</td>
+            </tr>
+        }
+        @if (!string.IsNullOrEmpty(data.product_zona))
+        {
+            <tr>
+                <th></th>
+                <td>@data.product_zona</td>
+            </tr>
+        }
+        @if (!string.IsNullOrEmpty(data.product_detail))
+        {
+            <tr>
+                <th></th>
+                <td>@data.product_detail</td>
+            </tr>
+        }
+        <tr>
+            <th>Harga</th>
+            <td>@data.price_buyer</td>
+        </tr>
+        <tr>
+            <th>SN</th>
+            @if (data.status == 1)
+            {
+                <td><button class="btn btn-primary btn-sm">Cek Transaksi</button></td>
+            }
+            else
+            {
+                <td>@data.sn</td>
+            }
+        </tr>
+        <tr>
+            <th>Pembeli</th>
+            <td>@data.nama_pembeli</td>
+        </tr>
+        <tr>
+            <td colspan="2" >
+                <button class="btn btn-success btn-sm">WA</button>
+                <button class="btn btn-warning btn-sm">Komplain</button>
+                <button class="btn btn-primary btn-sm detailTransaksi">Detail</button>
+                <button class="btn btn-primary btn-sm hideTransaksi">Sembunyikan</button>
+
+            </td>
+        </tr>
+        <tr class="detail">
+            <th>Saldo sebelum</th>
+            <td>@data.saldo_sebelum</td>
+        </tr>
+        <tr class="detail">
+            <th>Harga Beli</th>
+            <td>@data.jumlah_mutasi</td>
+        </tr>
+        <tr class="detail">
+            <th>Saldo sesudah</th>
+            <td>@data.saldo_sesudah</td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".detail").hide();
+        $(".hideTransaksi").hide();
+    });
+    $(document).on("click", ".detailTransaksi", function () {
+        $(".detail").show();
+        $(".hideTransaksi").show();
+        $(".detailTransaksi").hide();
+    });
+
+    $(document).on("click", ".hideTransaksi", function () {
+        $(".detail").hide();
+        $(".hideTransaksi").hide();
+        $(".detailTransaksi").show();
+    });
+</script>

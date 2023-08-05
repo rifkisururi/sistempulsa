@@ -14,6 +14,8 @@ namespace Pulsa.Service.Interface
         public Pengguna_Traksaksi getDetailTransaksi(Guid id);
         public bool verifikasiPin(Guid id, string pin);
         public string fixorder(Guid id);
+        public List<MutasiDTO> listMutasi(Guid idPengguna, int start, int jumlah);
+        Task<DetailTransaksiDTO> detailTransaksi(Guid id);
 
     }
 }

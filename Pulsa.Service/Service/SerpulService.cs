@@ -25,6 +25,8 @@ namespace Pulsa.Service.Service
         ITagihanDetailRepository _tagihanDetailRepository;
         ITagihanMasterRepository _tagihanMasterRepository;
         ISupplier_produkRepository _supplier_produkRepository;
+        IPenggunaTransaksiRepository _penggunaTransaksi;
+
         private IMapper _mapper;
         private readonly PulsaDataContext _context;
         private readonly IConfiguration _configuration;
@@ -40,6 +42,7 @@ namespace Pulsa.Service.Service
                 ITagihanDetailRepository tagihanDetailRepository,
                 ITagihanMasterRepository tagihanMasterRepository,
                 ISupplier_produkRepository Supplier_produkRepository,
+                IPenggunaTransaksiRepository penggunaTransaksi,
                 IMapper mapper,
                 PulsaDataContext context
         ) {
@@ -49,6 +52,7 @@ namespace Pulsa.Service.Service
             _tagihanDetailRepository = tagihanDetailRepository;
             _tagihanMasterRepository = tagihanMasterRepository;
             _supplier_produkRepository = Supplier_produkRepository;
+            _penggunaTransaksi = penggunaTransaksi;
             _mapper = mapper;
             _context = context;
             _apiKey = configuration.GetSection("serpul_apikey").Value;
@@ -241,7 +245,13 @@ namespace Pulsa.Service.Service
             return dtTagihan;
         }
 
-        public async Task<string> cekTransaksiPending(string refId)
+        public List<Pengguna_Traksaksi> cekTransaksiPrabayarPending()
+        {
+            var dtTagihan = _penggunaTransaksi.Find(a => a.status_transaksi == 1 && a.suppliyer == "serpul").AsNoTracking().ToList();
+            return dtTagihan;
+        }
+
+        public async Task<string> cekTransaksiPendingPasca(string refId)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -251,7 +261,7 @@ namespace Pulsa.Service.Service
             var respond = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringPendingPasca);
             if (respond.responseCode == 200)
             {
-                var respondCekBill = JsonConvert.DeserializeObject<SerpulRespondCekBill>(responseStringPendingPasca);
+                var respondCekBill = JsonConvert.DeserializeObject<SerpulRespondCekBillPasca>(responseStringPendingPasca);
 
                 var dtTagihan = _tagihanDetailRepository.Find(a => a.ref_id == refId ).FirstOrDefault();
                 dtTagihan.jumlah_tagihan = respondCekBill.responseData.bill_tagihan;
@@ -264,6 +274,38 @@ namespace Pulsa.Service.Service
                 _tagihanDetailRepository.Save();
             }
             else {
+                return respond.responseMessage;
+            }
+            return "";
+        }
+
+        public async Task<string> cekTransaksiPendingPrabayar(string refId)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("Authorization", _apiKey);
+            var cekPendingPasca = await client.GetAsync(_baseUrl + "prabayar/history/" + refId);
+            var responseStringPendingPasca = await cekPendingPasca.Content.ReadAsStringAsync();
+            var respond = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringPendingPasca);
+            if (respond.responseCode == 200)
+            {
+                var respondCekBill = JsonConvert.DeserializeObject<SerpulRespondCekBillPrabayar>(responseStringPendingPasca);
+                var transaksiPending = _penggunaTransaksi.GetById(Guid.Parse(refId));
+                if (respondCekBill.responseData.status == "SUCCESS" && transaksiPending.status_transaksi != 2) {
+                    transaksiPending.sn = respondCekBill.responseData.serial_number;
+                    transaksiPending.status_transaksi = 2;
+                    transaksiPending.harga = respondCekBill.responseData.price;
+                }
+                else if(respondCekBill.responseData.status == "FAILED" && transaksiPending.status_transaksi != 4)
+                {
+                    transaksiPending.status_transaksi = 3;
+                    // todo kembalikan deposit
+                }
+                _penggunaTransaksi.Update(transaksiPending);
+                _penggunaTransaksi.Save();
+            }
+            else
+            {
                 return respond.responseMessage;
             }
             return "";
@@ -285,10 +327,9 @@ namespace Pulsa.Service.Service
             {
                 namaPln = respond.data.nama_pelanggan+ " " + respond.data.tarif_daya;
             }
-
             return namaPln;
-
         }
+
     }
 }
 

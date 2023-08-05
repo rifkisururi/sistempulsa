@@ -154,7 +154,17 @@ namespace pulsa.Controllers.tagihan
             var tagihan = _serpul.cekTransaksiPascaPending();
             foreach (var td in tagihan)
             {
-                await _serpul.cekTransaksiPending(td.ref_id);
+                await _serpul.cekTransaksiPendingPasca(td.ref_id);
+            }
+            return Ok("tidak ada pending transaksi"); ;
+        }
+
+        public async Task<IActionResult> cekTransaksiPrabayarPending()
+        {
+            var tagihan = _serpul.cekTransaksiPrabayarPending();
+            foreach (var td in tagihan)
+            {
+                await _serpul.cekTransaksiPendingPrabayar(Convert.ToString(td.id));
             }
             return Ok("tidak ada pending transaksi"); ;
         }
