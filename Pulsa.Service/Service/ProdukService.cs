@@ -46,7 +46,7 @@ namespace Pulsa.Service.Service
         public List<CariProdukDTO> getProdukByType(string type, string brand)
         {
 
-            var data = (from p in _context.produks.Where(a => a.brand.ToLower() == brand.ToLower() && a.category.ToLower() == type.ToLower())
+            var data = (from p in _context.produks.Where(a => a.brand.Contains(brand) && a.category.ToLower() == type.ToLower())
                         join pd in _context.produk_details on p.product_id.ToLower() equals pd.product_id.ToLower()
                         join ps in _context.supplier_produks on pd.suppliyer_product_id.ToLower() equals ps.product_id.ToLower()
                         where
