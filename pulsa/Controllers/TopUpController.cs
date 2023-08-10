@@ -19,13 +19,18 @@ namespace Pulsa.Web.Controllers
         {
             this.context = context;
             this._topUpService = topUpService;
-            
+
         }
         public IActionResult Index()
         {
             return View();
         }
         public IActionResult History()
+        {
+            return View();
+        }
+
+        public IActionResult request()
         {
             return View();
         }

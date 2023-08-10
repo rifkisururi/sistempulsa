@@ -11,9 +11,6 @@ $(document).on("click", ".saveData", function () {
     dataPost.nama_pengirim = namePengirim;
     dataPost.status = 1;
     dataPost.action = "add";
-
-    debugger
-
     $.ajax({
         type: "POST",
         url: "../../TopUp/action",
@@ -35,7 +32,6 @@ $(document).on("click", ".saveData", function () {
             alert('terjadi kesalahan, hubungi admin');
         }
     });
-
 });
 
 
@@ -56,6 +52,10 @@ $(document).on("click", ".btnEdit", function () {
         console.log('always executed');
     });
 
+});
+
+$(document).on("click", "#isiSaldo", function () {
+    window.location.href = "Topup/request";
 });
 
 $(document).on("click", "#pulsa", function () {

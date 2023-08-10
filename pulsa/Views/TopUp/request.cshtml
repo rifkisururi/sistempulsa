@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "_UserLayout";
+}
+<br />
+<nav class="fixed flex flex-between top-0 left-1/2 -translate-x-1/2 w-full h-10 bg-blue-400 dark:bg-sky-900 max-w-md px-4 space-x-8 z-30">
+    <div class="flex flex-col justify-center w-full items-center cursor-pointer col p-2">
+        <strong>Deposit</strong>
+    </div>
+</nav>
+<div class="w-full rounded-xl bg-blue-400 p-4 pb-2 shadow-md dark:bg-sky-900 transition duration-500 dark:shadow-gray-400 ">
+
+    <label class="col-sm-2 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">Jumlah</label>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <input type="number" class="form-control" id="jumlah">
+        </div>
+    </div>
+
+
+    <label class="col-sm-10 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">Metode Pembayaran</label>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <select class="form-control" id="metode">
+                <option value="jago">Bank Jago (Otomatis)</option>
+                <option value="bri">BRI</option>
+                <option value="permata">Permata Bank</option>
+            </select>
+        </div>
+    </div>
+    <label class="col-sm-10 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">Nama Pengirim</label>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="namePengirim">
+        </div>
+    </div>
+    
+    <br />
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button class="btn btn-primary" id="deposit">Request</button>
+        </div>
+    </div>
+</div>
+
+<script src="~/mobile/js/topup.js"></script>

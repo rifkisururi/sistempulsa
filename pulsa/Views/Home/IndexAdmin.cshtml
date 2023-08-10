@@ -23,7 +23,7 @@
                                         Serpul
                                     </h6>
                                     <h6 class="font-extrabold mb-0">
-                                        @string.Format("{0:#,##0}", (decimal)ViewBag.saldo)
+                                        @ViewBag.saldo
                                     </h6>
                                 </div>
                             </div>
@@ -63,8 +63,7 @@
                                         Saldo
                                     </h6>
                                     <h6 class="font-extrabold mb-0">
-
-                                        @string.Format("{0:#,##0}", (decimal)ViewBag.saldoPengguna)
+                                        @ViewBag.saldoPengguna
                                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" style="float:right;"
                                                 data-bs-target="#inlineForm">
                                             Deposit ->

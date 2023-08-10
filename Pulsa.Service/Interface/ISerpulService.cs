@@ -7,7 +7,7 @@ namespace Pulsa.Service.Interface
     public interface ISerpulService
     {
         //Task<int> getSaldo();
-        public int getSaldo();
+        Task<int> getSaldo();
         Task<List<Supplier_produk>> refressProduk();
         public bool saveProduk(List<Supplier_produk> tm);
         Task<string> getTagihan(TagihanMasterDTO tm);

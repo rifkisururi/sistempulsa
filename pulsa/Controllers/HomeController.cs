@@ -60,6 +60,16 @@ namespace pulsa.Controllers
             ViewBag.picture = picture;
             return View();
         }
+
+        public async Task<IActionResult> IndexAdmin()
+        {
+            var saldo = await _serpul.getSaldo();
+            var saldoPengguna = _topUpService.saldo(IdLogin);
+            ViewBag.saldo = saldo.ToString("N0");
+            ViewBag.nama = fullname + "<br>" + "saldo " + saldoPengguna.ToString("N0");
+            ViewBag.picture = picture;
+            return View();
+        }
         public IActionResult env()
         {
             var environment = _env.EnvironmentName;

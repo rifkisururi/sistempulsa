@@ -16,9 +16,10 @@ namespace Pulsa.helper
             CreateMap<TopUp, VmRequestTopup>();
             CreateMap<Tagihan_master, TagihanMasterDTO > ();
 
-            // sumber, tujuan
+            // tujuan, sumber 
             CreateMap<prabayarProduk, Supplier_produk>();
             CreateMap<TagihanMasterDTO, Tagihan_master>();
+            CreateMap<TopUp, InputTopUpDTO>();
 
         }
     }

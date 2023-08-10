@@ -58,7 +58,7 @@ namespace Pulsa.Service.Service
             _apiKey = configuration.GetSection("serpul_apikey").Value;
             _baseUrl = configuration.GetSection("serpul_url").Value;
         }
-        public int getSaldo()
+        public async Task<int> getSaldo()
         {
             HttpClient _httpClient = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + "account");
