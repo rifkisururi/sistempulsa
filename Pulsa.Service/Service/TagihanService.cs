@@ -153,11 +153,11 @@ namespace Pulsa.Service.Service
                       where
                         tm.is_active == true
                         && detail.harus_dibayar != false
-                        //&& detail.tanggal_cek >= awalBulan
+                        && detail.tanggal_cek >= awalBulan
                         && detail.request_bayar != true
                         && tm.autopay == 1
-                        && (tm.autopay_day == 0 || tm.autopay_day >= dayToday)
-                        && (tm.autopay_hour == 0 || tm.autopay_hour >= hourToday)
+                        && (tm.autopay_day == 0 || tm.autopay_day <= dayToday)
+                        && (tm.autopay_hour == 0 || (tm.autopay_hour >= hourToday && tm.autopay_day <= dayToday))
                       select new TagihanMasterDTO
                       {
                           id = tm.id,
