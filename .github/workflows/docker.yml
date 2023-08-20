@@ -23,4 +23,4 @@ jobs:
         run: docker push rifkisururi/sistempulsa:latest
 
       - name: Trigger URL after push
-        run: curl -X POST ${{ secrets.AAPANEL }}
+        run: curl -X GET ${{ secrets.AAPANEL }}
