@@ -21,6 +21,3 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push rifkisururi/sistempulsa:latest
-
-      - name: Trigger URL after push
-        run: curl -X GET ${{ secrets.AAPANEL }}
