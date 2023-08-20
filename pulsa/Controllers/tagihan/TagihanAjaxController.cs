@@ -170,12 +170,14 @@ namespace pulsa.Controllers.tagihan
         }
         public async Task<IActionResult> autoPayTagihan()
         {
+            var dateNow = DateTime.Now;
             var tagihan = _tagihan.GetListBayarAutoPay();
             foreach (var td in tagihan)
             {
                 await _serpul.PayTagihan(td);
             }
-            return Ok("tidak ada pending autopay"); ;
+            
+            return Ok("tidak ada pending autopay " + dateNow.ToLongDateString() + " " + dateNow.ToLongTimeString()); ;
         }
 
 
