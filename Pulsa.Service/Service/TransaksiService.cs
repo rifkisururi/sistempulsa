@@ -136,10 +136,10 @@ namespace Pulsa.Service.Service
                     String refId = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
                     _serpul.orderPrabayar(transaksi.product_id, transaksi.tujuan, Convert.ToString(transaksi.id));
                 }
-                return "onProses";
+                return "1";
                 
             }
-            return "saldo tidak cukup";
+            return "0";
         }
 
         public List<MutasiDTO> listMutasi(Guid idPengguna, int start, int jumlah)

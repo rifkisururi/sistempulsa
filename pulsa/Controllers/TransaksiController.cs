@@ -114,13 +114,23 @@ namespace Pulsa.Web.Controllers
 
             // action ke serpul
             var result = _transaksi.fixorder(idTransaksi);
-
-            //return new JsonResult(new
-            //{
-            //    status = true,
-            //    message = result
-            //});
-            return Redirect("../../mutasi/detail?id=" + idTransaksi);
+            if (result == "0")
+            {
+                return new JsonResult(new
+                {
+                    status = false,
+                    message = "Saldo tidak cukup"
+                });
+            }
+            else {
+                return new JsonResult(new
+                {
+                    status = true,
+                    message = "Transaksi sedang di proses"
+                });
+            }
+            
+            
         }
 
         public async Task<IActionResult> cekPln(string no)

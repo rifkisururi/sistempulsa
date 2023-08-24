@@ -287,10 +287,10 @@ namespace Pulsa.Service.Service
             var cekPendingPasca = await client.GetAsync(_baseUrl + "prabayar/history/" + refId);
             var responseStringPendingPasca = await cekPendingPasca.Content.ReadAsStringAsync();
             var respond = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringPendingPasca);
+            var transaksiPending = _penggunaTransaksi.GetById(Guid.Parse(refId));
             if (respond.responseCode == 200)
             {
                 var respondCekBill = JsonConvert.DeserializeObject<SerpulRespondCekBillPrabayar>(responseStringPendingPasca);
-                var transaksiPending = _penggunaTransaksi.GetById(Guid.Parse(refId));
                 if (respondCekBill.responseData.status == "SUCCESS" && transaksiPending.status_transaksi != 3) {
                     transaksiPending.sn = respondCekBill.responseData.serial_number;
                     transaksiPending.status_transaksi = 2;
@@ -306,6 +306,9 @@ namespace Pulsa.Service.Service
             }
             else
             {
+                transaksiPending.status_transaksi = 3;
+                _penggunaTransaksi.Update(transaksiPending);
+                _penggunaTransaksi.Save();
                 return respond.responseMessage;
             }
             return "";
