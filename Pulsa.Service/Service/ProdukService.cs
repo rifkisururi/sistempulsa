@@ -43,14 +43,21 @@ namespace Pulsa.Service.Service
         public List<Domain.Entities.Produk> getAllProduk() { 
             return _produk.GetAll().ToList();
         }
-        public List<CariProdukDTO> getProdukByType(string type, string brand)
+        public List<CariProdukDTO> getProdukByType(string type, string brand, string typeProduk)
         {
+            if (!string.IsNullOrEmpty(typeProduk))
+                brand = "";
 
-            var data = (from p in _context.produks.Where(a => a.brand.Contains(brand) && a.category.ToLower() == type.ToLower())
+            var data = (from p in _context.produks.Where(a =>
+                            (a.brand.Contains(brand) || brand == "")
+                            && a.category.ToLower() == type.ToLower()
+                            && ( a.type_produk.ToLower() == typeProduk.ToLower() || typeProduk == "" )
+                        )
                         join pd in _context.produk_details on p.product_id.ToLower() equals pd.product_id.ToLower()
                         join ps in _context.supplier_produks on pd.suppliyer_product_id.ToLower() equals ps.product_id.ToLower()
                         where
                             pd.suppliyer.ToLower() == ps.supplier.ToLower()
+
                         select new CariProdukDTO
                         {
                             product_id = p.product_id,
@@ -64,8 +71,6 @@ namespace Pulsa.Service.Service
                         }).Distinct();
             return data.ToList();
         }
-
-        
 
         public CariProdukDTO getProdukSuppliyer(string produkId, string suppliyer)
         {
@@ -130,6 +135,13 @@ namespace Pulsa.Service.Service
             }
 
             return operatorName;
+        }
+
+        public IQueryable<string> listTypeProduk(string category) {
+
+            var list = _produk.Find(a => a.category.ToLower() == category.ToLower()).Select(a => a.type_produk).Distinct();
+            return list;
+
         }
     }
 }

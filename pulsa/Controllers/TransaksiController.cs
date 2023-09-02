@@ -56,14 +56,16 @@ namespace Pulsa.Web.Controllers
                 label = "No PLN";
 
             }
-            else if(produk == "emonay")
+            else if(produk == "ud")
             {
-                title = "emonay";
-                // redirect new page
+                label = "Tujuan";
+                title = "Uang digital";
+                var listTypeProduk = _produk.listTypeProduk(produk);
+                ViewBag.TypeProduk = listTypeProduk.ToList();
             }
             else if(produk == "game")
             {
-                title = "game";
+                label = "game";
                 // redirect new page
             }
             ViewBag.label = label;
@@ -71,10 +73,10 @@ namespace Pulsa.Web.Controllers
             ViewBag.produk = produk;
             return View();
         }
-        public IActionResult cariproduk(string produk, string dest)
+        public IActionResult cariproduk(string produk, string dest, string typeProduk = "")
         {
             var brand = _produk.cekOperator(dest);
-            var dtProduk = _produk.getProdukByType(produk, brand);
+            var dtProduk = _produk.getProdukByType(produk, brand, typeProduk);
 
             ViewBag.produk = produk;
             ViewBag.dest = dest;

@@ -1,12 +1,13 @@
 $(document).on("click", "#cariProduk", function () {
-    var produk = $("#produk").val();
-    var dest = $("#dest").val();
-    window.location.href = `cariproduk?produk=${produk}&dest=${dest}`;
+    let produk = $("#produk").val();
+    let dest = $("#dest").val();
+    let typeProduk = $("#typeProduk").val();
+    
+    window.location.href = `cariproduk?produk=${produk}&dest=${dest}&typeProduk=${typeProduk}`;
 });
 
 $(document).on("click", "#cekPln", function () {
-    var produk = $("#produk").val();
-    var dest = $("#dest").val();
+    let dest = $("#dest").val();
     console.log('sini');
     $.get("/Transaksi/cekPln?no=" + dest, function (data) {
         console.log(typeof data); // string
@@ -20,7 +21,7 @@ $(document).on("click", "#cekPln", function () {
 
 
 $(document).on("click", ".history", function () {
-    var produk = $("#produk").val();
-    var dest = $(this).val();
+    let produk = $("#produk").val();
+    let dest = $(this).val();
     window.location.href = `cariproduk?produk=${produk}&dest=${dest}`;
 });

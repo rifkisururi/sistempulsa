@@ -71,6 +71,11 @@ $(document).on("click", "#tokenlistrik", function () {
 });
 
 $(document).on("click", "#ma", function () {
-    window.location.href = "Transaksi/Index?produk=MA";
+    window.location.href = "Transaksi/Index?produk=ma";
 });
+$(document).on("click", "#emonay", function () {
+    window.location.href = "Transaksi/Index?produk=ud";
+});
+
+
 

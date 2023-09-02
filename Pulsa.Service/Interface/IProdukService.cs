@@ -10,8 +10,9 @@ namespace Pulsa.Service.Interface
     public interface IProdukService
     {
         public List<Domain.Entities.Produk> getAllProduk();
-        public List<CariProdukDTO> getProdukByType(string type, string brand);
+        public List<CariProdukDTO> getProdukByType(string type, string brand, string typeProduk);
         public string cekOperator(string dest);
         public CariProdukDTO getProdukSuppliyer(string produkId, string suppliyer);
+        public IQueryable<string> listTypeProduk(string category);
     }
 }
