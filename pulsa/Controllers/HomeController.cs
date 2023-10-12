@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Mvc;
 using pulsa.Models;
 using Pulsa.Data;
 using System.Diagnostics;
 using Pulsa.Service.Interface;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Globalization;
 
 namespace pulsa.Controllers
 {
@@ -20,18 +16,21 @@ namespace pulsa.Controllers
         private readonly IWebHostEnvironment _env;
         private  ITopUpService _topUpService;
         private ISerpulService _serpul;
+        private IDflashService _dflash;
         private Guid IdLogin { get; set; }
         private string fullname { get; set; }
         private string picture { get; set; }
         public HomeController(
             PulsaDataContext context, 
             IWebHostEnvironment env, 
-            ISerpulService serpul, 
+            ISerpulService serpul,
+            IDflashService dflash,
             ITopUpService topUpService,
             IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
             _env = env;
+            _dflash = dflash;
             _serpul = serpul;
             _topUpService = topUpService;
 
@@ -54,6 +53,8 @@ namespace pulsa.Controllers
         public async Task<IActionResult> Index()
         {
             //var saldo = await _serpul.getSaldo();
+            // var saldoDflash = await _dflash.getSaldo();
+
             var saldoPengguna = _topUpService.saldo(IdLogin);
             //ViewBag.saldo = saldo;
             ViewBag.nama = fullname+"<br>"+"saldo "+  saldoPengguna.ToString("N0");

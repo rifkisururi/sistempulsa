@@ -79,7 +79,6 @@ namespace Pulsa.Service.Service
 
 
             return pt.id;
-            //return _produk.GetAll().ToList();
         }
 
         public Pengguna_Traksaksi getDetailTransaksi(Guid id)
@@ -133,8 +132,8 @@ namespace Pulsa.Service.Service
                 if (transaksi.suppliyer.ToLower() == "serpul")
                 {
                     // hit serpul
-                    String refId = Convert.ToString(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
-                    _serpul.orderPrabayar(transaksi.product_id, transaksi.tujuan, Convert.ToString(transaksi.id));
+                    
+                    _serpul.orderPrabayar(transaksi.product_id, transaksi.tujuan, transaksi.id.ToString());
                 }
                 return "1";
                 
@@ -185,7 +184,7 @@ namespace Pulsa.Service.Service
 
 
         public async Task<DetailTransaksiDTO> detailTransaksi(Guid id) {
-            await _serpul.cekTransaksiPendingPrabayar(Convert.ToString(id));
+            await _serpul.cekTransaksiPendingPrabayar(id.ToString());
 
             var dtMutasi = new DetailTransaksiDTO();
             var detailMutasi = _penggunaMutasi.Find(a => a.id_transaksi == id).FirstOrDefault();

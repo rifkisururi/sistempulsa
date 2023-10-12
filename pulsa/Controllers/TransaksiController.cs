@@ -105,7 +105,8 @@ namespace Pulsa.Web.Controllers
         {
             // cek pin
             bool cekPin = _transaksi.verifikasiPin(IdLogin, pin);
-            if (cekPin == false) {
+            if (!cekPin)
+            {
                 return new JsonResult(new
                 {
                     status = false,

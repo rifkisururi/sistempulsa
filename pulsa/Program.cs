@@ -12,7 +12,6 @@ using Pulsa.helper;
 using Supabase;
 using System.Globalization;
 using System.Net;
-using Supabase;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -77,6 +76,7 @@ services.AddTransient<Pulsa.Service.Interface.ISerpulService, Pulsa.Service.Serv
 services.AddTransient<Pulsa.Service.Interface.IProdukService, Pulsa.Service.Service.ProdukService>();
 services.AddTransient<Pulsa.Service.Interface.ITransaksiService, Pulsa.Service.Service.TransaksiService>();
 services.AddTransient<Pulsa.Service.Interface.IPenggunaService, Pulsa.Service.Service.PenggunaService> ();
+services.AddTransient<Pulsa.Service.Interface.IDflashService, Pulsa.Service.Service.DflashService> ();
 services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 services.Configure<RequestLocalizationOptions>(options =>

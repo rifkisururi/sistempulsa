@@ -66,7 +66,6 @@ namespace Pulsa.Service.Service
             request.Headers.Add("Authorization", _apiKey);
 
             var response = _httpClient.Send(request);
-            var responseCode = response.EnsureSuccessStatusCode();
 
             var todo = response.Content.ReadFromJsonAsync<SerpulRespondAccount>().Result;
             return todo.responseData.balance;
@@ -192,7 +191,6 @@ namespace Pulsa.Service.Service
             client.DefaultRequestHeaders.Add("Authorization", _apiKey);
             var responseCheck = await client.PostAsync(_baseUrl + "prabayar/order", content);
             var responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
-            var serpulRespondStatus = JsonConvert.DeserializeObject<SerpulRespondStatus>(responseStringCheck);
             return responseStringCheck;
         }
 
@@ -219,7 +217,6 @@ namespace Pulsa.Service.Service
                             var responsePrabayarProdukCheck = await responsePrabayarProduk.Content.ReadAsStringAsync();
                             var prabayarProduk = JsonConvert.DeserializeObject<responsePrabayarProduk>(responsePrabayarProdukCheck);
                             foreach (var pp in prabayarProduk.responseData) {
-                                //int? dp = null;
                                 var dataInsert = _mapper.Map<Supplier_produk>(pp);
                                 dataInsert.supplier = "serpul";
                                 dataInsert.updated_at = updated_at;
@@ -233,8 +230,8 @@ namespace Pulsa.Service.Service
             return sp;
         }
 
-        public bool saveProduk(List<Supplier_produk> dt){
-            _supplier_produkRepository.AddRange(dt);
+        public bool saveProduk(List<Supplier_produk> dm){
+            _supplier_produkRepository.AddRange(dm);
             _supplier_produkRepository.Save();
             return true;
         }

@@ -114,7 +114,7 @@ namespace pulsa.Controllers.tagihan
             foreach (var td in tagihanMaster) {
                  await _serpul.getTagihan(td);
             }
-            return Ok("cek data sukses"); ;
+            return Ok("cek data sukses");
         }
 
         [Authorize]
@@ -126,8 +126,6 @@ namespace pulsa.Controllers.tagihan
             {
                  await _serpul.PayTagihan(td);
             }
-            //int saldo = _serpul.getSaldo();
-            //var tagihan = await _serpul.getTagihan("PLN", "521510718785");
             return null;
         }
 
@@ -156,7 +154,7 @@ namespace pulsa.Controllers.tagihan
             {
                 await _serpul.cekTransaksiPendingPasca(td.ref_id);
             }
-            return Ok("tidak ada pending transaksi"); ;
+            return Ok("tidak ada pending transaksi");
         }
 
         public async Task<IActionResult> cekTransaksiPrabayarPending()
@@ -164,9 +162,9 @@ namespace pulsa.Controllers.tagihan
             var tagihan = _serpul.cekTransaksiPrabayarPending();
             foreach (var td in tagihan)
             {
-                await _serpul.cekTransaksiPendingPrabayar(Convert.ToString(td.id));
+                await _serpul.cekTransaksiPendingPrabayar(td.id.ToString());
             }
-            return Ok("tidak ada pending transaksi"); ;
+            return Ok("tidak ada pending transaksi");
         }
         public async Task<IActionResult> autoPayTagihan()
         {
