@@ -53,7 +53,7 @@ namespace pulsa.Controllers
         public async Task<IActionResult> Index()
         {
             //var saldo = await _serpul.getSaldo();
-            var saldoDflash = await _dflash.getSaldo();
+            //var saldoDflash = await _dflash.getSaldo();
 
             var saldoPengguna = _topUpService.saldo(IdLogin);
             //ViewBag.saldo = saldo;
