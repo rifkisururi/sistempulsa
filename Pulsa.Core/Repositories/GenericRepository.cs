@@ -23,7 +23,7 @@ namespace Pulsa.Core.Repositories
         }
         public IQueryable<T> Find(Expression<Func<T, bool>> expression)
         {
-            return _context.Set<T>().Where(expression);
+            return _context.Set<T>().AsNoTracking().Where(expression);
         }
         public IQueryable<T> GetAll()
         {

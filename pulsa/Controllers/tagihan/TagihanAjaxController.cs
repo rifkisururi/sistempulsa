@@ -17,16 +17,19 @@ namespace pulsa.Controllers.tagihan
         private readonly PulsaDataContext context;
         private ITagihanService _tagihan;
         private ISerpulService _serpul; 
+        private IDflashService _dflash;
         private IMapper _mapper;
         public TagihanAjaxController(
             PulsaDataContext context, 
             ITagihanService tagihan, 
             ISerpulService serpul,
+            IDflashService dflash,
             IMapper mapper)
         {
             this.context = context;
             _tagihan = tagihan;
             _serpul = serpul;
+            _dflash = dflash;
             _mapper = mapper;
         }
 
@@ -110,10 +113,16 @@ namespace pulsa.Controllers.tagihan
         public async Task<IActionResult> getTagihan()
         {
             var tagihanMaster = _tagihan.getListAll();
-            
-            foreach (var td in tagihanMaster) {
-                 await _serpul.getTagihan(td);
+            List<Task> tasks = new List<Task>();
+
+            foreach (var td in tagihanMaster)
+            {
+                tasks.Add(Task.Run(() => _dflash.getTagihan(td)));
             }
+
+            Task.WhenAll(tasks).Wait();
+
+
             return Ok("cek data sukses");
         }
 
