@@ -81,6 +81,13 @@ namespace Pulsa.Web.Controllers
         }
         public IActionResult cariproduk(string produk, string dest, string typeProduk = "")
         {
+            dest = dest.Replace("-", "");
+            dest = dest.Replace(" ", "");
+            if (dest.StartsWith("62"))
+            {
+                dest = "0" + dest.Substring(2);
+            }
+
             var brand = "";
             if (produk == "pulsa" || produk == "data") {
                 brand = _produk.cekOperator(dest);

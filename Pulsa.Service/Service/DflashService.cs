@@ -473,7 +473,8 @@ namespace Pulsa.Service.Service
                     {
                         var pengguna = _penggunaRepository.Find(a => a.id == pengguna_Traksaksi.pengguna).SingleOrDefault();
                         int saldoAwal = pengguna.saldo;
-                        pengguna.saldo = saldoAwal + transaksiPending.harga_jual;
+                        int saldoAkhir = saldoAwal + transaksiPending.harga_jual;
+                        pengguna.saldo = saldoAkhir;
 
                         Saldo_refund sr = new Saldo_refund();
                         sr.jumlah = transaksiPending.harga_jual;
@@ -481,7 +482,7 @@ namespace Pulsa.Service.Service
                         sr.note = respond.keterangan;
                         sr.idtransaksi = pengguna_Traksaksi.id;
                         sr.saldo_awal = saldoAwal;
-                        sr.saldo_akhir = pengguna.saldo;
+                        sr.saldo_akhir = saldoAkhir;
 
                         _penggunaRepository.Update(pengguna);
                         _penggunaRepository.Save();
