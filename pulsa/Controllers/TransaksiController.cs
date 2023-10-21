@@ -63,10 +63,16 @@ namespace Pulsa.Web.Controllers
                 var listTypeProduk = _produk.listTypeProduk(produk);
                 ViewBag.TypeProduk = listTypeProduk.ToList();
             }
-            else if(produk == "game")
+            else if (produk == "game")
             {
                 label = "game";
                 // redirect new page
+            }
+            else if (produk == "voucher")
+            {
+                label = "Voucher";
+                var listTypeProduk = _produk.listTypeProduk(produk);
+                ViewBag.TypeProduk = listTypeProduk.ToList();
             }
             ViewBag.label = label;
             ViewBag.title = title;

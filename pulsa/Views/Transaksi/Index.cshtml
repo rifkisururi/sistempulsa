@@ -30,6 +30,18 @@
             </select>
         </div>
     }
+    else if (ViewBag.produk == "voucher")
+    {
+        <label class="col-sm-2 col-form-label text-gray-700 drop-shadow-lg text-xs dark:text-gray-50 font-medium">Produk</label>
+        <div class="form-group row">
+            <select class="form-control" id="typeProduk">
+                @foreach (var tp in ViewBag.TypeProduk)
+                {
+                    <option value="@tp">@tp</option>
+                }
+            </select>
+        </div>
+    }
 
     <br />
     <div class="form-group row">

@@ -76,6 +76,10 @@ $(document).on("click", "#ma", function () {
 $(document).on("click", "#emonay", function () {
     window.location.href = "Transaksi/Index?produk=ud";
 });
+$(document).on("click", "#voucher", function () {
+    window.location.href = "Transaksi/Index?produk=voucher";
+});
+
 
 
 
