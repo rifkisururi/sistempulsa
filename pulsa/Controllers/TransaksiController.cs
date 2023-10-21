@@ -145,11 +145,9 @@ namespace Pulsa.Web.Controllers
                 return new JsonResult(new
                 {
                     status = true,
-                    message = "Transaksi sedang di proses"
+                    message = result
                 });
             }
-            
-            
         }
 
         public async Task<IActionResult> cekPln(string no)
