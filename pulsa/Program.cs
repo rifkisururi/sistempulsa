@@ -67,6 +67,7 @@ services.AddTransient<Pulsa.DataAccess.Interface.IProdukRepository, Pulsa.DataAc
 services.AddTransient<Pulsa.DataAccess.Interface.IProdukDetailRepository, Pulsa.DataAccess.Repository.ProdukDetailRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IPenggunaTransaksiRepository, Pulsa.DataAccess.Repository.PenggunaTransaksiRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.IPenggunaMutasiRepository, Pulsa.DataAccess.Repository.PenggunaMutasiRepository>();
+services.AddTransient<Pulsa.DataAccess.Interface.ISaldoRefundRepository, Pulsa.DataAccess.Repository.SaldoRefundRepository>();
 services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 // add service

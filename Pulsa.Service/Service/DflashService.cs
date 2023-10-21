@@ -34,6 +34,9 @@ namespace Pulsa.Service.Service
         Pulsa.DataAccess.Interface.ISupplier_produkRepository _suppliyerProduk;
         IPenggunaTransaksiRepository _penggunaTransaksi;
         ISupplier_produkRepository _supplier_produkRepository;
+        ISaldoRefundRepository _saldoRefund;
+        ITopUpService _topUpService;
+        IPenggunaRepository _penggunaRepository;
 
         private IMapper _mapper;
         private readonly PulsaDataContext _context;
@@ -56,7 +59,12 @@ namespace Pulsa.Service.Service
                 IPenggunaTransaksiRepository penggunaTransaksi,
                 IMapper mapper,
                 PulsaDataContext context,
-                ISupplier_produkRepository Supplier_produkRepository
+                ISupplier_produkRepository Supplier_produkRepository,
+                ITopUpService topUpService,
+                ISaldoRefundRepository saldoRefund,
+                IPenggunaRepository penggunaRepository
+
+
         ) {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
@@ -68,6 +76,9 @@ namespace Pulsa.Service.Service
             _mapper = mapper;
             _context = context;
             _supplier_produkRepository = Supplier_produkRepository;
+            _topUpService = topUpService;
+            _saldoRefund = saldoRefund;
+            _penggunaRepository = penggunaRepository;
 
             _baseUrl = configuration.GetSection("dflah_ip").Value;
             _memberId = configuration.GetSection("dflah_id").Value;
@@ -458,15 +469,28 @@ namespace Pulsa.Service.Service
             }
             else {
                 transaksiPending.status_transaksi = 3;
-                if (transaksiPending.status_transaksi != 3) { 
-                    // refund
+                if (transaksiPending.status_transaksi != 3) {
+                    lock (_penggunaRepository)
+                    {
+                        var pengguna = _penggunaRepository.Find(a => a.id == pengguna_Traksaksi.pengguna).SingleOrDefault();
+                        int saldoAwal = pengguna.saldo;
+                        pengguna.saldo = saldoAwal + transaksiPending.harga_jual;
 
+                        Saldo_refund sr = new Saldo_refund();
+                        sr.jumlah = transaksiPending.harga_jual;
+                        sr.idpengguna = pengguna_Traksaksi.pengguna;
+                        sr.note = respond.keterangan;
+                        sr.idtransaksi = pengguna_Traksaksi.id;
+                        sr.saldo_awal = saldoAwal;
+                        sr.saldo_akhir = pengguna.saldo;
+
+                        _penggunaRepository.Update(pengguna);
+                        _penggunaRepository.Save();
+
+                        _saldoRefund.Add(sr);
+                    }
                 }
-
             }
-
-            _penggunaTransaksi.Update(transaksiPending);
-            _penggunaTransaksi.Save();
 
             return "";
 

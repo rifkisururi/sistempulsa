@@ -24,6 +24,7 @@ namespace Pulsa.DataAccess.Repository
             ProdukDetailRepository = new ProdukDetailRepository(_context);
             PenggunaTransaksiRepository = new PenggunaTransaksiRepository(_context);
             PenggunaMutasiRepository = new PenggunaMutasiRepository(_context);
+            SaldoRefundRepository = new SaldoRefundRepository(_context);
         }
         public ITagihanMasterRepository TagihanMasterRepository { get; private set; }
         public ITagihanDetailRepository TagihanDetailRepository { get; private set; }
@@ -37,6 +38,7 @@ namespace Pulsa.DataAccess.Repository
         public IProdukDetailRepository ProdukDetailRepository { get; private set; }
         public IPenggunaTransaksiRepository PenggunaTransaksiRepository { get; private set; }
         public IPenggunaMutasiRepository PenggunaMutasiRepository { get; private set; }
+        public ISaldoRefundRepository SaldoRefundRepository { get; private set; }
         public bool Complete()
         {
             bool isSuccess = true;

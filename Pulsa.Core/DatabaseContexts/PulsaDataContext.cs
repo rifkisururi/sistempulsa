@@ -24,6 +24,7 @@ namespace Pulsa.Data
         public DbSet<Produks_detail> produk_details { get; set; }
         public DbSet<Pengguna_Traksaksi> pengguna_transaksi { get; set; }
         public DbSet<Pengguna_mutasi> pengguna_mutasi { get; set; }
+        public DbSet<Saldo_refund> saldo_refund { get; set; }
 
     }
 }

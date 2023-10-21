@@ -2,7 +2,7 @@
 
 namespace Pulsa.DataAccess.Interface
 {
-    public interface IPenggunaTransaksiRepository : IGenericRepository<Domain.Entities.Pengguna_Traksaksi>
+    public interface ISaldoRefundRepository : IGenericRepository<Domain.Entities.Saldo_refund>
     {
     }
     
