@@ -56,7 +56,7 @@ namespace Pulsa.Web.Controllers
                 label = "No PLN";
 
             }
-            else if(produk == "ud")
+            else if(produk == "emoney")
             {
                 label = "Tujuan";
                 title = "Uang digital";
@@ -81,7 +81,10 @@ namespace Pulsa.Web.Controllers
         }
         public IActionResult cariproduk(string produk, string dest, string typeProduk = "")
         {
-            var brand = _produk.cekOperator(dest);
+            var brand = "";
+            if (produk == "pulsa" || produk == "data") {
+                brand = _produk.cekOperator(dest);
+            }
             var dtProduk = _produk.getProdukByType(produk, brand, typeProduk);
 
             ViewBag.produk = produk;
