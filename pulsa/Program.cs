@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Graph.ExternalConnectors;
 using Pulsa.Data;
 using Pulsa.DataAccess.Interface;
@@ -12,6 +13,9 @@ using Pulsa.helper;
 using Supabase;
 using System.Globalization;
 using System.Net;
+using Serilog;
+using Serilog.Formatting.Compact;
+using Serilog.Formatting.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -54,6 +58,19 @@ services.AddTransient<PulsaDataContext>();
 services.AddHttpClient();
 services.AddHttpContextAccessor();
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File(
+        new JsonFormatter(renderMessage: true),
+        "log\\log-.json",
+        rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+services.AddLogging(builder =>
+{
+    builder.AddSerilog();
+});
+
+
 // add data access
 services.AddTransient<Pulsa.DataAccess.Interface.ITagihanMasterRepository, Pulsa.DataAccess.Repository.TagihanMasterRepository>();
 services.AddTransient<Pulsa.DataAccess.Interface.ITagihanDetailRepository, Pulsa.DataAccess.Repository.TagihanDetailRepository>();
@@ -79,6 +96,8 @@ services.AddTransient<Pulsa.Service.Interface.ITransaksiService, Pulsa.Service.S
 services.AddTransient<Pulsa.Service.Interface.IPenggunaService, Pulsa.Service.Service.PenggunaService> ();
 services.AddTransient<Pulsa.Service.Interface.IDflashService, Pulsa.Service.Service.DflashService> ();
 services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
+
 
 services.Configure<RequestLocalizationOptions>(options =>
 {

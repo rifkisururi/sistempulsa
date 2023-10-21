@@ -14,11 +14,13 @@ namespace Pulsa.Web.Controllers
         private IProdukService _produk;
         private ITransaksiService _transaksi;
         private ISerpulService _serpul;
+        private readonly ILogger<TransaksiController> _logger;
         public TransaksiController(
             IHttpContextAccessor httpContextAccessor,
             IProdukService produk,
             ITransaksiService transaksi,
-            ISerpulService serpul
+            ISerpulService serpul,
+            ILogger<TransaksiController> logger
         )
         {
             var claimsIdentity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
@@ -35,6 +37,7 @@ namespace Pulsa.Web.Controllers
             _produk = produk;
             _transaksi = transaksi;
             _serpul = serpul;
+            _logger = logger;
         }
         public IActionResult Index(String produk)
         {
@@ -119,6 +122,7 @@ namespace Pulsa.Web.Controllers
 
         public async Task<IActionResult> submitorder(Guid idTransaksi, string harga_jual, string pin, string nama_pembeli)
         {
+            _logger.LogInformation("submitorder");
             // cek pin
             bool cekPin = _transaksi.verifikasiPin(IdLogin, pin);
             if (!cekPin)
@@ -133,6 +137,7 @@ namespace Pulsa.Web.Controllers
 
             // action ke serpul
             var result = await _transaksi.fixorder(idTransaksi);
+            _logger.LogInformation("id " + idTransaksi+" result "+ result);
             if (result == "0")
             {
                 return new JsonResult(new

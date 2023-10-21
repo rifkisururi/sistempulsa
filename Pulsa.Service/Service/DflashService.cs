@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 using static Microsoft.Graph.Constants;
 using Pulsa.DataAccess.Repository;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Pulsa.Service.Service
 {
@@ -37,6 +38,7 @@ namespace Pulsa.Service.Service
         ISaldoRefundRepository _saldoRefund;
         ITopUpService _topUpService;
         IPenggunaRepository _penggunaRepository;
+        ILogger<DflashService> _logger;
 
         private IMapper _mapper;
         private readonly PulsaDataContext _context;
@@ -62,7 +64,8 @@ namespace Pulsa.Service.Service
                 ISupplier_produkRepository Supplier_produkRepository,
                 ITopUpService topUpService,
                 ISaldoRefundRepository saldoRefund,
-                IPenggunaRepository penggunaRepository
+                IPenggunaRepository penggunaRepository,
+                ILogger<DflashService> logger
 
 
         ) {
@@ -79,6 +82,7 @@ namespace Pulsa.Service.Service
             _topUpService = topUpService;
             _saldoRefund = saldoRefund;
             _penggunaRepository = penggunaRepository;
+            _logger = logger;
 
             _baseUrl = configuration.GetSection("dflah_ip").Value;
             _memberId = configuration.GetSection("dflah_id").Value;
@@ -390,11 +394,13 @@ namespace Pulsa.Service.Service
 
             string sign = CalculateSign(CalculateTemplate(produkId, dest, refId));
             string fullUrl = _baseUrl + "trx?memberID=" + _memberId + "&product=" + produkId + "&dest=" + dest + "&refID=" + refId + "&sign=" + sign;
+            _logger.LogInformation("order fullUrl " + fullUrl);
             string responseStringCheck = "";
             if (_ipTransit == "")
             {
                 HttpResponseMessage responseCheck = await _httpClient.GetAsync(fullUrl);
                 responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+                _logger.LogInformation("response " + responseStringCheck);
             }
             else
             {
@@ -405,10 +411,12 @@ namespace Pulsa.Service.Service
                     destUrl = fullUrl,
                     method = "get"
                 };
+
                 try
                 {
                     HttpResponseMessage responseCheck = await RetryHttpPostAsync(_ipTransit, data, maxRetries, retryDelay);
                     responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+                    _logger.LogInformation("respond " + responseStringCheck);
                 }
                 catch (Exception ex)
                 {
@@ -416,6 +424,7 @@ namespace Pulsa.Service.Service
                 }
             }
             return responseStringCheck;
+
         }
         public async Task<string> cekTransaksiPending(Pengguna_Traksaksi pengguna_Traksaksi)
         {
@@ -456,6 +465,7 @@ namespace Pulsa.Service.Service
             if (respond == null) {
                 return "";
             }
+            _logger.LogInformation("respond cek pending " + responseStringCheck);
             var transaksiPending = _penggunaTransaksi.GetById(pengguna_Traksaksi.id);
             if (respond.status == 0 || respond.status == 1 || respond.status == 2 || respond.status == 22)
             {
@@ -479,7 +489,7 @@ namespace Pulsa.Service.Service
                         Saldo_refund sr = new Saldo_refund();
                         sr.jumlah = transaksiPending.harga_jual;
                         sr.idpengguna = pengguna_Traksaksi.pengguna;
-                        sr.note = respond.keterangan;
+                        sr.note = respond.keterangan + " "+ respond.status_text;
                         sr.idtransaksi = pengguna_Traksaksi.id;
                         sr.saldo_awal = saldoAwal;
                         sr.saldo_akhir = saldoAkhir;
@@ -491,6 +501,7 @@ namespace Pulsa.Service.Service
                         _saldoRefund.Save();
                     }
                     transaksiPending.status_transaksi = 3;
+                    transaksiPending.sn = respond.keterangan + " " + respond.status_text;
                 }
             }
 

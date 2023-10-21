@@ -534,3 +534,4 @@ FodyWeavers.xsd
 sql
 /dump-tagihan_listrik-202305060944.tar
 /pulsa/appsettings.json
+/pulsa/log/*
