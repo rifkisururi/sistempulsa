@@ -425,7 +425,7 @@ namespace Pulsa.Service.Service
             string refId = pengguna_Traksaksi.ref_id;
             string sign = CalculateSign(CalculateTemplate(produkId, dest, refId));
             DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
-            string fullUrl = _baseUrl + "check?memberID=" + _memberId + "&product=" + produkId + "&dest=" + dest + "&refID=" + refId + "&sign=" + sign;
+            string fullUrl = _baseUrl + "trx?memberID=" + _memberId + "&product=" + produkId + "&dest=" + dest + "&refID=" + refId + "&sign=" + sign;
             string responseStringCheck = "";
             if (_ipTransit == "")
             {
