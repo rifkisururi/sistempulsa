@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using static Microsoft.Graph.Constants;
+using Pulsa.DataAccess.Repository;
+using System.Collections.Generic;
 
 namespace Pulsa.Service.Service
 {
@@ -29,8 +31,9 @@ namespace Pulsa.Service.Service
         IUnitOfWork _unitOfWork;
         ITagihanDetailRepository _tagihanDetailRepository;
         ITagihanMasterRepository _tagihanMasterRepository;
-        ISupplier_produkRepository _supplier_produkRepository;
+        Pulsa.DataAccess.Interface.ISupplier_produkRepository _suppliyerProduk;
         IPenggunaTransaksiRepository _penggunaTransaksi;
+        ISupplier_produkRepository _supplier_produkRepository;
 
         private IMapper _mapper;
         private readonly PulsaDataContext _context;
@@ -49,20 +52,22 @@ namespace Pulsa.Service.Service
                 HttpClient client,
                 ITagihanDetailRepository tagihanDetailRepository,
                 ITagihanMasterRepository tagihanMasterRepository,
-                ISupplier_produkRepository Supplier_produkRepository,
+                ISupplier_produkRepository suppliyerProduk,
                 IPenggunaTransaksiRepository penggunaTransaksi,
                 IMapper mapper,
-                PulsaDataContext context
+                PulsaDataContext context,
+                ISupplier_produkRepository Supplier_produkRepository
         ) {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _client = client;
             _tagihanDetailRepository = tagihanDetailRepository;
             _tagihanMasterRepository = tagihanMasterRepository;
-            _supplier_produkRepository = Supplier_produkRepository;
+            _suppliyerProduk = suppliyerProduk;
             _penggunaTransaksi = penggunaTransaksi;
             _mapper = mapper;
             _context = context;
+            _supplier_produkRepository = Supplier_produkRepository;
 
             _baseUrl = configuration.GetSection("dflah_ip").Value;
             _memberId = configuration.GetSection("dflah_id").Value;
@@ -178,7 +183,6 @@ namespace Pulsa.Service.Service
                     {
                         _tagihanDetailRepository.Add(td);
                         _tagihanDetailRepository.Save();
-                        //var saveData = _unitOfWork.Complete();
                     }
                 }
 
@@ -191,6 +195,145 @@ namespace Pulsa.Service.Service
             return "gagal";
         }
 
+        public async Task<string> PayTagihan(TagihanMasterDTO tm)
+        {
+            var client = new HttpClient();
+            HttpClient _httpClient = new HttpClient();
+            String ref_id = tm.id_tagihan + "_" + DateTime.Now.Month + DateTime.Now.Day;
+            string codeProduk = "";
+            if (tm.type_tagihan == "telkom")
+            {
+                codeProduk = "CTEL";
+            }
+            else if (tm.type_tagihan == "pln")
+            {
+                codeProduk = "CPLN";
+            }
+            string sign = CalculateSign(CalculateTemplate(codeProduk, tm.id_tagihan, ref_id));
+            DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
+
+            string fullUrl = _baseUrl + "trx?memberID=" + _memberId + "&product=" + codeProduk + "&dest=" + tm.id_tagihan + "&refID=" + ref_id + "&sign=" + sign;
+            string responseStringCheck = "";
+            int maxRetries = 3;
+            TimeSpan retryDelay = TimeSpan.FromMilliseconds(200);
+
+            if (_ipTransit == "")
+            {
+                HttpResponseMessage responseCheck = await _httpClient.GetAsync(fullUrl);
+                responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                var data = new
+                {
+                    destUrl = fullUrl,
+                    method = "get"
+                };
+                try
+                {
+                    HttpResponseMessage responseCheck = await RetryHttpPostAsync(_ipTransit, data, maxRetries, retryDelay);
+                    responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+                }
+                catch (Exception ex)
+                {
+                    return "";
+                }
+            }
+
+            var tagihan = JsonConvert.DeserializeObject<DflashRespond>(responseStringCheck);
+            if (tagihan == null)
+                return "";
+
+            if ((tagihan.status == 20 || tagihan.status == 22) && tagihan.sn != null)
+            {
+                // cek tagihan sukses
+
+                string[] segments = tagihan.sn.Split('/');
+                string[] keterangan = tagihan.keterangan.Split('/');
+                if (tm.nama_pelanggan == null || tm.nama_pelanggan == "")
+                {
+                    var tagihanMaster = _tagihanMasterRepository.Find(a => a.id == tm.id).FirstOrDefault();
+                    tagihanMaster.nama_pelanggan = segments[0];
+                    lock (_tagihanMasterRepository)
+                    {
+                        _tagihanMasterRepository.Update(tagihanMaster);
+                        _tagihanMasterRepository.Save();
+                    }
+                }
+
+                // Find the segment that starts with "TAG:" to get "80619".
+                string tagSegment = Array.Find(segments, s => s.StartsWith("TAG:"));
+                string tagValue = tagSegment != null ? tagSegment.Substring(4) : null;
+
+                // todo save to tagihanDetail
+                string btketerangan = Array.Find(keterangan, s => s.StartsWith("BT="));
+                string btValue = btketerangan != null ? btketerangan.Substring(3) : null;
+
+
+                Domain.Entities.Tagihan_detail td = new Tagihan_detail();
+                td.id_tagihan_master = tm.id;
+                td.ref_id = ref_id;
+                td.periode_tagihan = btValue;
+                td.jumlah_tagihan = Convert.ToInt32(tagValue);
+                td.tanggal_cek = DateTime.Now.Date;
+                //td.admin_tagihan = Convert.ToInt32(tagihanListrik.responseData.biaya_admin);
+
+                lock (_tagihanDetailRepository)
+                {
+                    var dataTagihan = _tagihanDetailRepository.Find(a => a.id_tagihan_master == td.id_tagihan_master && a.tanggal_cek >= awalBulan).FirstOrDefault();
+                    if (dataTagihan == null)
+                    {
+                        _tagihanDetailRepository.Add(td);
+                        _tagihanDetailRepository.Save();
+                    }
+                }
+
+                return responseStringCheck;
+            }
+            else if (tagihan.status == 43)
+            {
+                // transaksi gagal
+            }
+            return "gagal";
+
+        }
+
+        public async Task<List<Supplier_produk>> refressProduk(string dateUpdate)
+        {
+            List<Supplier_produk> listSp = new List<Supplier_produk>();
+            HttpClient _httpClient = new HttpClient();
+            string fullUrl = "https://dflash.co.id/harga/pricelist_json.php";
+            string responseStringCheck = "";
+            HttpResponseMessage responseCheck = await _httpClient.GetAsync(fullUrl);
+            responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+            if (responseStringCheck != "") {
+
+
+                List<DflashProviderData> result = JsonConvert.DeserializeObject<List<DflashProviderData>>(responseStringCheck);
+                
+
+                foreach (var providerData in result)
+                {
+                    foreach (var product in providerData.data)
+                    {
+                        Supplier_produk sp = new Supplier_produk();
+                        sp.supplier = "dflash";
+                        sp.operator_name = providerData.provider;
+                        sp.category = providerData.kategori;
+
+                        sp.supplierkey = "dflash" + product.kode;
+                        sp.product_id = product.kode;
+                        sp.product_name = product.nama;
+                        sp.product_price = product.harga;
+                        sp.product_id = product.kode;
+                        sp.status = Convert.ToString(product.status);
+                        sp.updated_at = dateUpdate;
+                        listSp.Add(sp);
+                    }
+                }
+            }
+            return listSp;
+        }
 
         private string CalculateTemplate(string product = "", string dest = "", string refID = "")
         {
@@ -204,10 +347,129 @@ namespace Pulsa.Service.Service
             }
         }
 
+        public void saveProduk(string dateUpdate, List<Supplier_produk> listSp) {
+            lock (_supplier_produkRepository)
+            {
+                // remove produk
+                var removeProduk = _supplier_produkRepository.Find(a => a.updated_at != dateUpdate && a.supplier == "dflash");;
+                _supplier_produkRepository.RemoveRange(removeProduk);
+
+                _supplier_produkRepository.AddRange(listSp);
+                _supplier_produkRepository.Save();
+
+                //int batchSize = 100;
+                //// add produk
+                //for (int i = 0; i < listSp.Count; i += batchSize)
+                //{
+                //    var batch = listSp.Skip(i).Take(batchSize).ToList();
+                //    _supplier_produkRepository.AddRange(batch);
+                //    _supplier_produkRepository.Save();
+                //}
+            }
+        }
+
         public static string CalculateSign(string template)
         {
             string sign = template.TrimEnd('=').Replace('+', '-').Replace('/', '_');
             return sign;
+        }
+        public async Task<string> order(string produkId, string dest, string refId)
+        {
+            HttpClient _httpClient = new HttpClient();
+
+            string sign = CalculateSign(CalculateTemplate(produkId, dest, refId));
+            string fullUrl = _baseUrl + "trx?memberID=" + _memberId + "&product=" + produkId + "&dest=" + dest + "&refID=" + refId + "&sign=" + sign;
+            string responseStringCheck = "";
+            if (_ipTransit == "")
+            {
+                HttpResponseMessage responseCheck = await _httpClient.GetAsync(fullUrl);
+                responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                int maxRetries = 3;
+                TimeSpan retryDelay = TimeSpan.FromMilliseconds(200);
+                var data = new
+                {
+                    destUrl = fullUrl,
+                    method = "get"
+                };
+                try
+                {
+                    HttpResponseMessage responseCheck = await RetryHttpPostAsync(_ipTransit, data, maxRetries, retryDelay);
+                    responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+                }
+                catch (Exception ex)
+                {
+                    return "";
+                }
+            }
+            return responseStringCheck;
+        }
+        public async Task<string> cekTransaksiPending(Pengguna_Traksaksi pengguna_Traksaksi)
+        {
+            HttpClient _httpClient = new HttpClient();
+            string produkId = pengguna_Traksaksi.product_id;
+            string dest = pengguna_Traksaksi.tujuan;
+            string refId = pengguna_Traksaksi.ref_id;
+            string sign = CalculateSign(CalculateTemplate(produkId, dest, refId));
+            DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
+            string fullUrl = _baseUrl + "check?memberID=" + _memberId + "&product=" + produkId + "&dest=" + dest + "&refID=" + refId + "&sign=" + sign;
+            string responseStringCheck = "";
+            if (_ipTransit == "")
+            {
+                HttpResponseMessage responseCheck = await _httpClient.GetAsync(fullUrl);
+                responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                int maxRetries = 3;
+                TimeSpan retryDelay = TimeSpan.FromMilliseconds(200);
+                var data = new
+                {
+                    destUrl = fullUrl,
+                    method = "get"
+                };
+                try
+                {
+                    HttpResponseMessage responseCheck = await RetryHttpPostAsync(_ipTransit, data, maxRetries, retryDelay);
+                    responseStringCheck = await responseCheck.Content.ReadAsStringAsync();
+                }
+                catch (Exception ex)
+                {
+                    return "";
+                }
+            }
+
+            var respond = JsonConvert.DeserializeObject<DflashCekTransaksi>(responseStringCheck);
+            if (respond == null) {
+                return "";
+            }
+            var transaksiPending = _penggunaTransaksi.GetById(pengguna_Traksaksi.id);
+            if (respond.status == 0 || respond.status == 1 || respond.status == 2 || respond.status == 22)
+            {
+                transaksiPending.status_transaksi = 1;
+            }
+            else if (respond.status == 20)
+            {
+                transaksiPending.status_transaksi = 2;
+                transaksiPending.sn = respond.sn;
+                transaksiPending.harga = Convert.ToInt32(respond.harga);
+            }
+            else {
+                transaksiPending.status_transaksi = 3;
+                if (transaksiPending.status_transaksi != 3) { 
+                    // refund
+
+                }
+
+            }
+
+            _penggunaTransaksi.Update(transaksiPending);
+            _penggunaTransaksi.Save();
+
+            return "";
+
         }
         private async Task<HttpResponseMessage> RetryHttpPostAsync(string url, object data, int maxRetries, TimeSpan retryDelay)
         {

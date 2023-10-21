@@ -27,6 +27,7 @@ namespace Pulsa.Service.Service
         IPenggunaMutasiRepository _penggunaMutasi;
         IPenggunaRepository _pengguna;
         ISerpulService _serpul;
+        IDflashService _dflash;
         private IMapper _mapper;
         private readonly PulsaDataContext _context;
         public TransaksiService(
@@ -40,6 +41,7 @@ namespace Pulsa.Service.Service
             IPenggunaRepository pengguna,
             IPenggunaMutasiRepository penggunaMutasi,
             ISerpulService serpul,
+            IDflashService dflash,
             PulsaDataContext context
         ) {
             _unitOfWork= unitOfWork;
@@ -53,6 +55,7 @@ namespace Pulsa.Service.Service
             _serpul = serpul;
             _mapper = mapper;
             _context = context;
+            _dflash = dflash;
         }
 
         public List<Domain.Entities.Produk> getAllProduk()
@@ -73,6 +76,7 @@ namespace Pulsa.Service.Service
             pt.harga_jual = (produk.margin ?? 0) + produkDetailSuppiyer.product_price + (produk.bagihasil1 ?? 0) + (produk.bagihasil2 ?? 0);
             pt.status_transaksi = 0;
             pt.pengguna = pengguna;
+            pt.ref_id = GenerateUniqueString(); 
 
             _penggunaTransaksi.Add(pt);
             _penggunaTransaksi.Save();
@@ -129,12 +133,12 @@ namespace Pulsa.Service.Service
                 _pengguna.Save();
 
                 // hit ppob server
-                if (transaksi.suppliyer.ToLower() == "serpul")
+                if (transaksi.suppliyer.ToLower() == "dflash")
                 {
-                    // hit serpul
                     
-                    _serpul.orderPrabayar(transaksi.product_id, transaksi.tujuan, transaksi.id.ToString());
+                    _dflash.order(transaksi.product_id, transaksi.tujuan, transaksi.ref_id);
                 }
+
                 return "1";
                 
             }
@@ -160,7 +164,7 @@ namespace Pulsa.Service.Service
                 if (dtMutasi.type.ToLower() == "pembelian") {
                     var detailMutasi = _penggunaTransaksi.GetById(item.id_transaksi);                    
                     var detailProduk = _produkSuppliyer.Find(a => a.supplier == detailMutasi.suppliyer && a.product_id == detailMutasi.product_id).FirstOrDefault();
-                    dtMutasi.produk = detailProduk.product_name;
+                    dtMutasi.produk = detailProduk?.product_name;
                     string noteTransaksi = detailMutasi.tujuan + " <br>"; 
                     if (detailMutasi.status_transaksi == 1) {
                         noteTransaksi += " sedang di proses";
@@ -184,11 +188,13 @@ namespace Pulsa.Service.Service
 
 
         public async Task<DetailTransaksiDTO> detailTransaksi(Guid id) {
-            await _serpul.cekTransaksiPendingPrabayar(id.ToString());
+            var detailTransaksi = _penggunaTransaksi.GetById(id);
+            if (detailTransaksi.suppliyer == "dflash" && detailTransaksi.status_transaksi == 1) {
+                await _dflash.cekTransaksiPending(detailTransaksi);
+            }
 
             var dtMutasi = new DetailTransaksiDTO();
             var detailMutasi = _penggunaMutasi.Find(a => a.id_transaksi == id).FirstOrDefault();
-            var detailTransaksi = _penggunaTransaksi.GetById(id);
             var detailProduk = _produkSuppliyer.Find(a => a.supplier == detailTransaksi.suppliyer && a.product_id == detailTransaksi.product_id).FirstOrDefault();
 
             dtMutasi.id = id;
@@ -208,6 +214,31 @@ namespace Pulsa.Service.Service
             dtMutasi.status = detailTransaksi.status_transaksi;
 
             return dtMutasi;
+        }
+
+        private static string GenerateUniqueString()
+        {
+            DateTime now = DateTime.Now;
+            string month = now.Month.ToString("D2"); // D2 menghasilkan dua digit
+            string day = now.Day.ToString("D2"); // D2 menghasilkan dua digit
+            string year = now.Year.ToString();
+            string sequenceNumber = GenerateRandom(4);
+
+            // Menggabungkan semua komponen menjadi satu string
+            string uniqueString = $"{year}{month}{day}{sequenceNumber}";
+
+            return uniqueString;
+        }
+
+        private static string GenerateRandom(int length)
+        {
+            const string alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            Random random = new Random();
+
+            string randomString = new string(Enumerable.Repeat(alphanumericChars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return randomString;
         }
     }
 }

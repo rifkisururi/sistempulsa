@@ -2,8 +2,10 @@ $(document).on("click", "#cariProduk", function () {
     let produk = $("#produk").val();
     let dest = $("#dest").val();
     let typeProduk = $("#typeProduk").val();
-    
-    window.location.href = `cariproduk?produk=${produk}&dest=${dest}&typeProduk=${typeProduk}`;
+    if (typeProduk == undefined)
+        window.location.href = `cariproduk?produk=${produk}&dest=${dest}`;
+    else
+        window.location.href = `cariproduk?produk=${produk}&dest=${dest}&typeProduk=${typeProduk}`;
 });
 
 $(document).on("click", "#cekPln", function () {

@@ -7,6 +7,7 @@ namespace Pulsa.Domain.Entities
         [Key]
         public Guid id { get; set; } = Guid.NewGuid();
         public Guid pengguna { get; set; }
+        public string? ref_id { get; set; }
         public string product_id { get; set; }
         public string suppliyer { get; set; }
         public string tujuan { get; set; }

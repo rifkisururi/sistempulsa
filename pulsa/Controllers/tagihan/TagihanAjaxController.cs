@@ -187,6 +187,14 @@ namespace pulsa.Controllers.tagihan
             return Ok("tidak ada pending autopay " + dateNow.ToLongDateString() + " " + dateNow.ToLongTimeString()); ;
         }
 
+        public async Task<IActionResult> getProduk()
+        {
+            string dateUpdate = DateTime.Now.Year + "" + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour;
+            var data = _dflash.refressProduk(dateUpdate).Result;
+            _dflash.saveProduk(dateUpdate, data);
+            return Ok("cek data sukses");
+        }
+
 
 
     }
