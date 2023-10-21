@@ -487,6 +487,7 @@ namespace Pulsa.Service.Service
                         _penggunaRepository.Save();
 
                         _saldoRefund.Add(sr);
+                        _saldoRefund.Save();
                     }
                     transaksiPending.status_transaksi = 3;
                 }
