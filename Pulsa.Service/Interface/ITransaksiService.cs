@@ -13,7 +13,7 @@ namespace Pulsa.Service.Interface
         public Guid transaksi(string product_id, string suppliyer, string dest, Guid pengguna);
         public Pengguna_Traksaksi getDetailTransaksi(Guid id);
         public bool verifikasiPin(Guid id, string pin);
-        public string fixorder(Guid id);
+        Task<string> fixorder(Guid id);
         public List<MutasiDTO> listMutasi(Guid idPengguna, int start, int jumlah);
         Task<DetailTransaksiDTO> detailTransaksi(Guid id);
 

@@ -105,11 +105,13 @@ namespace Pulsa.Service.Service
             return true;
         }
 
-        public string fixorder(Guid id)
+        public async Task<string> fixorder(Guid id)
         {
             var transaksi = _penggunaTransaksi.GetById(id);
             var pengguna = _pengguna.Find(a => a.id == transaksi.pengguna).SingleOrDefault();
             if (pengguna.saldo > transaksi.harga_jual) {
+
+                string respond = "";
 
                 // update status transaksi
                 transaksi.status_transaksi = 1;
@@ -135,10 +137,10 @@ namespace Pulsa.Service.Service
                 // hit ppob server
                 if (transaksi.suppliyer.ToLower() == "dflash")
                 {
-                    _dflash.order(transaksi.product_id, transaksi.tujuan, transaksi.ref_id);
+                    respond = await _dflash.order(transaksi.product_id, transaksi.tujuan, transaksi.ref_id);
                 }
 
-                return "1";
+                return respond ;
                 
             }
             return "0";

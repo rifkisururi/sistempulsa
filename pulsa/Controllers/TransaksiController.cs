@@ -110,7 +110,7 @@ namespace Pulsa.Web.Controllers
             return RedirectToAction("order", new { idTransaksi = idTransaksi });
         }
 
-        public IActionResult submitorder(Guid idTransaksi, string harga_jual, string pin, string nama_pembeli)
+        public async Task<IActionResult> submitorder(Guid idTransaksi, string harga_jual, string pin, string nama_pembeli)
         {
             // cek pin
             bool cekPin = _transaksi.verifikasiPin(IdLogin, pin);
@@ -125,7 +125,7 @@ namespace Pulsa.Web.Controllers
             // save nama pembeli
 
             // action ke serpul
-            var result = _transaksi.fixorder(idTransaksi);
+            var result = await _transaksi.fixorder(idTransaksi);
             if (result == "0")
             {
                 return new JsonResult(new
