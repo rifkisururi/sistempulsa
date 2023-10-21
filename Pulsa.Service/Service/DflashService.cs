@@ -468,7 +468,6 @@ namespace Pulsa.Service.Service
                 transaksiPending.harga = Convert.ToInt32(respond.harga);
             }
             else {
-                transaksiPending.status_transaksi = 3;
                 if (transaksiPending.status_transaksi != 3) {
                     lock (_penggunaRepository)
                     {
@@ -489,8 +488,13 @@ namespace Pulsa.Service.Service
 
                         _saldoRefund.Add(sr);
                     }
+                    transaksiPending.status_transaksi = 3;
                 }
             }
+
+            _penggunaTransaksi.Update(transaksiPending);
+            _penggunaTransaksi.Save();
+
 
             return "";
 
