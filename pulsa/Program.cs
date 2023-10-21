@@ -61,7 +61,7 @@ services.AddHttpContextAccessor();
 Log.Logger = new LoggerConfiguration()
     .WriteTo.File(
         new JsonFormatter(renderMessage: true),
-        "log\\log-.json",
+        "log/log-.json",
         rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
