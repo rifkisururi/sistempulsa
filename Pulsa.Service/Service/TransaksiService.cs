@@ -109,7 +109,7 @@ namespace Pulsa.Service.Service
         {
             var transaksi = _penggunaTransaksi.GetById(id);
             var pengguna = _pengguna.Find(a => a.id == transaksi.pengguna).SingleOrDefault();
-            if (pengguna.saldo > transaksi.harga_jual) {
+            if (pengguna.saldo >= transaksi.harga_jual) {
 
                 string respond = "";
 
