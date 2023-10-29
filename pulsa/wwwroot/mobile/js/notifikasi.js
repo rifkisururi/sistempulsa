@@ -14,21 +14,27 @@ $(document).ready(function () {
 });
 
 function cekTransaksiPending(id){
-    console.log(id);
     var url = `transaksi/cekTransaksiPending?id=${id}`;
-    $.get(url, function (data, status) {
-        console.log('respond transaksi pending', data);
-        if (data.status_transaksi != "1") {
-            var status = "";
-            if (data.status_transaksi == "2") {
-                status = "berhasil";
-            } else {
-                status = "gagal";
-            }
+    // Fungsi untuk melakukan pengecekan status transaksi
+    function checkStatus() {
+        $.get(url, function (data, status) {
+            console.log('respond transaksi pending', data);
+            var statusTransaksi = data.status_transaksi;
 
-            const notif = new Notification(`Transaksi ${data.tujuan} ${status}`, {
-                body: `Transaksi ${data.tujuan} ${status}`,
-            });
-       }
-    });
+            if (statusTransaksi !== "1") {
+                var status = (statusTransaksi === "2") ? "berhasil" : "gagal";
+                notifPopup = `Transaksi ${data.tujuan} ${status}`;
+                const notif = new Notification(notifPopup, {
+                    body: notifPopup,
+                });
+                alert(notifPopup);
+            } else {
+                // Jika status masih "1", lakukan pengecekan ulang setelah jeda waktu (misalnya, 1 detik)
+                setTimeout(checkStatus, 1000); // Waktu dalam milidetik
+            }
+        });
+    }
+
+    // Mulai pengecekan pertama kali
+    checkStatus();
 }
