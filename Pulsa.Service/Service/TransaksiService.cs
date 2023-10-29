@@ -189,11 +189,7 @@ namespace Pulsa.Service.Service
 
 
         public async Task<DetailTransaksiDTO> detailTransaksi(Guid id) {
-            var detailTransaksi = _penggunaTransaksi.GetById(id);
-            if (detailTransaksi.suppliyer == "dflash" && detailTransaksi.status_transaksi == 1) {
-                await _dflash.cekTransaksiPending(detailTransaksi);
-            }
-
+            var detailTransaksi = await detailTransaksiById(id);
             var dtMutasi = new DetailTransaksiDTO();
             var detailMutasi = _penggunaMutasi.Find(a => a.id_transaksi == id).FirstOrDefault();
             var detailProduk = _produkSuppliyer.Find(a => a.supplier == detailTransaksi.suppliyer && a.product_id == detailTransaksi.product_id).FirstOrDefault();
@@ -215,6 +211,23 @@ namespace Pulsa.Service.Service
             dtMutasi.status = detailTransaksi.status_transaksi;
 
             return dtMutasi;
+        }
+
+        public async Task<Pengguna_Traksaksi> detailTransaksiById(Guid id)
+        {
+            var detailTransaksi = _penggunaTransaksi.GetById(id);
+            if (detailTransaksi.suppliyer == "dflash" && detailTransaksi.status_transaksi == 1)
+            {
+                await _dflash.cekTransaksiPending(detailTransaksi);
+            }
+            return detailTransaksi;
+        }
+        public async Task<string> cekTransaksiPending(Pengguna_Traksaksi pt) {
+            return await _dflash.cekTransaksiPending(pt);
+        }
+
+        public List<Guid> getTransaksiPending(Guid idPengguna) { 
+           return _penggunaTransaksi.Find(a => a.status_transaksi == 1 && (a.pengguna == idPengguna || idPengguna == Guid.Empty)).Select(a => a.id).ToList();
         }
 
         private static string GenerateUniqueString()

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using pulsa.Models;
 using Pulsa.Data;
 using Pulsa.Domain.Entities;
 using Pulsa.Service.Interface;
@@ -168,7 +169,31 @@ namespace Pulsa.Web.Controllers
             });
         }
 
-         
+        public async Task<IActionResult> cekTransaksiPending(Guid id) {
+            var transaksi = await _transaksi.detailTransaksiById(id);
+            var status = await _transaksi.cekTransaksiPending(transaksi);
+            return new JsonResult(new
+            {
+                status = true,
+                status_transaksi = status,
+                tujuan = transaksi.tujuan,
+                id = transaksi.id
+            });
+        }
 
+        public async Task<IActionResult> listTransaksiPending(bool isAll = false)
+        {
+            //IdLogin
+            List<Guid> transaksiPending = new List<Guid>();
+            if (isAll)
+                transaksiPending.AddRange(_transaksi.getTransaksiPending(IdLogin));
+            else
+                transaksiPending.AddRange(_transaksi.getTransaksiPending(Guid.Empty));
+            return new JsonResult(new
+            {
+                status = true,
+                data = transaksiPending
+            });
+        }
     }
 }

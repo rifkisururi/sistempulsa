@@ -371,15 +371,6 @@ namespace Pulsa.Service.Service
 
                 _supplier_produkRepository.AddRange(listSp);
                 _supplier_produkRepository.Save();
-
-                //int batchSize = 100;
-                //// add produk
-                //for (int i = 0; i < listSp.Count; i += batchSize)
-                //{
-                //    var batch = listSp.Skip(i).Take(batchSize).ToList();
-                //    _supplier_produkRepository.AddRange(batch);
-                //    _supplier_produkRepository.Save();
-                //}
             }
         }
 
@@ -509,7 +500,7 @@ namespace Pulsa.Service.Service
             _penggunaTransaksi.Save();
 
 
-            return "";
+            return transaksiPending.status_transaksi.ToString();
 
         }
         private async Task<HttpResponseMessage> RetryHttpPostAsync(string url, object data, int maxRetries, TimeSpan retryDelay)

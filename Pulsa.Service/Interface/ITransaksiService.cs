@@ -16,6 +16,8 @@ namespace Pulsa.Service.Interface
         Task<string> fixorder(Guid id);
         public List<MutasiDTO> listMutasi(Guid idPengguna, int start, int jumlah);
         Task<DetailTransaksiDTO> detailTransaksi(Guid id);
-
+        Task<string> cekTransaksiPending(Pengguna_Traksaksi pt);
+        Task<Pengguna_Traksaksi> detailTransaksiById(Guid id);
+        public List<Guid> getTransaksiPending(Guid idPengguna);
     }
 }
