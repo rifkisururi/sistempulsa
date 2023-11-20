@@ -130,7 +130,7 @@ namespace pulsa.Controllers.tagihan
 
             foreach (var td in tagihanMaster)
             {
-                 await _serpul.PayTagihan(td);
+                await _dflash.PayTagihan(td);
             }
             return null;
         }
@@ -149,7 +149,8 @@ namespace pulsa.Controllers.tagihan
         [Authorize]
         public async Task<IActionResult> bayarTagihanIni(Guid idMaster) {
             var tagihan = _tagihan.GetListBayarAll(idMaster);
-            var returnBayar = await _serpul.PayTagihan(tagihan[0]);
+            //var returnBayar = await _serpul.PayTagihan(tagihan[0]);
+            var returnBayar = await _dflash.PayTagihan(tagihan[0]);
             return Ok(returnBayar);
         }
 

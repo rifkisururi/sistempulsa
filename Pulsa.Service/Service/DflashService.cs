@@ -218,11 +218,11 @@ namespace Pulsa.Service.Service
             string codeProduk = "";
             if (tm.type_tagihan == "telkom")
             {
-                codeProduk = "CTEL";
+                codeProduk = "BTEL";
             }
             else if (tm.type_tagihan == "pln")
             {
-                codeProduk = "CPLN";
+                codeProduk = "BPLN";
             }
             string sign = CalculateSign(CalculateTemplate(codeProduk, tm.id_tagihan, ref_id));
             DateTime awalBulan = Convert.ToDateTime(DateTime.Now.Year + "-" + DateTime.Now.Month + "-1");
@@ -284,21 +284,20 @@ namespace Pulsa.Service.Service
                 string btketerangan = Array.Find(keterangan, s => s.StartsWith("BT="));
                 string btValue = btketerangan != null ? btketerangan.Substring(3) : null;
 
-
-                Domain.Entities.Tagihan_detail td = new Tagihan_detail();
-                td.id_tagihan_master = tm.id;
-                td.ref_id = ref_id;
-                td.periode_tagihan = btValue;
-                td.jumlah_tagihan = Convert.ToInt32(tagValue);
-                td.tanggal_cek = DateTime.Now.Date;
-                //td.admin_tagihan = Convert.ToInt32(tagihanListrik.responseData.biaya_admin);
-
                 lock (_tagihanDetailRepository)
                 {
-                    var dataTagihan = _tagihanDetailRepository.Find(a => a.id_tagihan_master == td.id_tagihan_master && a.tanggal_cek >= awalBulan).FirstOrDefault();
-                    if (dataTagihan == null)
+                    var dataTagihan = _tagihanDetailRepository.Find(a => a.id_tagihan_master == tm.id  && a.tanggal_cek >= awalBulan).FirstOrDefault();
+                    if (dataTagihan != null)
                     {
-                        _tagihanDetailRepository.Add(td);
+                        dataTagihan.request_bayar = true;
+                        dataTagihan.status_bayar = true;
+                        dataTagihan.ref_id = ref_id;
+                        dataTagihan.tanggal_bayar = DateTime.Now; 
+                        dataTagihan.ref_id = ref_id;
+                        dataTagihan.periode_tagihan = btValue;
+                        dataTagihan.jumlah_tagihan = Convert.ToInt32(tagValue);
+
+                        _tagihanDetailRepository.Update(dataTagihan);
                         _tagihanDetailRepository.Save();
                     }
                 }

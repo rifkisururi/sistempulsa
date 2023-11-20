@@ -11,7 +11,7 @@ namespace Pulsa.Domain.Entities
         [ForeignKey("id_tagihan_master")]
         public Tagihan_master master { get; set; }
         public string ref_id { get; set; }
-        public string periode_tagihan { get; set; }
+        public string? periode_tagihan { get; set; }
         public DateTime? tanggal_cek { get; set; } = DateTime.Now.Date;
         public DateTime? tanggal_bayar { get; set; }
         public int jumlah_tagihan { get; set; }
