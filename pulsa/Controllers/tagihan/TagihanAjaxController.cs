@@ -117,11 +117,8 @@ namespace pulsa.Controllers.tagihan
 
             foreach (var td in tagihanMaster)
             {
-                tasks.Add(Task.Run(() => _dflash.getTagihan(td)));
+                await _dflash.getTagihan(td);
             }
-
-            Task.WhenAll(tasks).Wait();
-
 
             return Ok("cek data sukses");
         }
