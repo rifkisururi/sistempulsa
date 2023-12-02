@@ -48,6 +48,9 @@ namespace Pulsa.Service.Service
             if (!string.IsNullOrEmpty(typeProduk))
                 brand = "";
 
+            if (brand.ToLower() == "xl" && type.ToLower() == "pulsa")
+                brand = "Axis";
+
             var data = (from p in _context.produks.Where(a =>
                             (a.brand.Contains(brand) || brand == "")
                             && a.category.ToLower() == type.ToLower()
